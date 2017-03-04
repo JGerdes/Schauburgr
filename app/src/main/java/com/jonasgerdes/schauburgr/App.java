@@ -5,6 +5,7 @@ import android.app.Application;
 import com.jonasgerdes.schauburgr.dagger.component.AppComponent;
 import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
+import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 
 
 public class App extends Application {
@@ -17,6 +18,7 @@ public class App extends Application {
 
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
+                .dataModule(new DataModule("http://schauburg-cineworld.de/"))
                 .build();
     }
 
