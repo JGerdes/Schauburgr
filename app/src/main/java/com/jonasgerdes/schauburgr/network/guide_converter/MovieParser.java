@@ -37,9 +37,10 @@ public class MovieParser {
             + REGEX_STUB + ','
             + REGEX_IS_3D;
 
-    private static final java.lang.String PATTERN_RELASE_DATE = "YYMMddHHmm";
-    private static final DateFormat FORMAT_RELASE_DATE
-            = new SimpleDateFormat(PATTERN_RELASE_DATE, Locale.GERMAN);
+    private static final java.lang.String PATTERN_DATE = "YYMMddHHmm";
+    private static final DateFormat FORMAT_DATE
+            = new SimpleDateFormat(PATTERN_DATE, Locale.GERMAN);
+
 
     private final Pattern mPattern;
 
@@ -57,7 +58,7 @@ public class MovieParser {
         if (matcher.find()) {
             movie.setResourceId(matcher.group(1));
             movie.setTitle(matcher.group(2));
-            movie.setReleaseDate(parseDate(FORMAT_RELASE_DATE, matcher.group(3)));
+            movie.setReleaseDate(MovieParser.parseDate(matcher.group(3)));
             movie.setDuration(Long.parseLong(matcher.group(4)));
             movie.setContentRating(Integer.parseInt(matcher.group(5)));
             movie.setDescription(matcher.group(6));
@@ -66,10 +67,10 @@ public class MovieParser {
         return movie;
     }
 
-    private Calendar parseDate(DateFormat format, String toParse) {
+    public static Calendar parseDate(String toParse) {
         try {
             Calendar startDate = Calendar.getInstance();
-            startDate.setTime(format.parse(toParse));
+            startDate.setTime(FORMAT_DATE.parse(toParse));
             return startDate;
         } catch (ParseException e) {
             return null;

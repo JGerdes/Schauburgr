@@ -29,14 +29,17 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
                                                                 Retrofit retrofit) {
             return INSTANCE;
         }
+
     }
 
     private static final SchauburgGuideConverter INSTANCE = new SchauburgGuideConverter();
 
     private final MovieParser mMovieParser;
+    private final ScreeningParser mScreeningParser;
 
     private SchauburgGuideConverter() {
         mMovieParser = new MovieParser();
+        mScreeningParser = new ScreeningParser();
     }
 
     @Override
@@ -53,7 +56,7 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
         while (line != null) {
             //try screen parsing first increases performance
             //since there are more screenings then movies
-            screening = parseScreening(line);
+            screening = mScreeningParser.parse(line, guide.getMovies());
             if (screening != null) {
                 guide.getScreenings().add(screening);
             } else {
@@ -68,8 +71,4 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
         return guide;
     }
 
-
-    private Screening parseScreening(String line) {
-        return null;
-    }
 }

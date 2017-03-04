@@ -44,4 +44,14 @@ public class Screening {
     public void setHall(int hall) {
         this.hall = hall;
     }
+
+    @Override
+    public String toString() {
+        return "Screening{" +
+                "resourceId='" + resourceId + '\'' +
+                ", movie=" + movie +
+                ", startDate=" + startDate +
+                ", hall=" + hall +
+                '}';
+    }
 }
