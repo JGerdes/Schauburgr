@@ -16,7 +16,7 @@
         android:layout_weight="1">
 
         <com.jonasgerdes.schauburgr.usecase.home.guide.GuideView
-            android:id="@+id/home_guide_view"
+            android:id="@+id/navigation_guide"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

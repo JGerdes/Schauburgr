@@ -12,6 +12,7 @@ import com.jonasgerdes.schauburgr.R;
 import java.util.List;
 
 import butterknife.BindViews;
+import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -29,6 +30,13 @@ public class HomeActivity extends AppCompatActivity {
     };
 
     private boolean showView(@IdRes int id) {
+        for (HomeView useCaseView : mUseCaseViews) {
+            if (useCaseView.getId() == id) {
+                useCaseView.onStart();
+            } else {
+                useCaseView.onStop();
+            }
+        }
         switch (id) {
             case R.id.navigation_guide:
                 setTitle(R.string.title_guide);
@@ -40,13 +48,6 @@ public class HomeActivity extends AppCompatActivity {
                 setTitle(R.string.title_about);
                 return true;
         }
-        for (HomeView useCaseView : mUseCaseViews) {
-            if (useCaseView.getId() == id) {
-                useCaseView.onStart();
-            } else {
-                useCaseView.onStop();
-            }
-        }
         return false;
     }
 
@@ -54,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         showView(R.id.navigation_guide);
