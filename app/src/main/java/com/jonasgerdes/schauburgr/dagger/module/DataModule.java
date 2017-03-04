@@ -4,6 +4,7 @@ package com.jonasgerdes.schauburgr.dagger.module;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.network.SchauburgGuideConverter;
 
 import javax.inject.Singleton;
 
@@ -39,6 +40,7 @@ public class DataModule {
     @Singleton
     Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(new SchauburgGuideConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(mBaseUrl)
                 .client(okHttpClient)

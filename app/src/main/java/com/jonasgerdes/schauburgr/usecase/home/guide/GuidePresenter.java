@@ -41,7 +41,7 @@ public class GuidePresenter implements GuideContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                Log.e(TAG, "onFailure: ");
+                Log.e(TAG, "onFailure: ", t);
             }
         });
     }
