@@ -30,7 +30,6 @@ local.properties
 .idea/*
 # Forcibly including certain files we want propagated.
 !\.idea/codeStyleSettings.xml
-!\.idea/copyright
 
 # Gradle cache
 .gradle
