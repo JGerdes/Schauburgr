@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import javax.inject.Inject;
@@ -36,7 +37,9 @@ public class GuidePresenter implements GuideContract.Presenter {
         mApi.getFullGuide().enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                Log.d(TAG, "onResponse: "+response.body().getMovies().size());
+                for (Movie movie : response.body().getMovies()) {
+                    Log.d(TAG, "onResponse: " + movie.toString());
+                }
             }
 
             @Override

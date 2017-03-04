@@ -4,7 +4,7 @@ package com.jonasgerdes.schauburgr.dagger.module;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
-import com.jonasgerdes.schauburgr.network.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
 
 import javax.inject.Singleton;
 

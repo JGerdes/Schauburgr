@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.model;
 
+import java.util.Calendar;
+
 /**
  * Created by jonas on 04.03.2017.
  */
@@ -8,7 +10,7 @@ public class Movie {
 
     private String resourceId;
     private String title;
-    private String releaseDate;
+    private Calendar releaseDate;
     private long duration;
     private int contentRating;
     private String description;
@@ -31,11 +33,11 @@ public class Movie {
         this.title = title;
     }
 
-    public String getReleaseDate() {
+    public Calendar getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Calendar releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -69,5 +71,18 @@ public class Movie {
 
     public void setIs3D(boolean is3D) {
         this.is3D = is3D;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "resourceId='" + resourceId + '\'' +
+                ", title='" + title + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", duration=" + duration +
+                ", contentRating=" + contentRating +
+                ", description='" + description + '\'' +
+                ", is3D=" + is3D +
+                '}';
     }
 }
