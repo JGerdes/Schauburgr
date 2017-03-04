@@ -3,6 +3,7 @@ package com.jonasgerdes.schauburgr.dagger.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import javax.inject.Singleton;
 
@@ -43,6 +44,12 @@ public class DataModule {
                 .client(okHttpClient)
                 .build();
         return retrofit;
+    }
+
+    @Provides
+    @Singleton
+    SchauburgApi provideSchauburgApi(Retrofit retrofit) {
+        return retrofit.create(SchauburgApi.class);
     }
 
 

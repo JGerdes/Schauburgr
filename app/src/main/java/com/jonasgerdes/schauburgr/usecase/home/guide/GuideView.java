@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
  */
 
 public class GuideView extends FrameLayout implements HomeView, GuideContract.View {
-    private static final String TAG = "GuideView";
     private GuideContract.Presenter mPresenter;
 
     public GuideView(@NonNull Context context) {
@@ -56,6 +55,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
     @Override
     public void onStart() {
+        mPresenter.loadProgram();
     }
 
     @Override
