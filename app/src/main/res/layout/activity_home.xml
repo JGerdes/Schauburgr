@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jonasgerdes.schauburgr.HomeActivity">
+    tools:context=".usecase.home.HomeActivity">
 
     <FrameLayout
         android:id="@+id/content"
@@ -15,6 +15,10 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <com.jonasgerdes.schauburgr.usecase.home.guide.GuideView
+            android:id="@+id/home_guide_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 
