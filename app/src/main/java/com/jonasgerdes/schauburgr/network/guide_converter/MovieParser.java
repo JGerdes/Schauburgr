@@ -70,6 +70,8 @@ public class MovieParser {
             String rawTitle = matcher.group(2);
             rawTitle = parse3D(rawTitle, movie);
             rawTitle = parseAtmos(rawTitle, movie);
+            rawTitle = parseReel(rawTitle, movie);
+            rawTitle = parseTip(rawTitle, movie);
             rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
             movie.setTitle(rawTitle);
         }
@@ -93,6 +95,32 @@ public class MovieParser {
         for (String indicator : indicators) {
             if (rawTitle.contains(indicator)) {
                 movie.setIsAtmos(true);
+                return rawTitle.replace(indicator, "");
+            }
+        }
+        return rawTitle;
+    }
+
+    private String parseReel(String rawTitle, Movie movie) {
+        String[] indicators = new String[]{
+                "FILMROLLE: "
+        };
+        for (String indicator : indicators) {
+            if (rawTitle.contains(indicator)) {
+                movie.setReel(true);
+                return rawTitle.replace(indicator, "");
+            }
+        }
+        return rawTitle;
+    }
+
+    private String parseTip(String rawTitle, Movie movie) {
+        String[] indicators = new String[]{
+                " - FILMTIPP"
+        };
+        for (String indicator : indicators) {
+            if (rawTitle.contains(indicator)) {
+                movie.setTip(true);
                 return rawTitle.replace(indicator, "");
             }
         }
