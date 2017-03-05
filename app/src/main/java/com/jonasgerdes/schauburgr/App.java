@@ -18,7 +18,7 @@ public class App extends Application {
 
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .dataModule(new DataModule("http://schauburg-cineworld.de/"))
+                .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
                 .build();
     }
 

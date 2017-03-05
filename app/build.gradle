@@ -18,6 +18,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        online {
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://schauburg-cineworld.de/"'
+        }
+
+        local {
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2/"'
+        }
+    }
 }
 
 dependencies {
