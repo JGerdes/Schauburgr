@@ -24,6 +24,27 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="A Cure for Wellness"/>
 
+    <TextView
+        android:id="@+id/labelTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="0"
+        android:textAllCaps="true"
+        android:text="Tipp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/labelReel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="0"
+        android:textAllCaps="true"
+        android:text="Filmrolle"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
     <TextView
         android:id="@+id/label3d"

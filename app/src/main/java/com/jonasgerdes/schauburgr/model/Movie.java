@@ -16,6 +16,8 @@ public class Movie {
     private String description;
     private boolean is3D;
     private boolean isAtmos;
+    private boolean isTip;
+    private boolean isReel; //"Filmrolle"-Aktion
 
 
     public String getResourceId() {
@@ -76,9 +78,8 @@ public class Movie {
         return is3D;
     }
 
-    public Movie setIs3D(boolean is3D) {
+    public void setIs3D(boolean is3D) {
         this.is3D = is3D;
-        return this;
     }
 
     public boolean isAtmos() {
@@ -87,6 +88,22 @@ public class Movie {
 
     public void setIsAtmos(boolean atmos) {
         isAtmos = atmos;
+    }
+
+    public boolean isTip() {
+        return isTip;
+    }
+
+    public void setTip(boolean tip) {
+        isTip = tip;
+    }
+
+    public boolean isReel() {
+        return isReel;
+    }
+
+    public void setReel(boolean reel) {
+        isReel = reel;
     }
 
     @Override
@@ -100,6 +117,8 @@ public class Movie {
                 ", description='" + description + '\'' +
                 ", is3D=" + is3D +
                 ", isAtmos=" + isAtmos +
+                ", isTip=" + isTip +
+                ", isReel=" + isReel +
                 '}';
     }
 }
