@@ -21,56 +21,63 @@ public class Movie {
         return resourceId;
     }
 
-    public void setResourceId(String resourceId) {
+    public Movie setResourceId(String resourceId) {
         this.resourceId = resourceId;
+        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public Movie setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public Calendar getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Calendar releaseDate) {
+    public Movie setReleaseDate(Calendar releaseDate) {
         this.releaseDate = releaseDate;
+        return this;
     }
 
     public long getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public Movie setDuration(long duration) {
         this.duration = duration;
+        return this;
     }
 
     public int getContentRating() {
         return contentRating;
     }
 
-    public void setContentRating(int contentRating) {
+    public Movie setContentRating(int contentRating) {
         this.contentRating = contentRating;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public Movie setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public boolean is3D() {
         return is3D;
     }
 
-    public void setIs3D(boolean is3D) {
+    public Movie setIs3D(boolean is3D) {
         this.is3D = is3D;
+        return this;
     }
 
     @Override

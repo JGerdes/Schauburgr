@@ -45,6 +45,12 @@ public class Screening {
         this.hall = hall;
     }
 
+    public boolean isOnDay(Calendar day) {
+        return getStartDate().get(Calendar.YEAR) == day.get(Calendar.YEAR)
+                && getStartDate().get(Calendar.MONTH) == day.get(Calendar.MONTH)
+                && getStartDate().get(Calendar.DAY_OF_MONTH) == day.get(Calendar.DAY_OF_MONTH);
+    }
+
     @Override
     public String toString() {
         return "Screening{" +

@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -45,9 +44,6 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
     @Override
     public Guide convert(ResponseBody value) throws IOException {
         Guide guide = new Guide();
-        guide.setMovies(new ArrayList<Movie>());
-        guide.setScreenings(new ArrayList<Screening>());
-
         BufferedReader reader = new BufferedReader(value.charStream());
 
         String line = reader.readLine();
@@ -58,11 +54,11 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
             //since there are more screenings then movies
             screening = mScreeningParser.parse(line, guide.getMovies());
             if (screening != null) {
-                guide.getScreenings().add(screening);
+                guide.addScreening(screening);
             } else {
                 movie = mMovieParser.parse(line);
                 if (movie != null) {
-                    guide.getMovies().add(movie);
+                    guide.addMovie(movie);
                 }
             }
             line = reader.readLine();
