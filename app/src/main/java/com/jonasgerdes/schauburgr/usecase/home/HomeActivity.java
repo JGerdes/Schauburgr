@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.jonasgerdes.schauburgr.R;
 
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @BindViews({R.id.navigation_guide})
+    @BindViews({R.id.navigation_guide, R.id.navigation_movies})
     List<HomeView> mUseCaseViews;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -33,8 +34,11 @@ public class HomeActivity extends AppCompatActivity {
         for (HomeView useCaseView : mUseCaseViews) {
             if (useCaseView.getId() == id) {
                 useCaseView.onStart();
+                useCaseView.setVisibility(View.VISIBLE);
             } else {
+                useCaseView.setVisibility(View.GONE);
                 useCaseView.onStop();
+
             }
         }
         switch (id) {
