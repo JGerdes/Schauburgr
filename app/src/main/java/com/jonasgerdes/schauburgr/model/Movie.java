@@ -15,6 +15,7 @@ public class Movie {
     private int contentRating;
     private String description;
     private boolean is3D;
+    private boolean isAtmos;
 
 
     public String getResourceId() {
@@ -80,6 +81,14 @@ public class Movie {
         return this;
     }
 
+    public boolean isAtmos() {
+        return isAtmos;
+    }
+
+    public void setIsAtmos(boolean atmos) {
+        isAtmos = atmos;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -90,6 +99,7 @@ public class Movie {
                 ", contentRating=" + contentRating +
                 ", description='" + description + '\'' +
                 ", is3D=" + is3D +
+                ", isAtmos=" + isAtmos +
                 '}';
     }
 }

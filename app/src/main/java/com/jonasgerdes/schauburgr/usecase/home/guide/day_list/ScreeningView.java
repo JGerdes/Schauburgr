@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 public class ScreeningView extends FrameLayout {
 
     private static final float ALPHA_ENBALED = 1f;
-    private static final float ALPHA_DISABLED = 0.2f;
+    private static final float ALPHA_DISABLED = 0.1f;
     @BindView(R.id.title)
     TextView mTitle;
 
@@ -61,7 +61,7 @@ public class ScreeningView extends FrameLayout {
     void bindScreening(Screening screening) {
         mTitle.setText(screening.getMovie().getTitle());
         mLabel3D.setAlpha(screening.getMovie().is3D() ? ALPHA_ENBALED : ALPHA_DISABLED);
-        mLabelAtmos.setAlpha(ALPHA_DISABLED);
+        mLabelAtmos.setAlpha(screening.getMovie().isAtmos() ? ALPHA_ENBALED : ALPHA_DISABLED);
         mLabelHall.setText(String.valueOf(screening.getHall()));
     }
 }

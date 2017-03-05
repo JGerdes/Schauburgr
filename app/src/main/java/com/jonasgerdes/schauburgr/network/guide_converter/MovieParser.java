@@ -60,14 +60,40 @@ public class MovieParser {
         Matcher matcher = mPattern.matcher(line);
         if (matcher.find()) {
             movie.setResourceId(matcher.group(1));
-            movie.setTitle(matcher.group(2));
             movie.setReleaseDate(MovieParser.parseDate(matcher.group(3)));
             movie.setDuration(Long.parseLong(matcher.group(4)));
             movie.setContentRating(Integer.parseInt(matcher.group(5)));
             movie.setDescription(matcher.group(6));
+
+            String rawTitle = matcher.group(2);
+            rawTitle = parse3D(rawTitle, movie);
+            rawTitle = parseAtmos(rawTitle, movie);
+            movie.setTitle(rawTitle);
         }
 
         return movie;
+    }
+
+    private String parse3D(String rawTitle, Movie movie) {
+        if (rawTitle.startsWith("(3D) ")) {
+            movie.setIs3D(true);
+            return rawTitle.substring(5, rawTitle.length());
+        }
+        return rawTitle;
+    }
+
+    private String parseAtmos(String rawTitle, Movie movie) {
+        String[] indicators = new String[]{
+                " in Dolby Atmos",
+                " Dolby Atmos"
+        };
+        for (String indicator : indicators) {
+            if (rawTitle.contains(indicator)) {
+                movie.setIsAtmos(true);
+                return rawTitle.replace(indicator, "");
+            }
+        }
+        return rawTitle;
     }
 
     public static Calendar parseDate(String toParse) {
