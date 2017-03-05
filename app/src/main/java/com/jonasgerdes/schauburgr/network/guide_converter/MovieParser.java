@@ -70,6 +70,7 @@ public class MovieParser {
             String rawTitle = matcher.group(2);
             rawTitle = parse3D(rawTitle, movie);
             rawTitle = parseAtmos(rawTitle, movie);
+            rawTitle = parseOT(rawTitle, movie);
             rawTitle = parseReel(rawTitle, movie);
             rawTitle = parseTip(rawTitle, movie);
             rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
@@ -81,7 +82,7 @@ public class MovieParser {
 
     private String parse3D(String rawTitle, Movie movie) {
         if (rawTitle.startsWith("(3D) ")) {
-            movie.setIs3D(true);
+            movie.set3D(true);
             return rawTitle.substring(5, rawTitle.length());
         }
         return rawTitle;
@@ -94,7 +95,20 @@ public class MovieParser {
         };
         for (String indicator : indicators) {
             if (rawTitle.contains(indicator)) {
-                movie.setIsAtmos(true);
+                movie.setAtmos(true);
+                return rawTitle.replace(indicator, "");
+            }
+        }
+        return rawTitle;
+    }
+
+    private String parseOT(String rawTitle, Movie movie) {
+        String[] indicators = new String[]{
+                " OT"
+        };
+        for (String indicator : indicators) {
+            if (rawTitle.contains(indicator)) {
+                movie.setOT(true);
                 return rawTitle.replace(indicator, "");
             }
         }

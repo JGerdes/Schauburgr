@@ -23,20 +23,24 @@ public class ScreeningView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
 
-    @BindView(R.id.labelReel)
-    TextView mLabelReel;
-
-    @BindView(R.id.labelTip)
-    TextView mLabelTip;
-
     @BindView(R.id.label3d)
     TextView mLabel3D;
 
     @BindView(R.id.labelAtmos)
     TextView mLabelAtmos;
 
+    @BindView(R.id.labelOT)
+    TextView mLabelOT;
+
     @BindView(R.id.labelHall)
     TextView mLabelHall;
+
+
+    @BindView(R.id.labelReel)
+    TextView mLabelReel;
+
+    @BindView(R.id.labelTip)
+    TextView mLabelTip;
 
     public ScreeningView(Context context) {
         super(context);
@@ -67,6 +71,7 @@ public class ScreeningView extends FrameLayout {
         mTitle.setText(screening.getMovie().getTitle());
         ViewUtils.setVisible(mLabel3D, screening.getMovie().is3D());
         ViewUtils.setVisible(mLabelAtmos, screening.getMovie().isAtmos());
+        ViewUtils.setVisible(mLabelOT, screening.getMovie().isOT());
         ViewUtils.setVisible(mLabelReel, screening.getMovie().isReel());
         ViewUtils.setVisible(mLabelTip, screening.getMovie().isTip());
         mLabelHall.setText(String.valueOf(screening.getHall()));

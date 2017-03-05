@@ -16,6 +16,7 @@ public class Movie {
     private String description;
     private boolean is3D;
     private boolean isAtmos;
+    private boolean isOT; //Original-Ton
     private boolean isTip;
     private boolean isReel; //"Filmrolle"-Aktion
 
@@ -78,7 +79,7 @@ public class Movie {
         return is3D;
     }
 
-    public void setIs3D(boolean is3D) {
+    public void set3D(boolean is3D) {
         this.is3D = is3D;
     }
 
@@ -86,8 +87,16 @@ public class Movie {
         return isAtmos;
     }
 
-    public void setIsAtmos(boolean atmos) {
+    public void setAtmos(boolean atmos) {
         isAtmos = atmos;
+    }
+
+    public boolean isOT() {
+        return isOT;
+    }
+
+    public void setOT(boolean OT) {
+        isOT = OT;
     }
 
     public boolean isTip() {
@@ -117,6 +126,7 @@ public class Movie {
                 ", description='" + description + '\'' +
                 ", is3D=" + is3D +
                 ", isAtmos=" + isAtmos +
+                ", isOT=" + isOT +
                 ", isTip=" + isTip +
                 ", isReel=" + isReel +
                 '}';

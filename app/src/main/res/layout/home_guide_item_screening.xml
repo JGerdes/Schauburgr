@@ -47,6 +47,16 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
     <TextView
+        android:id="@+id/labelOT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="0"
+        android:text="OT"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
         android:id="@+id/label3d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
