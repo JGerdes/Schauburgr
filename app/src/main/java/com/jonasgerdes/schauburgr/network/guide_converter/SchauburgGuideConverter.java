@@ -6,8 +6,10 @@ import com.jonasgerdes.schauburgr.model.Screening;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -19,6 +21,7 @@ import retrofit2.Retrofit;
  */
 
 public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
+    private static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
 
     public static final class Factory extends Converter.Factory {
 
@@ -44,7 +47,9 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
     @Override
     public Guide convert(ResponseBody value) throws IOException {
         Guide guide = new Guide();
-        BufferedReader reader = new BufferedReader(value.charStream());
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(value.byteStream(), ISO_8859_1)
+        );
 
         String line = reader.readLine();
         Movie movie;
