@@ -39,18 +39,18 @@ public class Guide {
         return this;
     }
 
-    public List<Day> getScreeningsGroupedByDay() {
-        List<Day> days = new ArrayList<>();
+    public List<ScreeningDay> getScreeningsGroupedByStartTime() {
+        List<ScreeningDay> days = new ArrayList<>();
         for (Screening screening : getScreenings()) {
             boolean found = false;
-            for (Day day : days) {
+            for (ScreeningDay day : days) {
                 if (screening.isOnDay(day.getDate())) {
                     day.addScreening(screening);
                     found = true;
                 }
             }
             if (!found) {
-                days.add(new Day()
+                days.add(new ScreeningDay()
                         .setDate(screening.getStartDate())
                         .addScreening(screening)
                 );

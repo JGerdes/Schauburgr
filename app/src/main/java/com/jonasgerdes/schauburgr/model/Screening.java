@@ -51,6 +51,11 @@ public class Screening {
                 && getStartDate().get(Calendar.DAY_OF_MONTH) == day.get(Calendar.DAY_OF_MONTH);
     }
 
+    public boolean isAtTime(Calendar day) {
+        return getStartDate().get(Calendar.HOUR) == day.get(Calendar.HOUR)
+                && getStartDate().get(Calendar.MINUTE) == day.get(Calendar.MINUTE);
+    }
+
     @Override
     public String toString() {
         return "Screening{" +
