@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Day;
+import com.jonasgerdes.schauburgr.model.ScreeningDay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
 
-    private List<Day> mDays = new ArrayList<>();
+    private List<ScreeningDay> mDays = new ArrayList<>();
 
     @Override
     public DayHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,7 +28,7 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
 
     @Override
     public void onBindViewHolder(DayHolder holder, int position) {
-        Day day = mDays.get(position);
+        ScreeningDay day = mDays.get(position);
         holder.onBind(day);
     }
 
@@ -37,7 +37,7 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
         return mDays.size();
     }
 
-    public void setDays(List<Day> days) {
+    public void setDays(List<ScreeningDay> days) {
         mDays = days;
         notifyDataSetChanged();
     }

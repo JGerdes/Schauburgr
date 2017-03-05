@@ -79,6 +79,6 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
     @Override
     public void showGuide(Guide guide) {
-        mDayListAdapter.setDays(guide.getScreeningsGroupedByDay());
+        mDayListAdapter.setDays(guide.getScreeningsGroupedByStartTime());
     }
 }
