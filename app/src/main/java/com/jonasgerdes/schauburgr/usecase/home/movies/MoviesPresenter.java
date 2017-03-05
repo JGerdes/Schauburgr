@@ -1,6 +1,4 @@
-package com.jonasgerdes.schauburgr.usecase.home.guide;
-
-import android.util.Log;
+package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
@@ -13,35 +11,32 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by jonas on 04.03.2017.
+ * Created by jonas on 05.03.2017.
  */
 
-public class GuidePresenter implements GuideContract.Presenter {
-    private static final String TAG = "MoviesPresenter";
-
+public class MoviesPresenter implements MoviesContract.Presenter {
     @Inject
     SchauburgApi mApi;
 
-    private GuideContract.View mView;
+    private MoviesContract.View mView;
 
-    public GuidePresenter(GuideContract.View view) {
+    public MoviesPresenter(MoviesContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
     }
 
-
     @Override
-    public void loadProgram() {
+    public void loadMovies() {
         mApi.getFullGuide().enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                mView.showGuide(response.body());
+                mView.showMovies(response.body().getMovies());
             }
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                Log.e(TAG, "onFailure: ", t);
+                // TODO: 05.03.2017 handle
             }
         });
     }
