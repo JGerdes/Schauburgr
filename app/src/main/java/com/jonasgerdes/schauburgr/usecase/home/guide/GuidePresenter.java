@@ -36,6 +36,7 @@ public class GuidePresenter implements GuideContract.Presenter {
         mApi.getFullGuide().enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
+                mView.showScreenings(response.body().getScreenings());
             }
 
             @Override
