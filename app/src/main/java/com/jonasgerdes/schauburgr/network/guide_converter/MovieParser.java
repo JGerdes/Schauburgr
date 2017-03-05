@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.network.guide_converter;
 
+import android.text.Html;
+
 import com.jonasgerdes.schauburgr.model.Movie;
 
 import java.text.DateFormat;
@@ -68,6 +70,7 @@ public class MovieParser {
             String rawTitle = matcher.group(2);
             rawTitle = parse3D(rawTitle, movie);
             rawTitle = parseAtmos(rawTitle, movie);
+            rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
             movie.setTitle(rawTitle);
         }
 
