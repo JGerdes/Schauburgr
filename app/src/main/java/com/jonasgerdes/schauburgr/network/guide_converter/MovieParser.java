@@ -37,9 +37,12 @@ public class MovieParser {
             + REGEX_STUB + ','
             + REGEX_IS_3D;
 
-    private static final java.lang.String PATTERN_DATE = "YYMMddHHmm";
-    private static final DateFormat FORMAT_DATE
+    private static final java.lang.String PATTERN_DATE = "yyMMddHHmm";
+    public static final DateFormat FORMAT_DATE
             = new SimpleDateFormat(PATTERN_DATE, Locale.GERMAN);
+
+    //is used on Schauburg Website like this *rolleyes*
+    private static final String DATE_NONE_PLACEHOLDER = "9999999999";
 
 
     private final Pattern mPattern;
@@ -68,6 +71,9 @@ public class MovieParser {
     }
 
     public static Calendar parseDate(String toParse) {
+        if (toParse.equals(DATE_NONE_PLACEHOLDER)) {
+            return null;
+        }
         try {
             Calendar startDate = Calendar.getInstance();
             startDate.setTime(FORMAT_DATE.parse(toParse));
