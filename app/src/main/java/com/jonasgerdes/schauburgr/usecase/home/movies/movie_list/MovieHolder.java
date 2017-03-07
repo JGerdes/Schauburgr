@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.util.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +35,19 @@ public class MovieHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.duration)
     TextView mDuration;
 
+    @BindView(R.id.label3d)
+    TextView mLabel3D;
+
+    @BindView(R.id.labelAtmos)
+    TextView mLabelAtmos;
+
+    @BindView(R.id.labelOT)
+    TextView mLabelOT;
+
+
+    @BindView(R.id.labelReel)
+    TextView mLabelReel;
+
     public MovieHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -43,10 +57,15 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         Context context = itemView.getContext();
         Resources resources = context.getResources();
         mTitle.setText(movie.getTitle());
-        mDuration.setText(movie.getDuration() + " Minuten");
+        mDuration.setText(movie.getDuration() + " Min");
         mContentRating.setText("ab " + movie.getContentRating());
         @ColorInt int color = getContentRatingColor(context, movie.getContentRating());
         mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
+
+        ViewUtils.setVisible(mLabel3D, movie.is3D());
+        ViewUtils.setVisible(mLabelAtmos, movie.isAtmos());
+        ViewUtils.setVisible(mLabelOT, movie.isOT());
+        ViewUtils.setVisible(mLabelReel, movie.isReel());
 
     }
 

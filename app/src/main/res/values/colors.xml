@@ -2,13 +2,13 @@
 <resources>
     <color name="colorPrimary">#b21a1a</color>
     <color name="colorPrimaryDark">#6e0e0e</color>
-    <color name="colorAccent">#5D4037</color>
+    <color name="colorAccent">#5d4037</color>
     <color name="colorBackground">?android:attr/windowBackground</color>
     <color name="colorBackgroundDark">#212121</color>
 
     <color name="colorContentRating0">#f4f4f4</color>
-    <color name="colorContentRating6">#FBC02D</color>
-    <color name="colorContentRating12">#2E7D32</color>
-    <color name="colorContentRating16">#283593</color>
-    <color name="colorContentRating18">#D50000</color>
+    <color name="colorContentRating6">#FFE082</color>
+    <color name="colorContentRating12">#81C784</color>
+    <color name="colorContentRating16">#42A5F5</color>
+    <color name="colorContentRating18">#E57373</color>
 </resources>

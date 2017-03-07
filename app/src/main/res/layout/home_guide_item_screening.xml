@@ -26,56 +26,36 @@
 
     <TextView
         android:id="@+id/labelTip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/movie_attribute"
         android:layout_weight="0"
-        android:textAllCaps="true"
         android:text="Tipp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:textAllCaps="true"/>
 
     <TextView
         android:id="@+id/labelReel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/movie_attribute"
         android:layout_weight="0"
-        android:textAllCaps="true"
         android:text="Filmrolle"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:textAllCaps="true"/>
 
     <TextView
         android:id="@+id/labelOT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/movie_attribute"
         android:layout_weight="0"
-        android:text="OT"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:text="OT"/>
 
     <TextView
         android:id="@+id/label3d"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/movie_attribute"
         android:layout_weight="0"
-        android:text="3D"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:text="3D"/>
 
 
     <TextView
         android:id="@+id/labelAtmos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/movie_attribute"
         android:layout_weight="0"
-        android:text="ATMOS"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:text="ATMOS"/>
 
     <TextView
         android:id="@+id/labelHall"
