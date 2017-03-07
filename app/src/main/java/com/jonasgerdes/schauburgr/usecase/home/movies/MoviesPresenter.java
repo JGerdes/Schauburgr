@@ -18,6 +18,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Inject
     SchauburgApi mApi;
 
+
     private MoviesContract.View mView;
 
     public MoviesPresenter(MoviesContract.View view) {

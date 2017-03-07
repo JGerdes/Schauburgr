@@ -4,6 +4,7 @@ import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuidePresenter;
 import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesPresenter;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 
 import javax.inject.Singleton;
 
@@ -15,4 +16,6 @@ public interface AppComponent {
     void inject(GuidePresenter presenter);
 
     void inject(MoviesPresenter presenter);
+
+    void inject(MovieHolder movieHolder);
 }

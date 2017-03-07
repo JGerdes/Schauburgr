@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="0dp"
@@ -41,7 +41,7 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@+id/imageView"
+            app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="A Cure For Wellness"/>
@@ -54,7 +54,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintLeft_toRightOf="@+id/imageView"
+            app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="Thriller, Horror"/>
 
@@ -85,7 +85,7 @@
             android:lines="1"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/imageView"
+            app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintTop_toBottomOf="@+id/genre"
             app:layout_constraintVertical_bias="0.0"
             tools:text="128 Min"/>

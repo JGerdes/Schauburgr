@@ -3,8 +3,10 @@ package com.jonasgerdes.schauburgr.dagger.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.network.image.SchauburgImageUrlCreator;
 
 import javax.inject.Singleton;
 
@@ -52,6 +54,12 @@ public class DataModule {
     @Singleton
     SchauburgApi provideSchauburgApi(Retrofit retrofit) {
         return retrofit.create(SchauburgApi.class);
+    }
+
+    @Provides
+    @Singleton
+    ImageUrlCreator provideImageUrlCreator() {
+        return new SchauburgImageUrlCreator(mBaseUrl);
     }
 
 

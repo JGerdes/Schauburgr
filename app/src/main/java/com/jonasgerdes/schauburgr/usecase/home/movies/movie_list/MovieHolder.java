@@ -8,11 +8,17 @@ import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +28,9 @@ import butterknife.ButterKnife;
  */
 
 public class MovieHolder extends RecyclerView.ViewHolder {
+
+    @Inject
+    ImageUrlCreator mImageUrlCreator;
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -44,13 +53,16 @@ public class MovieHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.labelOT)
     TextView mLabelOT;
 
-
     @BindView(R.id.labelReel)
     TextView mLabelReel;
+
+    @BindView(R.id.poster)
+    ImageView mPoster;
 
     public MovieHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        App.getAppComponent().inject(this);
     }
 
     public void onBind(Movie movie) {
@@ -66,6 +78,12 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         ViewUtils.setVisible(mLabelAtmos, movie.isAtmos());
         ViewUtils.setVisible(mLabelOT, movie.isOT());
         ViewUtils.setVisible(mLabelReel, movie.isReel());
+
+        String posterImageUrl = mImageUrlCreator.getPosterImageUrl(movie);
+        Glide.with(context)
+                .load(posterImageUrl)
+                .centerCrop()
+                .into(mPoster);
 
     }
 
