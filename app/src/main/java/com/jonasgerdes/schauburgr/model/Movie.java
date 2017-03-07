@@ -1,6 +1,8 @@
 package com.jonasgerdes.schauburgr.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -8,12 +10,16 @@ import java.util.Calendar;
 
 public class Movie {
 
+    public static final String GENRE_MET_OPERA = "Met Opera";
+
+
     private String resourceId;
     private String title;
     private Calendar releaseDate;
     private long duration;
     private int contentRating;
     private String description;
+    private List<String> genres = new ArrayList<>();
     private boolean is3D;
     private boolean isAtmos;
     private boolean isOT; //Original-Ton
@@ -73,6 +79,14 @@ public class Movie {
     public Movie setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
     }
 
     public boolean is3D() {

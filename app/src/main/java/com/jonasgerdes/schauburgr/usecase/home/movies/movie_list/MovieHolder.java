@@ -16,6 +16,7 @@ import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
 import javax.inject.Inject;
@@ -78,6 +79,12 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         ViewUtils.setVisible(mLabelAtmos, movie.isAtmos());
         ViewUtils.setVisible(mLabelOT, movie.isOT());
         ViewUtils.setVisible(mLabelReel, movie.isReel());
+
+        String genreString = "";
+        if (!movie.getGenres().isEmpty()) {
+            genreString = StringUtil.concat(movie.getGenres(), ", ");
+        }
+        mGenre.setText(genreString);
 
         String posterImageUrl = mImageUrlCreator.getPosterImageUrl(movie);
         Glide.with(context)

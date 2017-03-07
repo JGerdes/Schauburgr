@@ -26,6 +26,7 @@ public class MovieParser {
     private static final String REGEX_DESCRIPTION = "'((?>\\s|\\S)*?)'";
     private static final String REGEX_IS_3D = "'(1?)'";
     private static final String REGEX_STUB = "'.*?'";
+    private static final String REGEX_GENRE = "Genre:(.*?)<br>";
 
     private static final String REGEX_MOVIE = ""
             + REGEX_PREFIX
@@ -45,12 +46,15 @@ public class MovieParser {
 
     //is used on Schauburg Website like this *rolleyes*
     private static final String DATE_NONE_PLACEHOLDER = "9999999999";
+    private static final int GENRE_MAX_LENGTH = 16;
 
 
-    private final Pattern mPattern;
+    private final Pattern mMoviePattern;
+    private final Pattern mGenrePattern;
 
     public MovieParser() {
-        mPattern = Pattern.compile(REGEX_MOVIE);
+        mMoviePattern = Pattern.compile(REGEX_MOVIE);
+        mGenrePattern = Pattern.compile(REGEX_GENRE);
     }
 
 
@@ -59,7 +63,7 @@ public class MovieParser {
             return null;
         }
         Movie movie = new Movie();
-        Matcher matcher = mPattern.matcher(line);
+        Matcher matcher = mMoviePattern.matcher(line);
         if (matcher.find()) {
             movie.setResourceId(matcher.group(1));
             movie.setReleaseDate(MovieParser.parseDate(matcher.group(3)));
@@ -75,9 +79,40 @@ public class MovieParser {
             rawTitle = parseTip(rawTitle, movie);
             rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
             movie.setTitle(rawTitle);
+
+            //Advanced parsing
+            parseGenres(movie);
         }
 
         return movie;
+    }
+
+    private void parseGenres(Movie movie) {
+
+        //Search description for genres
+        Matcher matcher = mGenrePattern.matcher(movie.getDescription());
+        if (matcher.find()) {
+            String genreString = matcher.group(1);
+            //Split found genre string and remove whitespace
+            String[] genres = genreString.split(",");
+            for (String genre : genres) {
+                genre = genre.trim();
+                //Safety threshold in case of parsing error
+                if (genre.length() <= GENRE_MAX_LENGTH) {
+                    movie.getGenres().add(genre);
+                }
+            }
+        }
+        if (movie.getTitle().startsWith("Met Opera Live:")) {
+            movie.getGenres().add(Movie.GENRE_MET_OPERA);
+
+            //Tidy up title
+            String title = movie.getTitle();
+            title = title.substring(15, title.length());
+            title = title.trim();
+            movie.setTitle(title);
+        }
+
     }
 
     private String parse3D(String rawTitle, Movie movie) {
@@ -117,7 +152,7 @@ public class MovieParser {
 
     private String parseReel(String rawTitle, Movie movie) {
         String[] indicators = new String[]{
-                "FILMROLLE: "
+                "FILMROLLE: ", "Filmrolle:"
         };
         for (String indicator : indicators) {
             if (rawTitle.contains(indicator)) {
@@ -130,7 +165,7 @@ public class MovieParser {
 
     private String parseTip(String rawTitle, Movie movie) {
         String[] indicators = new String[]{
-                " - FILMTIPP"
+                " - FILMTIPP", " - Filmtipp", " FILMTIPP", " Filmtipp"
         };
         for (String indicator : indicators) {
             if (rawTitle.contains(indicator)) {
