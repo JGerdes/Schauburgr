@@ -3,4 +3,6 @@
     <string name="title_guide">Programm</string>
     <string name="title_movies">Filme</string>
     <string name="title_about">Über die App</string>
+    <string name="day_title_today">Heute</string>
+    <string name="day_title_tomorrow">Morgen</string>
 </resources>

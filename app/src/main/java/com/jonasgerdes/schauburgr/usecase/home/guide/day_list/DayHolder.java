@@ -14,6 +14,9 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.ScreeningTime;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -26,11 +29,11 @@ import butterknife.ButterKnife;
 
 public class DayHolder extends RecyclerView.ViewHolder {
 
-    private static final DateTimeFormatter FORMAT_DAY = DateTimeFormat.forPattern("dd.MM");
+    private static final DateTimeFormatter FORMAT_DAY = DateTimeFormat.forPattern("EEEE, dd.MM.YYYY");
     private static final DateTimeFormatter FORMAT_TIME = DateTimeFormat.forPattern("HH:mm");
 
     @BindView(R.id.title)
-    TextView mDayTile;
+    TextView mDayTitle;
 
     @BindView(R.id.screeningList)
     LinearLayout mScreeningList;
@@ -43,29 +46,62 @@ public class DayHolder extends RecyclerView.ViewHolder {
     public void onBind(ScreeningDay day) {
         Context context = itemView.getContext();
         mScreeningList.removeAllViews();
-        mDayTile.setText(FORMAT_DAY.print(day.getDate()));
+        String dayTitle = generateDayTitle(context, day.getDate());
+        mDayTitle.setText(dayTitle);
+
+        boolean isFirst = true;
+        boolean isPast = false;
+        boolean isToday = day.getDate().isEqual(new LocalDate());
+        LocalTime now = new LocalTime();
 
         for (ScreeningTime screeningTime : day.getTimes()) {
-            TextView timeView = createTimeView(context);
+            isPast = isToday && screeningTime.getTime().isBefore(now);
+            TextView timeView = createTimeView(context, isFirst);
             timeView.setText(FORMAT_TIME.print(screeningTime.getTime()));
             mScreeningList.addView(timeView);
+            makeGrey(timeView, isPast);
 
             for (Screening screening : screeningTime.getScreenings()) {
                 ScreeningView screeningView = new ScreeningView(context);
                 screeningView.bindScreening(screening);
                 mScreeningList.addView(screeningView);
+                makeGrey(screeningView, isPast);
             }
+            isFirst = false;
         }
     }
 
-    private TextView createTimeView(Context context) {
+    private void makeGrey(View timeView, boolean doMakeGrey) {
+        if (doMakeGrey) {
+            timeView.setAlpha(0.5f);
+        } else {
+            timeView.setAlpha(1f);
+        }
+    }
+
+    private String generateDayTitle(Context context, LocalDate date) {
+        LocalDate today = new LocalDate();
+        if (date.isEqual(today)) {
+            return context.getString(R.string.day_title_today);
+        }
+        if (date.isEqual(today.plusDays(1))) {
+            return context.getString(R.string.day_title_tomorrow);
+        }
+        if (Days.daysBetween(today, date).getDays() <= 7) {
+            return date.dayOfWeek().getAsText();
+        }
+
+        return FORMAT_DAY.print(date);
+    }
+
+    private TextView createTimeView(Context context, boolean isFirst) {
         TextView timeView = new TextView(context);
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         int horizontalMargin = ViewUtils.dpToPx(context, 16);
-        int topMargin = ViewUtils.dpToPx(context, 24);
+        int topMargin = ViewUtils.dpToPx(context, isFirst ? 0 : 24);
         layout.setMargins(horizontalMargin, topMargin, horizontalMargin, 0);
 
         timeView.setLayoutParams(layout);
