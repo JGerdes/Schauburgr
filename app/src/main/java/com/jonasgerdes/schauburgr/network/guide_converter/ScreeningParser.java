@@ -43,7 +43,7 @@ public class ScreeningParser {
         Matcher matcher = mPattern.matcher(line);
         if (matcher.find()) {
             screening.setResourceId(matcher.group(3));
-            screening.setStartDate(MovieParser.parseDate(matcher.group(2)));
+            screening.setStartDate(SchauburgGuideConverter.parseDate(matcher.group(2)));
             screening.setHall(Integer.parseInt(matcher.group(4)));
 
             int movieId = Integer.parseInt(matcher.group(1));

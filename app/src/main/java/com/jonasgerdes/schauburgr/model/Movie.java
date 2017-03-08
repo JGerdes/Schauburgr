@@ -1,7 +1,8 @@
 package com.jonasgerdes.schauburgr.model;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class Movie {
 
     private String resourceId;
     private String title;
-    private Calendar releaseDate;
+    private DateTime releaseDate;
     private long duration;
     private int contentRating;
     private String description;
@@ -45,11 +46,11 @@ public class Movie {
         return this;
     }
 
-    public Calendar getReleaseDate() {
+    public DateTime getReleaseDate() {
         return releaseDate;
     }
 
-    public Movie setReleaseDate(Calendar releaseDate) {
+    public Movie setReleaseDate(DateTime releaseDate) {
         this.releaseDate = releaseDate;
         return this;
     }

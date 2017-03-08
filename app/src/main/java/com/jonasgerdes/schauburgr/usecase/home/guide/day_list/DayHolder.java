@@ -1,6 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide.day_list;
 
 import android.content.Context;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,8 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.ScreeningTime;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,8 +26,8 @@ import butterknife.ButterKnife;
 
 public class DayHolder extends RecyclerView.ViewHolder {
 
-    private static final DateFormat FORMAT_DAY = new SimpleDateFormat("dd.MM", Locale.GERMAN);
-    private static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm", Locale.GERMAN);
+    private static final DateTimeFormatter FORMAT_DAY = DateTimeFormat.forPattern("dd.MM");
+    private static final DateTimeFormatter FORMAT_TIME = DateTimeFormat.forPattern("HH:mm");
 
     @BindView(R.id.title)
     TextView mDayTile;
@@ -43,11 +43,11 @@ public class DayHolder extends RecyclerView.ViewHolder {
     public void onBind(ScreeningDay day) {
         Context context = itemView.getContext();
         mScreeningList.removeAllViews();
-        mDayTile.setText(FORMAT_DAY.format(day.getDate().getTime()));
+        mDayTile.setText(FORMAT_DAY.print(day.getDate()));
 
         for (ScreeningTime screeningTime : day.getTimes()) {
             TextView timeView = createTimeView(context);
-            timeView.setText(FORMAT_TIME.format(screeningTime.getTime().getTime()));
+            timeView.setText(FORMAT_TIME.print(screeningTime.getTime()));
             mScreeningList.addView(timeView);
 
             for (Screening screening : screeningTime.getScreenings()) {
@@ -69,7 +69,7 @@ public class DayHolder extends RecyclerView.ViewHolder {
         layout.setMargins(horizontalMargin, topMargin, horizontalMargin, 0);
 
         timeView.setLayoutParams(layout);
-        timeView.setTextAppearance(R.style.TextAppearance_AppCompat_Caption);
+        TextViewCompat.setTextAppearance(timeView, R.style.TextAppearance_AppCompat_Caption);
         return timeView;
     }
 }

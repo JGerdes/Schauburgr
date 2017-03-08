@@ -44,14 +44,14 @@ public class Guide {
         for (Screening screening : getScreenings()) {
             boolean found = false;
             for (ScreeningDay day : days) {
-                if (screening.isOnDay(day.getDate())) {
+                if (screening.getStartDate().toLocalDate().isEqual(day.getDate())) {
                     day.addScreening(screening);
                     found = true;
                 }
             }
             if (!found) {
                 days.add(new ScreeningDay()
-                        .setDate(screening.getStartDate())
+                        .setDate(screening.getStartDate().toLocalDate())
                         .addScreening(screening)
                 );
 

@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.HomeView;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +80,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
 
     @Override
-    public void showGuide(Guide guide) {
-        mDayListAdapter.setDays(guide.getScreeningsGroupedByStartTime());
+    public void showGuide(List<ScreeningDay> days) {
+        mDayListAdapter.setDays(days);
     }
 }

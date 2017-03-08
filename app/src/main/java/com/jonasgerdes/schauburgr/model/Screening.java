@@ -1,6 +1,6 @@
 package com.jonasgerdes.schauburgr.model;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -10,7 +10,7 @@ public class Screening {
 
     private String resourceId;
     private Movie movie;
-    private Calendar startDate;
+    private DateTime startDate;
     private int hall;
 
     public String getResourceId() {
@@ -29,11 +29,11 @@ public class Screening {
         this.movie = movie;
     }
 
-    public Calendar getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -45,16 +45,6 @@ public class Screening {
         this.hall = hall;
     }
 
-    public boolean isOnDay(Calendar day) {
-        return getStartDate().get(Calendar.YEAR) == day.get(Calendar.YEAR)
-                && getStartDate().get(Calendar.MONTH) == day.get(Calendar.MONTH)
-                && getStartDate().get(Calendar.DAY_OF_MONTH) == day.get(Calendar.DAY_OF_MONTH);
-    }
-
-    public boolean isAtTime(Calendar day) {
-        return getStartDate().get(Calendar.HOUR) == day.get(Calendar.HOUR)
-                && getStartDate().get(Calendar.MINUTE) == day.get(Calendar.MINUTE);
-    }
 
     @Override
     public String toString() {

@@ -4,11 +4,6 @@ import android.text.Html;
 
 import com.jonasgerdes.schauburgr.model.Movie;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,12 +35,6 @@ public class MovieParser {
             + REGEX_STUB + ','
             + REGEX_IS_3D;
 
-    private static final java.lang.String PATTERN_DATE = "yyMMddHHmm";
-    public static final DateFormat FORMAT_DATE
-            = new SimpleDateFormat(PATTERN_DATE, Locale.GERMAN);
-
-    //is used on Schauburg Website like this *rolleyes*
-    private static final String DATE_NONE_PLACEHOLDER = "9999999999";
     private static final int GENRE_MAX_LENGTH = 16;
 
 
@@ -66,7 +55,7 @@ public class MovieParser {
         Matcher matcher = mMoviePattern.matcher(line);
         if (matcher.find()) {
             movie.setResourceId(matcher.group(1));
-            movie.setReleaseDate(MovieParser.parseDate(matcher.group(3)));
+            movie.setReleaseDate(SchauburgGuideConverter.parseDate(matcher.group(3)));
             movie.setDuration(Long.parseLong(matcher.group(4)));
             movie.setContentRating(Integer.parseInt(matcher.group(5)));
             movie.setDescription(matcher.group(6));
@@ -176,16 +165,4 @@ public class MovieParser {
         return rawTitle;
     }
 
-    public static Calendar parseDate(String toParse) {
-        if (toParse.equals(DATE_NONE_PLACEHOLDER)) {
-            return null;
-        }
-        try {
-            Calendar startDate = Calendar.getInstance();
-            startDate.setTime(FORMAT_DATE.parse(toParse));
-            return startDate;
-        } catch (ParseException e) {
-            return null;
-        }
-    }
 }

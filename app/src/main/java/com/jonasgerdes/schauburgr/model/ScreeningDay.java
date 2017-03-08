@@ -1,7 +1,8 @@
 package com.jonasgerdes.schauburgr.model;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -9,14 +10,14 @@ import java.util.List;
  */
 
 public class ScreeningDay {
-    private Calendar date;
+    private LocalDate date;
     private List<ScreeningTime> times = new ArrayList<>();
 
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public ScreeningDay setDate(Calendar date) {
+    public ScreeningDay setDate(LocalDate date) {
         this.date = date;
         return this;
     }
@@ -33,14 +34,14 @@ public class ScreeningDay {
     public ScreeningDay addScreening(Screening screening) {
         boolean found = false;
         for (ScreeningTime screeningTime : times) {
-            if (screening.isAtTime(screeningTime.getTime())) {
+            if (screening.getStartDate().toLocalTime().isEqual(screeningTime.getTime())) {
                 screeningTime.addScreening(screening);
                 found = true;
             }
         }
         if (!found) {
             times.add(new ScreeningTime()
-                    .setTime(screening.getStartDate())
+                    .setTime(screening.getStartDate().toLocalTime())
                     .addScreening(screening)
             );
 

@@ -4,6 +4,10 @@ import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +26,11 @@ import retrofit2.Retrofit;
 
 public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
     private static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    private static final DateTimeFormatter FORMAT_DATE = DateTimeFormat.forPattern("yyMMddHHmm");
+
+    //is used on Schauburg Website like this *rolleyes*
+    private static final String DATE_NONE_PLACEHOLDER = "9999999999";
+
 
     public static final class Factory extends Converter.Factory {
 
@@ -70,6 +79,14 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
         }
 
         return guide;
+    }
+
+
+    public static DateTime parseDate(String toParse) {
+        if (toParse.equals(DATE_NONE_PLACEHOLDER)) {
+            return null;
+        }
+        return new DateTime(FORMAT_DATE.parseDateTime(toParse));
     }
 
 }

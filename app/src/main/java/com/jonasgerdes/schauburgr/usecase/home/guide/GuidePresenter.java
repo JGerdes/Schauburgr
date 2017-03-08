@@ -4,7 +4,13 @@ import android.util.Log;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+
+import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,7 +42,16 @@ public class GuidePresenter implements GuideContract.Presenter {
         mApi.getFullGuide().enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                mView.showGuide(response.body());
+                List<ScreeningDay> allDays = response.body().getScreeningsGroupedByStartTime();
+                List<ScreeningDay> daysToShow = new ArrayList<>();
+                //don't show past days
+                LocalDate today = new LocalDate();
+                for (ScreeningDay day : allDays) {
+                    if (!day.getDate().isBefore(today)) {
+                        daysToShow.add(day);
+                    }
+                }
+                mView.showGuide(daysToShow);
             }
 
             @Override

@@ -1,7 +1,8 @@
 package com.jonasgerdes.schauburgr.model;
 
+import org.joda.time.LocalTime;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -9,14 +10,14 @@ import java.util.List;
  */
 
 public class ScreeningTime {
-    private Calendar time;
+    private LocalTime time;
     private List<Screening> screenings = new ArrayList<>();
 
-    public Calendar getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public ScreeningTime setTime(Calendar time) {
+    public ScreeningTime setTime(LocalTime time) {
         this.time = time;
         return this;
     }
