@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.home.about;
 
+import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 
@@ -9,11 +10,11 @@ import com.jonasgerdes.schauburgr.mvp.BaseView;
 
 public interface AboutContract {
     interface View extends BaseView<AboutContract.Presenter> {
-
+        void setLicenses(OpenSourceLicense... licenses);
 
     }
 
     interface Presenter extends BasePresenter {
-
+        void loadLicenses();
     }
 }

@@ -95,6 +95,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
@@ -105,11 +106,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif light"
-            android:paddingTop="24dp"
             android:text="@string/about_open_source_title"
             android:textSize="16sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/licenseList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

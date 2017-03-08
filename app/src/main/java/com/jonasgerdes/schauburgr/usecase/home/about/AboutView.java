@@ -5,13 +5,20 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
 import com.jonasgerdes.schauburgr.usecase.home.HomeView;
+import com.jonasgerdes.schauburgr.usecase.home.about.license_list.LicenseListApdater;
 
+import java.util.Arrays;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,7 +26,12 @@ import butterknife.ButterKnife;
  */
 
 public class AboutView extends FrameLayout implements HomeView, AboutContract.View {
+
+    @BindView(R.id.licenseList)
+    RecyclerView mLicenseList;
+
     private AboutContract.Presenter mPresenter;
+    private LicenseListApdater mLicenseAdapter;
 
 
     public AboutView(@NonNull Context context) {
@@ -45,7 +57,12 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.home_about, this);
         ButterKnife.bind(this);
-
+        new AboutPresenter(this);
+        mLicenseAdapter = new LicenseListApdater();
+        mLicenseList.setAdapter(mLicenseAdapter);
+        mLicenseList.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
+        );
     }
 
     @Override
@@ -55,11 +72,16 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
 
     @Override
     public void onStart() {
-
+        mPresenter.loadLicenses();
     }
 
     @Override
     public void onStop() {
 
+    }
+
+    @Override
+    public void setLicenses(OpenSourceLicense... licenses) {
+        mLicenseAdapter.setLicenseList(Arrays.asList(licenses));
     }
 }
