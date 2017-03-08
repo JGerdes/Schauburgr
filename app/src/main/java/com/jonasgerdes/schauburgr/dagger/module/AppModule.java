@@ -1,6 +1,6 @@
 package com.jonasgerdes.schauburgr.dagger.module;
 
-import android.app.Application;
+import com.jonasgerdes.schauburgr.App;
 
 import javax.inject.Singleton;
 
@@ -9,15 +9,15 @@ import dagger.Provides;
 
 @Module
 public class AppModule {
-    Application mApplication;
+    App mApplication;
 
-    public AppModule(Application mApplication) {
+    public AppModule(App mApplication) {
         this.mApplication = mApplication;
     }
 
     @Provides
     @Singleton
-    Application provideApplication() {
+    App provideApplication() {
         return mApplication;
     }
 }

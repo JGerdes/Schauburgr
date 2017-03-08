@@ -11,6 +11,7 @@ import com.jonasgerdes.schauburgr.mvp.BaseView;
 public interface AboutContract {
     interface View extends BaseView<AboutContract.Presenter> {
         void setLicenses(OpenSourceLicense... licenses);
+        void setVersionName(String versionName);
 
     }
 

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
@@ -29,6 +30,9 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
 
     @BindView(R.id.licenseList)
     RecyclerView mLicenseList;
+
+    @BindView(R.id.versionName)
+    TextView mVersionName;
 
     private AboutContract.Presenter mPresenter;
     private LicenseListApdater mLicenseAdapter;
@@ -83,5 +87,10 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
     @Override
     public void setLicenses(OpenSourceLicense... licenses) {
         mLicenseAdapter.setLicenseList(Arrays.asList(licenses));
+    }
+
+    @Override
+    public void setVersionName(String versionName) {
+        mVersionName.setText("v" + versionName);
     }
 }

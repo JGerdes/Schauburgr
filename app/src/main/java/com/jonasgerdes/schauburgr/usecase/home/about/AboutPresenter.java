@@ -1,7 +1,10 @@
 package com.jonasgerdes.schauburgr.usecase.home.about;
 
+import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+
+import javax.inject.Inject;
 
 /**
  * Created by jonas on 08.03.2017.
@@ -9,11 +12,16 @@ import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
 
 public class AboutPresenter implements AboutContract.Presenter {
 
+    @Inject
+    App mApp;
+
     private AboutContract.View mView;
 
     public AboutPresenter(AboutContract.View view) {
+        App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+        mView.setVersionName(mApp.getVersionName());
     }
 
     @Override
