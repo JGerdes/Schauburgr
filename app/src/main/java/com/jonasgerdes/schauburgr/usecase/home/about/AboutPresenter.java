@@ -34,6 +34,9 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_butterknife_title,
                         R.string.license_butterknife_body),
                 new OpenSourceLicense(
+                        R.string.license_dagger_title,
+                        R.string.license_dagger_body),
+                new OpenSourceLicense(
                         R.string.license_glide_title,
                         R.string.license_glide_body),
                 new OpenSourceLicense(
