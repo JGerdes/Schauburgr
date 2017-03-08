@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @BindViews({R.id.navigation_guide, R.id.navigation_movies})
+    @BindViews({R.id.navigation_guide, R.id.navigation_movies, R.id.navigation_about})
     List<HomeView> mUseCaseViews;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -38,9 +38,9 @@ public class HomeActivity extends AppCompatActivity {
             } else {
                 useCaseView.setVisibility(View.GONE);
                 useCaseView.onStop();
-
             }
         }
+
         switch (id) {
             case R.id.navigation_guide:
                 setTitle(R.string.title_guide);

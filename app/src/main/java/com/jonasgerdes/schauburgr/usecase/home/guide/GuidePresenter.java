@@ -23,7 +23,7 @@ import retrofit2.Response;
  */
 
 public class GuidePresenter implements GuideContract.Presenter {
-    private static final String TAG = "MoviesPresenter";
+    private static final String TAG = "AboutPresenter";
 
     @Inject
     SchauburgApi mApi;

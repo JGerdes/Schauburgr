@@ -25,6 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <com.jonasgerdes.schauburgr.usecase.home.about.AboutView
+            android:id="@+id/navigation_about"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
