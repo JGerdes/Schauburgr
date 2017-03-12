@@ -20,10 +20,12 @@ public class StateToggleLayout extends FrameLayout {
 
     public static final int STATE_EMPTY = 0;
     public static final int STATE_CONTENT = 1;
+    public static final int STATE_ERROR = -1;
 
     @IntDef({
             STATE_EMPTY,
-            STATE_CONTENT
+            STATE_CONTENT,
+            STATE_ERROR
     })
     public @interface State {
     }
@@ -33,6 +35,7 @@ public class StateToggleLayout extends FrameLayout {
 
     private View mEmptyView;
     private View mContentView;
+    private View mErrorView;
 
     public StateToggleLayout(@NonNull Context context) {
         super(context);
@@ -53,7 +56,12 @@ public class StateToggleLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        bindViews();
+        setState(STATE_EMPTY);
 
+    }
+
+    private void bindViews() {
         if (getChildCount() > 0) {
             mEmptyView = getChildAt(0);
         }
@@ -62,9 +70,9 @@ public class StateToggleLayout extends FrameLayout {
             mContentView = getChildAt(1);
         }
 
-        mContentView.setVisibility(GONE);
-        mEmptyView.setVisibility(VISIBLE);
-
+        if (getChildCount() > 2) {
+            mContentView = getChildAt(2);
+        }
     }
 
     public void setState(@State int state) {
@@ -75,5 +83,6 @@ public class StateToggleLayout extends FrameLayout {
     private void updateState() {
         ViewUtils.setVisible(mEmptyView, mState == STATE_EMPTY);
         ViewUtils.setVisible(mContentView, mState == STATE_CONTENT);
+        ViewUtils.setVisible(mErrorView, mState == STATE_ERROR);
     }
 }

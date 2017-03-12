@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
@@ -56,7 +54,7 @@ public class GuidePresenter implements GuideContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                Log.e(TAG, "onFailure: ", t);
+                mView.showError(t.getMessage());
             }
         });
     }

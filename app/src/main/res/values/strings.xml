@@ -7,6 +7,9 @@
     <string name="day_title_today">Heute</string>
     <string name="day_title_tomorrow">Morgen</string>
 
+    <string name="guide_state_hint_loading">Lade Programmvorschau</string>
+    <string name="guide_state_hint_error_default">Programm konnte nicht geladen werden</string>
+
     <string name="about_idea">Idee, Programmierung</string>
     <string name="about_jonas_gerdes">Jonas Gerdes\nwww.jonasgerdes.com</string>
     <string name="about_github">Schauburgr ist OpenSource.\nQuelltext verfügbar unter\nhttps://github.com/JGerdes/Schauburgr</string>

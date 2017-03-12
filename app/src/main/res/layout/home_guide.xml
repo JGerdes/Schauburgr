@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Lade Programmvorschau"/>
+            android:text="@string/guide_state_hint_loading"/>
     </FrameLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -29,4 +29,17 @@
             android:layout_height="match_parent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/guide_state_hint_error_default"/>
+    </FrameLayout>
 </com.jonasgerdes.schauburgr.view.StateToggleLayout>

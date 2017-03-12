@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
@@ -39,6 +40,9 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout mRefreshLayout;
+
+    @BindView(R.id.errorMessage)
+    TextView mErrorMessageView;
 
     private GuideDaysAdapter mDayListAdapter;
 
@@ -98,10 +102,18 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     }
 
     @Override
+    public void showError(String message) {
+        mErrorMessageView.setText(message);
+        mStateLayout.setState(StateToggleLayout.STATE_ERROR);
+    }
+
+    @Override
     public void onRefresh() {
         if (mPresenter != null) {
             mPresenter.loadProgram();
+        } else {
+            mErrorMessageView.setText(R.string.guide_state_hint_error_default);
+            mStateLayout.setState(StateToggleLayout.STATE_ERROR);
         }
-        // TODO: 12.03.2017 handle null
     }
 }

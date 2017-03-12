@@ -9,6 +9,7 @@ import java.util.List;
 public interface GuideContract {
     interface View extends BaseView<GuideContract.Presenter> {
         void showGuide(List<ScreeningDay> days);
+        void showError(String message);
 
     }
 
