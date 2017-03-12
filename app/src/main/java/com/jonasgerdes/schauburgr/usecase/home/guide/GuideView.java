@@ -95,6 +95,8 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
     @Override
     public void onStop() {
+        mPresenter.onStop();
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override

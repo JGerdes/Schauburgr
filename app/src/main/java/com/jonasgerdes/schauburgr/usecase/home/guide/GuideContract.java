@@ -15,5 +15,6 @@ public interface GuideContract {
 
     interface Presenter extends BasePresenter {
         void loadProgram();
+        void onStop();
     }
 }

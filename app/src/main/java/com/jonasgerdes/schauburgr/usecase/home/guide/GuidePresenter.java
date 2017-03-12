@@ -27,6 +27,7 @@ public class GuidePresenter implements GuideContract.Presenter {
     SchauburgApi mApi;
 
     private GuideContract.View mView;
+    private Call<Guide> mCall;
 
     public GuidePresenter(GuideContract.View view) {
         App.getAppComponent().inject(this);
@@ -37,7 +38,8 @@ public class GuidePresenter implements GuideContract.Presenter {
 
     @Override
     public void loadProgram() {
-        mApi.getFullGuide().enqueue(new Callback<Guide>() {
+        mCall = mApi.getFullGuide();
+        mCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
                 List<ScreeningDay> allDays = response.body().getScreeningsGroupedByStartTime();
@@ -57,5 +59,12 @@ public class GuidePresenter implements GuideContract.Presenter {
                 mView.showError(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        if(mCall != null) {
+            mCall.cancel();
+        }
     }
 }
