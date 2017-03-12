@@ -23,6 +23,9 @@ public class ViewUtils {
     }
 
     public static void setVisible(View view, boolean isVisible) {
+        if (view == null) {
+            return;
+        }
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }
