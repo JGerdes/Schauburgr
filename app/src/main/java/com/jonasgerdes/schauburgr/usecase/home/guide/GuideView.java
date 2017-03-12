@@ -5,6 +5,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -25,11 +26,16 @@ import butterknife.ButterKnife;
  * Created by jonas on 04.03.2017.
  */
 
-public class GuideView extends FrameLayout implements HomeView, GuideContract.View {
+public class GuideView extends FrameLayout implements HomeView, GuideContract.View,
+        SwipeRefreshLayout.OnRefreshListener {
     private GuideContract.Presenter mPresenter;
 
     @BindView(R.id.day_list)
     RecyclerView mDayList;
+
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout mRefreshLayout;
+
     private GuideDaysAdapter mDayListAdapter;
 
     public GuideView(@NonNull Context context) {
@@ -61,6 +67,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         mDayList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
+        mRefreshLayout.setOnRefreshListener(this);
 
     }
 
@@ -78,9 +85,17 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     public void onStop() {
     }
 
-
     @Override
     public void showGuide(List<ScreeningDay> days) {
         mDayListAdapter.setDays(days);
+        mRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mPresenter != null) {
+            mPresenter.loadProgram();
+        }
+        // TODO: 12.03.2017 handle null
     }
 }
