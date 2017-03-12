@@ -71,7 +71,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         ButterKnife.bind(this);
         new GuidePresenter(this);
         mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
-        mDayListAdapter = new GuideDaysAdapter();
+        mDayListAdapter = new GuideDaysAdapter(getContext());
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
