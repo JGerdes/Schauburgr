@@ -71,7 +71,7 @@ public class StateToggleLayout extends FrameLayout {
         }
 
         if (getChildCount() > 2) {
-            mContentView = getChildAt(2);
+            mErrorView = getChildAt(2);
         }
     }
 

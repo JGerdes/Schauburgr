@@ -77,6 +77,9 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
         mRefreshLayout.setOnRefreshListener(this);
+        int triggerDistance = getContext()
+                .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
+        mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
 
     }
 
@@ -105,6 +108,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     public void showError(String message) {
         mErrorMessageView.setText(message);
         mStateLayout.setState(StateToggleLayout.STATE_ERROR);
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
