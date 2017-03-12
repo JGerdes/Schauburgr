@@ -16,6 +16,7 @@ import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.HomeView;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
+import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ import butterknife.ButterKnife;
 public class GuideView extends FrameLayout implements HomeView, GuideContract.View,
         SwipeRefreshLayout.OnRefreshListener {
     private GuideContract.Presenter mPresenter;
+
+    @BindView(R.id.stateToggleLayout)
+    StateToggleLayout mStateLayout;
 
     @BindView(R.id.day_list)
     RecyclerView mDayList;
@@ -62,6 +66,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         LayoutInflater.from(getContext()).inflate(R.layout.home_guide, this);
         ButterKnife.bind(this);
         new GuidePresenter(this);
+        mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
         mDayListAdapter = new GuideDaysAdapter();
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
@@ -88,6 +93,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     @Override
     public void showGuide(List<ScreeningDay> days) {
         mDayListAdapter.setDays(days);
+        mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
         mRefreshLayout.setRefreshing(false);
     }
 
