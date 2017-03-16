@@ -13,6 +13,12 @@ public class Movie {
 
     public static final String GENRE_MET_OPERA = "Met Opera";
 
+    public static final String EXTRA_3D = "3D";
+    public static final String EXTRA_ATMOS = "Atmos";
+    public static final String EXTRA_OT = "OT"; //Original-Ton
+    public static final String EXTRA_TIP = "Tip";
+    public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
+
 
     private String resourceId;
     private String title;
@@ -21,11 +27,7 @@ public class Movie {
     private int contentRating;
     private String description;
     private List<String> genres = new ArrayList<>();
-    private boolean is3D;
-    private boolean isAtmos;
-    private boolean isOT; //Original-Ton
-    private boolean isTip;
-    private boolean isReel; //"Filmrolle"-Aktion
+    private List<String> extras = new ArrayList<>();
 
 
     public String getResourceId() {
@@ -82,6 +84,14 @@ public class Movie {
         return this;
     }
 
+    public List<String> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<String> extras) {
+        this.extras = extras;
+    }
+
     public List<String> getGenres() {
         return genres;
     }
@@ -91,59 +101,23 @@ public class Movie {
     }
 
     public boolean is3D() {
-        return is3D;
-    }
-
-    public void set3D(boolean is3D) {
-        this.is3D = is3D;
+        return extras.contains(EXTRA_3D);
     }
 
     public boolean isAtmos() {
-        return isAtmos;
-    }
-
-    public void setAtmos(boolean atmos) {
-        isAtmos = atmos;
+        return extras.contains(EXTRA_ATMOS);
     }
 
     public boolean isOT() {
-        return isOT;
-    }
-
-    public void setOT(boolean OT) {
-        isOT = OT;
+        return extras.contains(EXTRA_OT);
     }
 
     public boolean isTip() {
-        return isTip;
-    }
-
-    public void setTip(boolean tip) {
-        isTip = tip;
+        return extras.contains(EXTRA_TIP);
     }
 
     public boolean isReel() {
-        return isReel;
+        return extras.contains(EXTRA_REEL);
     }
 
-    public void setReel(boolean reel) {
-        isReel = reel;
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "resourceId='" + resourceId + '\'' +
-                ", title='" + title + '\'' +
-                ", releaseDate=" + releaseDate +
-                ", duration=" + duration +
-                ", contentRating=" + contentRating +
-                ", description='" + description + '\'' +
-                ", is3D=" + is3D +
-                ", isAtmos=" + isAtmos +
-                ", isOT=" + isOT +
-                ", isTip=" + isTip +
-                ", isReel=" + isReel +
-                '}';
-    }
 }

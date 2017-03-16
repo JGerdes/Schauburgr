@@ -16,4 +16,8 @@ public class StringUtil {
         }
         return concated;
     }
+
+    public static String remove(String full, int start, int length) {
+        return full.substring(0, start) + full.substring(start + length, full.length());
+    }
 }

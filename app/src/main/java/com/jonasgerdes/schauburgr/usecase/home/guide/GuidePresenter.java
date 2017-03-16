@@ -7,6 +7,7 @@ import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import org.joda.time.LocalDate;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +57,18 @@ public class GuidePresenter implements GuideContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                mView.showError(t.getMessage());
+                if (t instanceof SocketTimeoutException) {
+                    mView.showError("Keine Internetverbindung :(");
+                } else {
+                    mView.showError(t.getClass().getName());
+                }
             }
         });
     }
 
     @Override
     public void onStop() {
-        if(mCall != null) {
+        if (mCall != null) {
             mCall.cancel();
         }
     }

@@ -3,7 +3,10 @@ package com.jonasgerdes.schauburgr.network.guide_converter;
 import android.text.Html;
 
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,8 +38,15 @@ public class MovieParser {
             + REGEX_STUB + ','
             + REGEX_IS_3D;
 
-    private static final int GENRE_MAX_LENGTH = 16;
+    private static final ExtraMapping[] EXTRA_MAPPINGS = new ExtraMapping[]{
+            new ExtraMapping(Movie.EXTRA_3D, "(3D)", "in 3D", "- 3D", "3D"),
+            new ExtraMapping(Movie.EXTRA_ATMOS, "in Dolby Atmos", "- Dolby Atmos", "Dolby Atmos"),
+            new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
+            new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
+            new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
+    };
 
+    private static final int GENRE_MAX_LENGTH = 16;
 
     private final Pattern mMoviePattern;
     private final Pattern mGenrePattern;
@@ -61,11 +71,8 @@ public class MovieParser {
             movie.setDescription(matcher.group(6));
 
             String rawTitle = matcher.group(2);
-            rawTitle = parse3D(rawTitle, movie);
-            rawTitle = parseAtmos(rawTitle, movie);
-            rawTitle = parseOT(rawTitle, movie);
-            rawTitle = parseReel(rawTitle, movie);
-            rawTitle = parseTip(rawTitle, movie);
+            rawTitle = parseExtras(movie, rawTitle);
+            rawTitle = rawTitle.trim();
             rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
             movie.setTitle(rawTitle);
 
@@ -76,8 +83,20 @@ public class MovieParser {
         return movie;
     }
 
-    private void parseGenres(Movie movie) {
+    private String parseExtras(Movie movie, String rawTitle) {
+        List<String> extras = new ArrayList<>();
+        for (ExtraMapping extraMapping : EXTRA_MAPPINGS) {
+            ExtraParseResult result = parseExtra(rawTitle, extraMapping.hints);
+            if (result.found) {
+                extras.add(extraMapping.extra);
+                rawTitle = result.newTitle;
+            }
+        }
+        movie.setExtras(extras);
+        return rawTitle;
+    }
 
+    private void parseGenres(Movie movie) {
         //Search description for genres
         Matcher matcher = mGenrePattern.matcher(movie.getDescription());
         if (matcher.find()) {
@@ -104,65 +123,33 @@ public class MovieParser {
 
     }
 
-    private String parse3D(String rawTitle, Movie movie) {
-        if (rawTitle.startsWith("(3D) ")) {
-            movie.set3D(true);
-            return rawTitle.substring(5, rawTitle.length());
-        }
-        return rawTitle;
-    }
-
-    private String parseAtmos(String rawTitle, Movie movie) {
-        String[] indicators = new String[]{
-                " in Dolby Atmos",
-                " Dolby Atmos"
-        };
-        for (String indicator : indicators) {
-            if (rawTitle.contains(indicator)) {
-                movie.setAtmos(true);
-                return rawTitle.replace(indicator, "");
+    private ExtraParseResult parseExtra(String rawTitle, String[] hints) {
+        ExtraParseResult result = new ExtraParseResult();
+        for (String hint : hints) {
+            int start = rawTitle.toLowerCase().indexOf(hint.toLowerCase());
+            if (start != -1) {
+                //cut found string out of
+                rawTitle = StringUtil.remove(rawTitle, start, hint.length());
+                result.found = true;
             }
         }
-        return rawTitle;
+        result.newTitle = rawTitle;
+        return result;
     }
 
-    private String parseOT(String rawTitle, Movie movie) {
-        String[] indicators = new String[]{
-                " OT"
-        };
-        for (String indicator : indicators) {
-            if (rawTitle.contains(indicator)) {
-                movie.setOT(true);
-                return rawTitle.replace(indicator, "");
-            }
-        }
-        return rawTitle;
+    private class ExtraParseResult {
+        String newTitle;
+        boolean found;
     }
 
-    private String parseReel(String rawTitle, Movie movie) {
-        String[] indicators = new String[]{
-                "FILMROLLE: ", "Filmrolle:"
-        };
-        for (String indicator : indicators) {
-            if (rawTitle.contains(indicator)) {
-                movie.setReel(true);
-                return rawTitle.replace(indicator, "");
-            }
+    private static class ExtraMapping {
+        public ExtraMapping(String extra, String... hints) {
+            this.extra = extra;
+            this.hints = hints;
         }
-        return rawTitle;
-    }
 
-    private String parseTip(String rawTitle, Movie movie) {
-        String[] indicators = new String[]{
-                " - FILMTIPP", " - Filmtipp", " FILMTIPP", " Filmtipp"
-        };
-        for (String indicator : indicators) {
-            if (rawTitle.contains(indicator)) {
-                movie.setTip(true);
-                return rawTitle.replace(indicator, "");
-            }
-        }
-        return rawTitle;
+        String extra;
+        String[] hints;
     }
 
 }
