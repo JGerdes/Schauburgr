@@ -97,22 +97,23 @@ public class MovieParser {
     }
 
     private void parseGenres(Movie movie) {
+        List<String> genres = new ArrayList<>();
         //Search description for genres
         Matcher matcher = mGenrePattern.matcher(movie.getDescription());
         if (matcher.find()) {
             String genreString = matcher.group(1);
             //Split found genre string and remove whitespace
-            String[] genres = genreString.split(",");
-            for (String genre : genres) {
+            String[] splitted = genreString.split(",");
+            for (String genre : splitted) {
                 genre = genre.trim();
                 //Safety threshold in case of parsing error
                 if (genre.length() <= GENRE_MAX_LENGTH) {
-                    movie.getGenres().add(genre);
+                    genres.add(genre);
                 }
             }
         }
         if (movie.getTitle().startsWith("Met Opera Live:")) {
-            movie.getGenres().add(Movie.GENRE_MET_OPERA);
+            genres.add(Movie.GENRE_MET_OPERA);
 
             //Tidy up title
             String title = movie.getTitle();
@@ -120,6 +121,7 @@ public class MovieParser {
             title = title.trim();
             movie.setTitle(title);
         }
+        movie.setGenres(genres);
 
     }
 
