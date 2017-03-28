@@ -116,7 +116,6 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
 
     @Override
     public void onStart() {
-        mPresenter.loadProgram();
     }
 
     @Override

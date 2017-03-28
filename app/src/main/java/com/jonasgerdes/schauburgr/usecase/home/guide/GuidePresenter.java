@@ -34,6 +34,9 @@ public class GuidePresenter implements GuideContract.Presenter {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
+            loadProgram();
+        }
     }
 
     @Override
