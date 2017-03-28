@@ -1,18 +1,18 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
-import org.joda.time.LocalDate;
-
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,27 +36,22 @@ public class GuidePresenter implements GuideContract.Presenter {
         mView.setPresenter(this);
     }
 
-
     @Override
     public void loadProgram() {
         mCall = mApi.getFullGuide();
         mCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                List<ScreeningDay> allDays = response.body().getScreeningsGroupedByStartTime();
-                List<ScreeningDay> daysToShow = new ArrayList<>();
-                //don't show past days
-                LocalDate today = new LocalDate();
-                for (ScreeningDay day : allDays) {
-                    if (!day.getDate().isBefore(today)) {
-                        daysToShow.add(day);
-                    }
-                }
-                mView.showGuide(daysToShow);
+                List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(guide);
+                realm.commitTransaction();
             }
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
+                Log.e(TAG, "Failure while feting data", t);
                 if (t instanceof SocketTimeoutException) {
                     mView.showError("Keine Internetverbindung :(");
                 } else {

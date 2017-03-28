@@ -65,4 +65,11 @@ public class HomeActivity extends AppCompatActivity {
         showView(R.id.navigation_guide);
     }
 
+    @Override
+    protected void onDestroy() {
+        for (HomeView useCaseView : mUseCaseViews) {
+            useCaseView.onDestroy();
+        }
+        super.onDestroy();
+    }
 }

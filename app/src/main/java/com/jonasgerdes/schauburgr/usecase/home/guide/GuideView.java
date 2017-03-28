@@ -19,10 +19,14 @@ import com.jonasgerdes.schauburgr.usecase.home.HomeView;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
-import java.util.List;
+import org.joda.time.LocalDate;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -45,6 +49,7 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     TextView mErrorMessageView;
 
     private GuideDaysAdapter mDayListAdapter;
+    private Realm mRealm;
 
     public GuideView(@NonNull Context context) {
         super(context);
@@ -56,12 +61,14 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         init();
     }
 
-    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
+            defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
+            defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
@@ -69,7 +76,6 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.home_guide, this);
         ButterKnife.bind(this);
-        new GuidePresenter(this);
         mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
         mDayListAdapter = new GuideDaysAdapter(getContext());
         mDayList.setAdapter(mDayListAdapter);
@@ -81,6 +87,26 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
                 .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
         mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
 
+        bindModel();
+
+        new GuidePresenter(this);
+    }
+
+    private void bindModel() {
+        mRealm = Realm.getDefaultInstance();
+        RealmResults<ScreeningDay> days
+                = mRealm.where(ScreeningDay.class)
+                .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                .findAllSorted("date", Sort.ASCENDING);
+        mDayListAdapter.setDays(days);
+        mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+        days.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
+            @Override
+            public void onChange(RealmResults<ScreeningDay> element) {
+                mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -100,10 +126,8 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     }
 
     @Override
-    public void showGuide(List<ScreeningDay> days) {
-        mDayListAdapter.setDays(days);
-        mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
-        mRefreshLayout.setRefreshing(false);
+    public void onDestroy() {
+        mRealm.close();
     }
 
     @Override

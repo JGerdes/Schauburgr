@@ -8,6 +8,9 @@ import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 
 public class App extends Application {
 
@@ -21,6 +24,16 @@ public class App extends Application {
                 .appModule(new AppModule(this))
                 .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
                 .build();
+
+        initRealmDb();
+    }
+
+    private void initRealmDb() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     public String getVersionName() {

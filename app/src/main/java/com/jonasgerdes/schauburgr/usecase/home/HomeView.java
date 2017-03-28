@@ -11,6 +11,8 @@ public interface HomeView {
 
     void onStop();
 
+    void onDestroy();
+
     @IdRes int getId();
 
     void setVisibility(int visibility);

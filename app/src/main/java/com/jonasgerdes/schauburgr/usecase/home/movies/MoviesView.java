@@ -80,6 +80,11 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void showMovies(List<Movie> movies) {
         mMovieListAdapter.setMovies(movies);
     }

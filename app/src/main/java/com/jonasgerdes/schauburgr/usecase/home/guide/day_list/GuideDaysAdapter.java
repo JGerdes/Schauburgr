@@ -11,8 +11,8 @@ import android.view.animation.AnimationUtils;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -21,7 +21,7 @@ import java.util.List;
 public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
 
     private final Animation mAppearAnimation;
-    private List<ScreeningDay> mDays = new ArrayList<>();
+    private RealmResults<ScreeningDay> mDays;
     private int mLastPositionAnimated = -1;
 
     public GuideDaysAdapter(Context context) {
@@ -50,13 +50,20 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
 
     @Override
     public int getItemCount() {
-        return mDays.size();
+        return mDays == null ? 0 : mDays.size();
     }
 
-    public void setDays(List<ScreeningDay> days) {
+    public void setDays(RealmResults<ScreeningDay> days) {
         mDays = days;
         mLastPositionAnimated = -1;
         notifyDataSetChanged();
+        days.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
+            @Override
+            public void onChange(RealmResults<ScreeningDay> element) {
+                notifyDataSetChanged();
+                mLastPositionAnimated = -1;
+            }
+        });
     }
 
     private void startAnimation(View toAnimate, int position) {

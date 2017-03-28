@@ -85,6 +85,11 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void setLicenses(OpenSourceLicense... licenses) {
         mLicenseAdapter.setLicenseList(Arrays.asList(licenses));
     }
