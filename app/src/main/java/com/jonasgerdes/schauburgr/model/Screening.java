@@ -2,15 +2,19 @@ package com.jonasgerdes.schauburgr.model;
 
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
+import io.realm.RealmObject;
+
 /**
  * Created by jonas on 04.03.2017.
  */
 
-public class Screening {
+public class Screening extends RealmObject{
 
     private String resourceId;
     private Movie movie;
-    private DateTime startDate;
+    private Date startDate;
     private int hall;
 
     public String getResourceId() {
@@ -30,11 +34,11 @@ public class Screening {
     }
 
     public DateTime getStartDate() {
-        return startDate;
+        return new DateTime(startDate);
     }
 
     public void setStartDate(DateTime startDate) {
-        this.startDate = startDate;
+        this.startDate = startDate.toDate();
     }
 
     public int getHall() {

@@ -3,28 +3,31 @@ package com.jonasgerdes.schauburgr.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by jonas on 04.03.2017.
  */
 
-public class Guide {
-    private List<Movie> movies = new ArrayList<>();
-    private List<Screening> screenings = new ArrayList<>();
+public class Guide extends RealmObject{
+    private RealmList<Movie> movies = new RealmList<>();
+    private RealmList<Screening> screenings = new RealmList<>();
 
-    public List<Movie> getMovies() {
+    public RealmList<Movie> getMovies() {
         return movies;
     }
 
-    public Guide setMovies(List<Movie> movies) {
+    public Guide setMovies(RealmList<Movie> movies) {
         this.movies = movies;
         return this;
     }
 
-    public List<Screening> getScreenings() {
+    public RealmList<Screening> getScreenings() {
         return screenings;
     }
 
-    public Guide setScreenings(List<Screening> screenings) {
+    public Guide setScreenings(RealmList<Screening> screenings) {
         this.screenings = screenings;
         return this;
     }

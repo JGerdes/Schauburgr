@@ -1,15 +1,21 @@
 package com.jonasgerdes.schauburgr.model;
 
+import com.jonasgerdes.schauburgr.util.StringUtil;
+
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import io.realm.RealmObject;
 
 /**
  * Created by jonas on 04.03.2017.
  */
 
-public class Movie {
+public class Movie extends RealmObject {
 
     public static final String GENRE_MET_OPERA = "Met Opera";
 
@@ -19,16 +25,20 @@ public class Movie {
     public static final String EXTRA_TIP = "Tip";
     public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
 
+    private static final String STRING_LIST_SEPERATOR = "||";
+
 
     private String resourceId;
     private String title;
-    private DateTime releaseDate;
+    private Date releaseDate;
     private long duration;
     private int contentRating;
     private String description;
-    private List<String> genres = new ArrayList<>();
-    private List<String> extras = new ArrayList<>();
 
+    //Use concatenated string of elements instead of RealmList<RealmString>
+    //see https://hackernoon.com/realmlist-realmstring-is-an-anti-pattern-bfc10efb7ca5
+    private String genres = "";
+    private String extras = "";
 
     public String getResourceId() {
         return resourceId;
@@ -49,11 +59,15 @@ public class Movie {
     }
 
     public DateTime getReleaseDate() {
-        return releaseDate;
+        return new DateTime(releaseDate);
     }
 
     public Movie setReleaseDate(DateTime releaseDate) {
-        this.releaseDate = releaseDate;
+        if (releaseDate == null) {
+            this.releaseDate = null;
+        } else {
+            this.releaseDate = releaseDate.toDate();
+        }
         return this;
     }
 
@@ -85,19 +99,19 @@ public class Movie {
     }
 
     public List<String> getExtras() {
-        return extras;
+        return Collections.unmodifiableList(Arrays.asList(extras.split(STRING_LIST_SEPERATOR)));
     }
 
     public void setExtras(List<String> extras) {
-        this.extras = extras;
+        this.extras = StringUtil.concat(extras, STRING_LIST_SEPERATOR);
     }
 
     public List<String> getGenres() {
-        return genres;
+        return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPERATOR)));
     }
 
     public void setGenres(List<String> genres) {
-        this.genres = genres;
+        this.genres = StringUtil.concat(genres, STRING_LIST_SEPERATOR);
     }
 
     public boolean is3D() {

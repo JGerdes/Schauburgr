@@ -2,31 +2,33 @@ package com.jonasgerdes.schauburgr.model;
 
 import org.joda.time.LocalDate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
  * Created by jonas on 05.03.2017.
  */
 
-public class ScreeningDay {
-    private LocalDate date;
-    private List<ScreeningTime> times = new ArrayList<>();
+public class ScreeningDay extends RealmObject{
+    private Date date;
+    private RealmList<ScreeningTime> times = new RealmList<>();
 
     public LocalDate getDate() {
-        return date;
+        return new LocalDate(date);
     }
 
     public ScreeningDay setDate(LocalDate date) {
-        this.date = date;
+        this.date = date.toDate();
         return this;
     }
 
-    public List<ScreeningTime> getTimes() {
+    public RealmList<ScreeningTime> getTimes() {
         return times;
     }
 
-    public ScreeningDay setTimes(List<ScreeningTime> times) {
+    public ScreeningDay setTimes(RealmList<ScreeningTime> times) {
         this.times = times;
         return this;
     }
