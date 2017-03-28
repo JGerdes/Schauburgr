@@ -2,10 +2,14 @@ package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,7 +36,11 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mApi.getFullGuide().enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                mView.showMovies(response.body().getMovies());
+                List<Movie> movies = response.body().getMovies();
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(movies);
+                realm.commitTransaction();
             }
 
             @Override

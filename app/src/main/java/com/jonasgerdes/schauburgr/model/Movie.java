@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -28,6 +29,7 @@ public class Movie extends RealmObject {
     private static final String STRING_LIST_SEPERATOR = "||";
 
 
+    @PrimaryKey
     private String resourceId;
     private String title;
     private Date releaseDate;

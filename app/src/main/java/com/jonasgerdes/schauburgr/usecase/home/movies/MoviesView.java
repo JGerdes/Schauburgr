@@ -16,10 +16,10 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.usecase.home.HomeView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -32,6 +32,7 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
     RecyclerView mMovieList;
 
     private MovieListAdapter mMovieListAdapter;
+    private Realm mRealm;
 
     public MoviesView(@NonNull Context context) {
         super(context);
@@ -43,14 +44,21 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
         init();
     }
 
-    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
+            defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
+            defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
+    }
+
+    @Override
+    public void showError(String message) {
+
     }
 
     private void init() {
@@ -62,7 +70,14 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
         mMovieList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
+        bindModel();
 
+    }
+
+    private void bindModel() {
+        mRealm = Realm.getDefaultInstance();
+        RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
+        mMovieListAdapter.setMovies(movies);
     }
 
     @Override
@@ -72,7 +87,6 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
 
     @Override
     public void onStart() {
-        mPresenter.loadMovies();
     }
 
     @Override
@@ -81,11 +95,6 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
 
     @Override
     public void onDestroy() {
-
-    }
-
-    @Override
-    public void showMovies(List<Movie> movies) {
-        mMovieListAdapter.setMovies(movies);
+        mRealm.close();
     }
 }
