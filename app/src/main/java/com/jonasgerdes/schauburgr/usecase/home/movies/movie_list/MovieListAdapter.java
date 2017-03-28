@@ -11,6 +11,9 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+
 /**
  * Created by jonas on 05.03.2017.
  */
@@ -37,8 +40,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
         return mMovies.size();
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(RealmResults<Movie> movies) {
         mMovies = movies;
         notifyDataSetChanged();
+        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
+            @Override
+            public void onChange(RealmResults<Movie> element) {
+                notifyDataSetChanged();
+            }
+        });
     }
 }
