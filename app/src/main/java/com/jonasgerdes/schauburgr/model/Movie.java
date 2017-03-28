@@ -26,7 +26,7 @@ public class Movie extends RealmObject {
     public static final String EXTRA_TIP = "Tip";
     public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
 
-    private static final String STRING_LIST_SEPERATOR = "||";
+    private static final String STRING_LIST_SEPERATOR = ";;;";
 
 
     @PrimaryKey
@@ -109,6 +109,7 @@ public class Movie extends RealmObject {
     }
 
     public List<String> getGenres() {
+        String genres = this.genres;
         return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPERATOR)));
     }
 
