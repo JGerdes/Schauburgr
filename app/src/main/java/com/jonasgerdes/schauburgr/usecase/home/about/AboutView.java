@@ -51,6 +51,7 @@ public class AboutView extends Fragment implements AboutContract.View {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_about);
         ButterKnife.bind(this, view);
         mLicenseAdapter = new LicenseListAdapter();
         mLicenseList.setAdapter(mLicenseAdapter);

@@ -48,6 +48,7 @@ public class MoviesView extends Fragment implements MoviesContract.View {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_movies);
         ButterKnife.bind(this, view);
         new MoviesPresenter(this);
         mMovieListAdapter = new MovieListAdapter();

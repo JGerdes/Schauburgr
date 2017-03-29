@@ -43,27 +43,33 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private boolean showView(@IdRes int id) {
-        Fragment fragment = null;
-        switch (id) {
-            case R.id.navigation_guide:
-                setTitle(R.string.title_guide);
-                fragment = GuideView.newInstance();
-                break;
-            case R.id.navigation_movies:
-                setTitle(R.string.title_movies);
-                fragment = MoviesView.newInstance();
-                break;
-            case R.id.navigation_about:
-                setTitle(R.string.title_about);
-                fragment = AboutView.newInstance();
-                break;
+        String tag = String.valueOf(id);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment == null) {
+            switch (id) {
+                case R.id.navigation_guide:
+                    fragment = GuideView.newInstance();
+                    break;
+                case R.id.navigation_movies:
+                    fragment = MoviesView.newInstance();
+                    break;
+                case R.id.navigation_about:
+                    fragment = AboutView.newInstance();
+                    break;
+            }
         }
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, fragment)
-                    .commitAllowingStateLoss();
+                    .replace(R.id.content, fragment, tag)
+                    .addToBackStack(tag)
+                    .commit();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
