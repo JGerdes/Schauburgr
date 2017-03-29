@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
@@ -47,6 +49,7 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     private GuideDaysAdapter mDayListAdapter;
     private Realm mRealm;
+    private Animation mUpdateAnimation;
 
     public static GuideView newInstance() {
         Bundle args = new Bundle();
@@ -68,7 +71,7 @@ public class GuideView extends Fragment implements GuideContract.View,
         getActivity().setTitle(R.string.title_guide);
         ButterKnife.bind(this, view);
 
-        mDayListAdapter = new GuideDaysAdapter(getContext());
+        mDayListAdapter = new GuideDaysAdapter();
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
@@ -77,6 +80,8 @@ public class GuideView extends Fragment implements GuideContract.View,
         int triggerDistance = getContext()
                 .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
         mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
+
+        mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
 
         bindModel();
 
@@ -105,6 +110,7 @@ public class GuideView extends Fragment implements GuideContract.View,
                 } else {
                     mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
                 }
+                mDayList.startAnimation(mUpdateAnimation);
                 mRefreshLayout.setRefreshing(false);
             }
         });
