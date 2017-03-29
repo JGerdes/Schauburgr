@@ -37,6 +37,9 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_dagger_title,
                         R.string.license_dagger_body),
                 new OpenSourceLicense(
+                        R.string.license_dart_title,
+                        R.string.license_dart_body),
+                new OpenSourceLicense(
                         R.string.license_glide_title,
                         R.string.license_glide_body),
                 new OpenSourceLicense(
@@ -60,6 +63,6 @@ public class AboutPresenter implements AboutContract.Presenter {
                 new OpenSourceLicense(
                         R.string.license_retrofit_title,
                         R.string.license_retrofit_body)
-        );
+                );
     }
 }
