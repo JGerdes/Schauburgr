@@ -52,6 +52,12 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_okhttp_title,
                         R.string.license_okhttp_body),
                 new OpenSourceLicense(
+                        R.string.license_realm_core_title,
+                        R.string.license_realm_core_body),
+                new OpenSourceLicense(
+                        R.string.license_realm_java_title,
+                        R.string.license_realm_java_body),
+                new OpenSourceLicense(
                         R.string.license_retrofit_title,
                         R.string.license_retrofit_body)
         );
