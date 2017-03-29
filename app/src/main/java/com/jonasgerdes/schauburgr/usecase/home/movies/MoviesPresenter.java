@@ -5,6 +5,8 @@ import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,7 +49,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                mView.showError("Programm konnte nicht geladen werden.");
+                if (t instanceof SocketTimeoutException
+                        || t instanceof UnknownHostException) {
+                    mView.showError("Keine Internetverbindung :(");
+                } else {
+                    mView.showError(t.getClass().getName());
+                }
             }
         });
     }

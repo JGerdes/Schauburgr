@@ -2,6 +2,8 @@ package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +32,9 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         .OnRefreshListener {
     private MoviesContract.Presenter mPresenter;
 
+    @BindView(R.id.coordinator)
+    CoordinatorLayout mCoordinatorLayout;
+
     @BindView(R.id.movieList)
     RecyclerView mMovieList;
 
@@ -39,6 +44,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     private MovieListAdapter mMovieListAdapter;
     private Realm mRealm;
     private Animation mUpdateAnimation;
+    private Snackbar mSnackbar;
 
     public static MoviesView newInstance() {
         Bundle args = new Bundle();
@@ -85,10 +91,6 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mRealm.close();
     }
 
-    @Override
-    public void onRefresh() {
-        mPresenter.loadMovies();
-    }
 
     private void bindModel() {
         mRealm = Realm.getDefaultInstance();
@@ -99,6 +101,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
             public void onChange(RealmResults<Movie> element) {
                 mRefreshLayout.setRefreshing(false);
                 mMovieList.startAnimation(mUpdateAnimation);
+                hideError();
             }
         });
     }
@@ -112,5 +115,26 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     @Override
     public void showError(String message) {
         mRefreshLayout.setRefreshing(false);
+        mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRefreshLayout.setRefreshing(true);
+                        onRefresh();
+                    }
+                });
+        mSnackbar.show();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.loadMovies();
+        hideError();
+    }
+
+    private void hideError() {
+        if (mSnackbar != null) {
+            mSnackbar.dismiss();
+        }
     }
 }
