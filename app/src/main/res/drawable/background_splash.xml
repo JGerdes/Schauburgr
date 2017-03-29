@@ -1,11 +1,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:left="64dp"
-        android:right="64dp">
+        android:drawable="@color/colorBackgroundDark"/>
+    <item
+        android:gravity="center">
         <bitmap android:src="@drawable/ic_launcher_128dp"/>
     </item>
     <item
-        android:bottom="0dp"
+        android:bottom="-192dp"
         android:drawable="@drawable/ic_logo_text"
-        android:top="160dp"/>
+        android:gravity="center"/>
 </layer-list>
