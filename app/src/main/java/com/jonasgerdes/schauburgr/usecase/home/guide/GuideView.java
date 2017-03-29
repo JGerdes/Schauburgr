@@ -91,6 +91,9 @@ public class GuideView extends Fragment implements GuideContract.View,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mRefreshLayout.setOnRefreshListener(null);
+        mDayList.clearAnimation();
+        mPresenter.stop();
         mRealm.close();
     }
 

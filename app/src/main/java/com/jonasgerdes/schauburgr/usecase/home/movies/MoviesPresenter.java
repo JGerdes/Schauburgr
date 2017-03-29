@@ -24,6 +24,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
 
     private MoviesContract.View mView;
+    private Call<Guide> mPendingCall;
 
     public MoviesPresenter(MoviesContract.View view) {
         App.getAppComponent().inject(this);
@@ -33,7 +34,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void loadMovies() {
-        mApi.getFullGuide().enqueue(new Callback<Guide>() {
+        mPendingCall = mApi.getFullGuide();
+        mPendingCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
                 List<Movie> movies = response.body().getMovies();
@@ -45,8 +47,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                // TODO: 05.03.2017 handle
+                mView.showError("Programm konnte nicht geladen werden.");
             }
         });
+    }
+
+    @Override
+    public void stop() {
+        if (mPendingCall != null) {
+            mPendingCall.cancel();
+        }
     }
 }
