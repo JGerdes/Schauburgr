@@ -20,13 +20,28 @@ import io.realm.RealmResults;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
 
+    public interface MovieClickedListener {
+        void onMovieClicked(Movie movie);
+    }
+
     private List<Movie> mMovies = new ArrayList<>();
+    private MovieClickedListener mMovieClickedListener;
 
     @Override
     public MovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.home_movies_item_movie, parent, false);
-        return new MovieHolder(view);
+        final MovieHolder holder = new MovieHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMovieClickedListener != null) {
+                    Movie movie = mMovies.get(holder.getAdapterPosition());
+                    mMovieClickedListener.onMovieClicked(movie);
+                }
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -49,5 +64,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
                 notifyDataSetChanged();
             }
         });
+    }
+
+    public void setMovieClickedListener(MovieClickedListener movieClickedListener) {
+        mMovieClickedListener = movieClickedListener;
     }
 }

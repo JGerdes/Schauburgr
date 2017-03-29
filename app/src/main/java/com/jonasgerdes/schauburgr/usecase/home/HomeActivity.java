@@ -35,11 +35,6 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         showView(R.id.navigation_guide);
     }
 

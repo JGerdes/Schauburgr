@@ -65,4 +65,9 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             mPendingCall.cancel();
         }
     }
+
+    @Override
+    public void onMovieClicked(Movie movie) {
+        mView.openDetails(movie);
+    }
 }

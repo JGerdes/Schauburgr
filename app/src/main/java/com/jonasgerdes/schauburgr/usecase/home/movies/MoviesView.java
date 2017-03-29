@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.home.movies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.Henson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +31,7 @@ import io.realm.RealmResults;
  */
 
 public class MoviesView extends Fragment implements MoviesContract.View, SwipeRefreshLayout
-        .OnRefreshListener {
+        .OnRefreshListener, MovieListAdapter.MovieClickedListener {
     private MoviesContract.Presenter mPresenter;
 
     @BindView(R.id.coordinator)
@@ -71,6 +73,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mMovieList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
+        mMovieListAdapter.setMovieClickedListener(this);
 
         mRefreshLayout.setOnRefreshListener(this);
         int triggerDistance = getContext()
@@ -89,6 +92,11 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mMovieList.clearAnimation();
         mPresenter.stop();
         mRealm.close();
+    }
+
+    @Override
+    public void onMovieClicked(Movie movie) {
+        mPresenter.onMovieClicked(movie);
     }
 
 
@@ -124,6 +132,16 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
                     }
                 });
         mSnackbar.show();
+    }
+
+    @Override
+    public void openDetails(Movie movie) {
+        Intent detailsIntent = Henson.with(getContext())
+                .gotoMovieDetailActivity()
+                .movieId(movie.getResourceId())
+                .build();
+
+        startActivity(detailsIntent);
     }
 
     @Override

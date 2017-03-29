@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".usecase.movie_detail.MovieDetailActivity"
+            android:parentActivityName=".usecase.home.HomeActivity"/>
     </application>
 
 </manifest>
