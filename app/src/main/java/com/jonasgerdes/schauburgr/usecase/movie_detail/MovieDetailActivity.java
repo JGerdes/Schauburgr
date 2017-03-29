@@ -2,6 +2,7 @@ package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
@@ -42,6 +43,16 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         movie.addChangeListener(this);
         onChange(movie);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
