@@ -61,6 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     .replace(R.id.content, fragment, tag)
                     .addToBackStack(tag)
                     .commit();
