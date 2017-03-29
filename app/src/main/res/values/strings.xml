@@ -19,5 +19,6 @@
     <string name="about_disclaimer">Schauburgr ist eine inoffizielle App und steht in keiner direkten Verbindung zur Schauburg-Cinewold. Die Daten werden von der Website geladen; entsprechende Rechte sind dem Impressum der Schauburg-Cineworld zu entnehmen.
         \n\nAlle Angaben sind ohne Gewähr; es wird keine Garantie für die Richtig- und Vollständigkeit der dargestellten Informationen gegeben und keine Haftung für eventuell verursachte Schäden übernommen.</string>
     <string name="about_open_source_title">OpenSource-Lizenzen</string>
+    <string name="snackbar_action_refresh">Neu laden</string>
 
 </resources>

@@ -2,6 +2,8 @@ package com.jonasgerdes.schauburgr.usecase.home.guide;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
@@ -35,21 +36,22 @@ public class GuideView extends Fragment implements GuideContract.View,
         SwipeRefreshLayout.OnRefreshListener {
     private GuideContract.Presenter mPresenter;
 
+    @BindView(R.id.coordinator)
+    CoordinatorLayout mCoordinatorLayout;
+
     @BindView(R.id.stateToggleLayout)
     StateToggleLayout mStateLayout;
 
     @BindView(R.id.day_list)
     RecyclerView mDayList;
 
-    @BindView(R.id.refreshLayout)
+    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
-
-    @BindView(R.id.errorMessage)
-    TextView mErrorMessageView;
 
     private GuideDaysAdapter mDayListAdapter;
     private Realm mRealm;
     private Animation mUpdateAnimation;
+    private Snackbar mSnackbar;
 
     public static GuideView newInstance() {
         Bundle args = new Bundle();
@@ -115,6 +117,7 @@ public class GuideView extends Fragment implements GuideContract.View,
                 }
                 mDayList.startAnimation(mUpdateAnimation);
                 mRefreshLayout.setRefreshing(false);
+                hideError();
             }
         });
     }
@@ -126,18 +129,27 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     @Override
     public void showError(String message) {
-        mErrorMessageView.setText(message);
-        mStateLayout.setState(StateToggleLayout.STATE_ERROR);
         mRefreshLayout.setRefreshing(false);
+        mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRefreshLayout.setRefreshing(true);
+                        onRefresh();
+                    }
+                });
+        mSnackbar.show();
     }
 
     @Override
     public void onRefresh() {
-        if (mPresenter != null) {
-            mPresenter.loadProgram();
-        } else {
-            mErrorMessageView.setText(R.string.guide_state_hint_error_default);
-            mStateLayout.setState(StateToggleLayout.STATE_ERROR);
+        mPresenter.loadProgram();
+        hideError();
+    }
+
+    private void hideError() {
+        if (mSnackbar != null) {
+            mSnackbar.dismiss();
         }
     }
 }

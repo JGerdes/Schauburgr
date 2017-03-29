@@ -8,6 +8,7 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -55,7 +56,8 @@ public class GuidePresenter implements GuideContract.Presenter {
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
                 Log.e(TAG, "Failure while feting data", t);
-                if (t instanceof SocketTimeoutException) {
+                if (t instanceof SocketTimeoutException
+                        || t instanceof UnknownHostException) {
                     mView.showError("Keine Internetverbindung :(");
                 } else {
                     mView.showError(t.getClass().getName());

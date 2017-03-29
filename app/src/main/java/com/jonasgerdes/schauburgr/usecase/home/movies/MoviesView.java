@@ -33,7 +33,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     @BindView(R.id.movieList)
     RecyclerView mMovieList;
 
-    @BindView(R.id.refreshLayout)
+    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
     private MovieListAdapter mMovieListAdapter;
