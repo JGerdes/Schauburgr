@@ -15,7 +15,7 @@ import java.util.List;
  * Created by jonas on 08.03.2017.
  */
 
-public class LicenseListApdater extends RecyclerView.Adapter<LicenseHolder> {
+public class LicenseListAdapter extends RecyclerView.Adapter<LicenseHolder> {
 
     List<OpenSourceLicense> mLicenseList = new ArrayList<>();
 

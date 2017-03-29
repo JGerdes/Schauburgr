@@ -1,21 +1,18 @@
 package com.jonasgerdes.schauburgr.usecase.home.about;
 
-import android.content.Context;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
-import com.jonasgerdes.schauburgr.usecase.home.HomeView;
-import com.jonasgerdes.schauburgr.usecase.home.about.license_list.LicenseListApdater;
+import com.jonasgerdes.schauburgr.usecase.home.about.license_list.LicenseListAdapter;
 
 import java.util.Arrays;
 
@@ -26,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by jonas on 08.03.2017.
  */
 
-public class AboutView extends FrameLayout implements HomeView, AboutContract.View {
+public class AboutView extends Fragment implements AboutContract.View {
 
     @BindView(R.id.licenseList)
     RecyclerView mLicenseList;
@@ -35,38 +32,32 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
     TextView mVersionName;
 
     private AboutContract.Presenter mPresenter;
-    private LicenseListApdater mLicenseAdapter;
+    private LicenseListAdapter mLicenseAdapter;
 
+    public static AboutView newInstance() {
+        Bundle args = new Bundle();
 
-    public AboutView(@NonNull Context context) {
-        super(context);
-        init();
+        AboutView fragment = new AboutView();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public AboutView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return LayoutInflater.from(getContext()).inflate(R.layout.home_about, container, false);
     }
 
-    public AboutView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    public AboutView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.home_about, this);
-        ButterKnife.bind(this);
-        new AboutPresenter(this);
-        mLicenseAdapter = new LicenseListApdater();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+        mLicenseAdapter = new LicenseListAdapter();
         mLicenseList.setAdapter(mLicenseAdapter);
         mLicenseList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
+        new AboutPresenter(this);
     }
 
     @Override
@@ -76,17 +67,8 @@ public class AboutView extends FrameLayout implements HomeView, AboutContract.Vi
 
     @Override
     public void onStart() {
+        super.onStart();
         mPresenter.loadLicenses();
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
     }
 
     @Override

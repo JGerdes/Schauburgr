@@ -1,21 +1,18 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.content.Context;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
-import com.jonasgerdes.schauburgr.usecase.home.HomeView;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
@@ -32,7 +29,7 @@ import io.realm.Sort;
  * Created by jonas on 04.03.2017.
  */
 
-public class GuideView extends FrameLayout implements HomeView, GuideContract.View,
+public class GuideView extends Fragment implements GuideContract.View,
         SwipeRefreshLayout.OnRefreshListener {
     private GuideContract.Presenter mPresenter;
 
@@ -51,32 +48,25 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     private GuideDaysAdapter mDayListAdapter;
     private Realm mRealm;
 
-    public GuideView(@NonNull Context context) {
-        super(context);
-        init();
+    public static GuideView newInstance() {
+        Bundle args = new Bundle();
+
+        GuideView fragment = new GuideView();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return LayoutInflater.from(getContext()).inflate(R.layout.home_guide, container, false);
     }
 
-    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
-            defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
 
-    public GuideView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int
-            defStyleAttr, @StyleRes int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.home_guide, this);
-        ButterKnife.bind(this);
-        mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
         mDayListAdapter = new GuideDaysAdapter(getContext());
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
@@ -92,6 +82,12 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         new GuidePresenter(this);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mRealm.close();
+    }
+
     private void bindModel() {
         mRealm = Realm.getDefaultInstance();
         RealmResults<ScreeningDay> days
@@ -102,8 +98,12 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
         mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
         days.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
             @Override
-            public void onChange(RealmResults<ScreeningDay> element) {
-                mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+            public void onChange(RealmResults<ScreeningDay> result) {
+                if (result.size() > 0) {
+                    mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+                } else {
+                    mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
+                }
                 mRefreshLayout.setRefreshing(false);
             }
         });
@@ -112,21 +112,6 @@ public class GuideView extends FrameLayout implements HomeView, GuideContract.Vi
     @Override
     public void setPresenter(GuideContract.Presenter presenter) {
         mPresenter = presenter;
-    }
-
-    @Override
-    public void onStart() {
-    }
-
-    @Override
-    public void onStop() {
-        mPresenter.onStop();
-        mRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onDestroy() {
-        mRealm.close();
     }
 
     @Override
