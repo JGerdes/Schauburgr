@@ -1,7 +1,12 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
@@ -15,6 +20,7 @@ import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
 
 import javax.inject.Inject;
 
@@ -39,6 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @BindView(R.id.description)
     TextView mDescriptionView;
+
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     @InjectExtra
     String movieId;
@@ -99,8 +108,28 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void onChange(Movie movie) {
         setTitle(movie.getTitle());
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
+        @ColorInt final int defaultColor
+                = ContextCompat.getColor(MovieDetailActivity.this, R.color.colorPrimaryDark);
         Glide.with(this)
                 .load(mImageUrlCreator.getPosterImageUrl(movie))
+                .asBitmap()
+                .listener(new GlideBitmapReadyListener() {
+                    @Override
+                    public void onBitmapReady(Bitmap bitmap) {
+                        Palette palette = Palette.from(bitmap).generate();
+                        @ColorInt int background = palette.getVibrantColor(
+                                palette.getDominantColor(defaultColor)
+                        );
+                        mCollapsingToolbarLayout.setBackgroundColor(background);
+                        mCollapsingToolbarLayout.setContentScrimColor(background);
+
+                        getWindow().setStatusBarColor(
+                                palette.getDarkVibrantColor(
+                                        palette.getDominantColor(defaultColor)
+                                )
+                        );
+                    }
+                })
                 .into(mPosterView);
     }
 }
