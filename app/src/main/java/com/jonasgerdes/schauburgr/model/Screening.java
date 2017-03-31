@@ -5,13 +5,15 @@ import org.joda.time.DateTime;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by jonas on 04.03.2017.
  */
 
-public class Screening extends RealmObject{
+public class Screening extends RealmObject {
 
+    @PrimaryKey
     private String resourceId;
     private Movie movie;
     private Date startDate;
