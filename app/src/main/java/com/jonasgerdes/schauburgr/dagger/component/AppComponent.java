@@ -7,6 +7,7 @@ import com.jonasgerdes.schauburgr.usecase.home.guide.GuidePresenter;
 import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesPresenter;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailPresenter;
 
 import javax.inject.Singleton;
 
@@ -24,4 +25,6 @@ public interface AppComponent {
     void inject(AboutPresenter aboutPresenter);
 
     void inject(MovieDetailActivity movieDetailActivity);
+
+    void inject(MovieDetailPresenter movieDetailPresenter);
 }

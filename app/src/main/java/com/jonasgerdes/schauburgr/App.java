@@ -14,13 +14,13 @@ import io.realm.RealmConfiguration;
 
 public class App extends Application {
 
-    private static AppComponent mAppComponent;
+    private static AppComponent sAppComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mAppComponent = DaggerAppComponent.builder()
+        sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
                 .build();
@@ -46,7 +46,7 @@ public class App extends Application {
     }
 
     public static AppComponent getAppComponent() {
-        return mAppComponent;
+        return sAppComponent;
     }
 
 }

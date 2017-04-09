@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
@@ -28,7 +26,6 @@ import retrofit2.Response;
  */
 
 public class GuidePresenter implements GuideContract.Presenter {
-    private static final String TAG = "AboutPresenter";
 
     @Inject
     SchauburgApi mApi;
@@ -76,7 +73,6 @@ public class GuidePresenter implements GuideContract.Presenter {
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                Log.e(TAG, "Failure while feting data", t);
                 if (t instanceof SocketTimeoutException
                         || t instanceof UnknownHostException
                         || t instanceof SocketException) {

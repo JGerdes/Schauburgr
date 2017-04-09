@@ -26,14 +26,12 @@ import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
 
-import org.joda.time.LocalDate;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -58,20 +56,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @BindView(R.id.screeningList)
     RecyclerView mScreeningList;
 
-    @InjectExtra
-    String movieId;
-
     @Inject
     ImageUrlCreator mImageUrlCreator;
 
-    private Realm mRealm;
+    @InjectExtra
+    String movieId;
+
     private MovieDetailContract.Presenter mPresenter;
-    private Movie mMovie;
+    private ScreeningListAdapter mScreeningsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
         App.getAppComponent().inject(this);
         ButterKnife.bind(this);
         Dart.inject(this);
@@ -79,27 +77,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRealm = Realm.getDefaultInstance();
+        initScreeningList();
+
         new MovieDetailPresenter(this);
-
-        mMovie = mRealm.where(Movie.class)
-                .equalTo("resourceId", movieId)
-                .findFirst();
-
-        mMovie.addChangeListener(this);
-        onChange(mMovie);
-        mScreeningList.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        );
-        ScreeningListAdapter adapter = new ScreeningListAdapter();
-        mScreeningList.setAdapter(adapter);
-        adapter.setScreenings(
-                mRealm.where(Screening.class)
-                        .equalTo("movie.resourceId", movieId)
-                        .greaterThanOrEqualTo("startDate", new LocalDate().toDate())
-                        .findAll()
-        );
-
     }
 
     @Override
@@ -115,13 +95,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void setPresenter(MovieDetailContract.Presenter presenter) {
         mPresenter = presenter;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mMovie.removeChangeListener(this);
-        mRealm.close();
-        super.onDestroy();
+        mPresenter.loadMovie(movieId);
+        mPresenter.loadScreeningsFor(movieId);
     }
 
     @Override
@@ -140,6 +115,25 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     }
                 })
                 .into(mPosterView);
+    }
+
+    @Override
+    public void showMovie(Movie movie) {
+        movie.addChangeListener(this);
+        onChange(movie);
+    }
+
+    @Override
+    public void showScreenings(RealmResults<Screening> screenings) {
+        mScreeningsAdapter.setScreenings(screenings);
+    }
+
+    private void initScreeningList() {
+        mScreeningList.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        );
+        mScreeningsAdapter = new ScreeningListAdapter();
+        mScreeningList.setAdapter(mScreeningsAdapter);
     }
 
     private void applyColors(Palette palette) {
