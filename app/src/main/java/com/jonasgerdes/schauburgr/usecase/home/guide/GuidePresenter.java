@@ -64,11 +64,14 @@ public class GuidePresenter implements GuideContract.Presenter {
         mPendingCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
+                final List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
                 Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(guide);
-                realm.commitTransaction();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(guide);
+                    }
+                });
             }
 
             @Override

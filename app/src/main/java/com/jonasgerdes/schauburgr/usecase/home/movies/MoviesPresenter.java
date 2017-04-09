@@ -49,11 +49,14 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mPendingCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                List<Movie> movies = response.body().getMovies();
+                final List<Movie> movies = response.body().getMovies();
                 Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(movies);
-                realm.commitTransaction();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(movies);
+                    }
+                });
             }
 
             @Override
