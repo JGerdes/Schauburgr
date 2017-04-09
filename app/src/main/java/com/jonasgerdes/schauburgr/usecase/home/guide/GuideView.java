@@ -19,14 +19,10 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
-import org.joda.time.LocalDate;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -49,7 +45,6 @@ public class GuideView extends Fragment implements GuideContract.View,
     SwipeRefreshLayout mRefreshLayout;
 
     private GuideDaysAdapter mDayListAdapter;
-    private Realm mRealm;
     private Animation mUpdateAnimation;
     private Snackbar mSnackbar;
 
@@ -85,8 +80,6 @@ public class GuideView extends Fragment implements GuideContract.View,
 
         mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
 
-        bindModel();
-
         new GuidePresenter(this);
     }
 
@@ -96,18 +89,18 @@ public class GuideView extends Fragment implements GuideContract.View,
         mRefreshLayout.setOnRefreshListener(null);
         mDayList.clearAnimation();
         mPresenter.stop();
-        mRealm.close();
     }
 
-    private void bindModel() {
-        mRealm = Realm.getDefaultInstance();
-        RealmResults<ScreeningDay> days
-                = mRealm.where(ScreeningDay.class)
-                .greaterThanOrEqualTo("date", new LocalDate().toDate())
-                .findAllSorted("date", Sort.ASCENDING);
-        mDayListAdapter.setDays(days);
+    @Override
+    public void setPresenter(GuideContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showScreeningDays(RealmResults<ScreeningDay> screeningDays) {
+        mDayListAdapter.setDays(screeningDays);
         mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
-        days.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
+        screeningDays.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
             @Override
             public void onChange(RealmResults<ScreeningDay> result) {
                 if (result.size() > 0) {
@@ -120,11 +113,6 @@ public class GuideView extends Fragment implements GuideContract.View,
                 hideError();
             }
         });
-    }
-
-    @Override
-    public void setPresenter(GuideContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Override
@@ -143,8 +131,8 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     @Override
     public void onRefresh() {
-        mPresenter.loadProgram();
         hideError();
+        mPresenter.loadProgram();
     }
 
     private void hideError() {

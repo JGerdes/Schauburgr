@@ -7,6 +7,9 @@ import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
+import org.joda.time.LocalDate;
+
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +33,9 @@ public class GuidePresenter implements GuideContract.Presenter {
     @Inject
     SchauburgApi mApi;
 
+    @Inject
+    Realm mRealm;
+
     private GuideContract.View mView;
     private Call<Guide> mPendingCall;
 
@@ -35,8 +43,18 @@ public class GuidePresenter implements GuideContract.Presenter {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+        showCachedDataOrFetch();
+    }
+
+    private void showCachedDataOrFetch() {
         if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
             loadProgram();
+        } else {
+            RealmResults<ScreeningDay> days
+                    = mRealm.where(ScreeningDay.class)
+                    .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                    .findAllSorted("date", Sort.ASCENDING);
+            mView.showScreeningDays(days);
         }
     }
 
@@ -57,7 +75,8 @@ public class GuidePresenter implements GuideContract.Presenter {
             public void onFailure(Call<Guide> call, Throwable t) {
                 Log.e(TAG, "Failure while feting data", t);
                 if (t instanceof SocketTimeoutException
-                        || t instanceof UnknownHostException) {
+                        || t instanceof UnknownHostException
+                        || t instanceof SocketException) {
                     mView.showError("Keine Internetverbindung :(");
                 } else {
                     mView.showError(t.getClass().getName());

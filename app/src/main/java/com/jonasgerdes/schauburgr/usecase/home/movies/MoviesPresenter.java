@@ -12,6 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +25,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Inject
     SchauburgApi mApi;
 
+    @Inject
+    Realm mRealm;
 
     private MoviesContract.View mView;
     private Call<Guide> mPendingCall;
@@ -32,6 +35,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+        showCachedMovies();
+    }
+
+    private void showCachedMovies() {
+        RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
+        mView.showMovies(movies);
     }
 
     @Override
@@ -64,6 +73,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         if (mPendingCall != null) {
             mPendingCall.cancel();
         }
+        mRealm.close();
     }
 
     @Override

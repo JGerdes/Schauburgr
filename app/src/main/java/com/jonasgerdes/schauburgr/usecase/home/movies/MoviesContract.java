@@ -4,6 +4,8 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 
+import io.realm.RealmResults;
+
 /**
  * Created by jonas on 05.03.2017.
  */
@@ -11,6 +13,7 @@ import com.jonasgerdes.schauburgr.mvp.BaseView;
 public interface MoviesContract {
     interface View extends BaseView<MoviesContract.Presenter> {
         void showError(String message);
+        void showMovies(RealmResults<Movie> movies);
         void openDetails(Movie movie);
 
     }

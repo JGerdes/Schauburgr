@@ -22,7 +22,6 @@ import com.jonasgerdes.schauburgr.usecase.movie_detail.Henson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -44,7 +43,6 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     SwipeRefreshLayout mRefreshLayout;
 
     private MovieListAdapter mMovieListAdapter;
-    private Realm mRealm;
     private Animation mUpdateAnimation;
     private Snackbar mSnackbar;
 
@@ -67,22 +65,29 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.title_movies);
         ButterKnife.bind(this, view);
+
+        mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
+
+        initRecyclerView();
+        initRefreshLayout();
+
         new MoviesPresenter(this);
+    }
+
+    private void initRefreshLayout() {
+        mRefreshLayout.setOnRefreshListener(this);
+        int triggerDistance = getContext()
+                .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
+        mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
+    }
+
+    private void initRecyclerView() {
         mMovieListAdapter = new MovieListAdapter();
         mMovieList.setAdapter(mMovieListAdapter);
         mMovieList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
         mMovieListAdapter.setMovieClickedListener(this);
-
-        mRefreshLayout.setOnRefreshListener(this);
-        int triggerDistance = getContext()
-                .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
-        mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
-
-        mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
-
-        bindModel();
     }
 
     @Override
@@ -91,27 +96,11 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mRefreshLayout.setOnRefreshListener(null);
         mMovieList.clearAnimation();
         mPresenter.stop();
-        mRealm.close();
     }
 
     @Override
     public void onMovieClicked(Movie movie) {
         mPresenter.onMovieClicked(movie);
-    }
-
-
-    private void bindModel() {
-        mRealm = Realm.getDefaultInstance();
-        RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
-        mMovieListAdapter.setMovies(movies);
-        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
-            @Override
-            public void onChange(RealmResults<Movie> element) {
-                mRefreshLayout.setRefreshing(false);
-                mMovieList.startAnimation(mUpdateAnimation);
-                hideError();
-            }
-        });
     }
 
     @Override
@@ -132,6 +121,19 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
                     }
                 });
         mSnackbar.show();
+    }
+
+    @Override
+    public void showMovies(RealmResults<Movie> movies) {
+        mMovieListAdapter.setMovies(movies);
+        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
+            @Override
+            public void onChange(RealmResults<Movie> element) {
+                mRefreshLayout.setRefreshing(false);
+                mMovieList.startAnimation(mUpdateAnimation);
+                hideError();
+            }
+        });
     }
 
     @Override

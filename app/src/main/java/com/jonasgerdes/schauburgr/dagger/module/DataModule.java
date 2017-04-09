@@ -3,15 +3,16 @@ package com.jonasgerdes.schauburgr.dagger.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.network.image.SchauburgImageUrlCreator;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -60,6 +61,11 @@ public class DataModule {
     @Singleton
     ImageUrlCreator provideImageUrlCreator() {
         return new SchauburgImageUrlCreator(mBaseUrl);
+    }
+
+    @Provides
+    Realm provideRealm() {
+       return Realm.getDefaultInstance();
     }
 
 
