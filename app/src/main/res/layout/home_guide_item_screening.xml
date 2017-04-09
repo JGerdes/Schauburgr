@@ -31,16 +31,8 @@
 
     <TextView
         android:id="@+id/labelHall"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/hall_icon"
         android:layout_weight="0"
-        android:background="@drawable/background_rounded_rect_light"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="?android:textColorPrimaryInverse"
-        android:textStyle="bold"
         tools:text="6"/>
 
 </LinearLayout>

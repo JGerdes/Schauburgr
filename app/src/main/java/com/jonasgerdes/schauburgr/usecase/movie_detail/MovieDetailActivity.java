@@ -7,6 +7,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
@@ -19,8 +21,12 @@ import com.f2prateek.dart.InjectExtra;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
+
+import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 
@@ -48,6 +54,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @BindView(R.id.collapsing_toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    @BindView(R.id.screeningList)
+    RecyclerView mScreeningList;
 
     @InjectExtra
     String movieId;
@@ -79,6 +88,17 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         mMovie.addChangeListener(this);
         onChange(mMovie);
+        mScreeningList.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        );
+        ScreeningListAdapter adapter = new ScreeningListAdapter();
+        mScreeningList.setAdapter(adapter);
+        adapter.setScreenings(
+                mRealm.where(Screening.class)
+                        .equalTo("movie.resourceId", movieId)
+                        .greaterThanOrEqualTo("startDate", new LocalDate().toDate())
+                        .findAll()
+        );
 
     }
 
@@ -108,8 +128,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void onChange(Movie movie) {
         setTitle(movie.getTitle());
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
-        @ColorInt final int defaultColor
-                = ContextCompat.getColor(MovieDetailActivity.this, R.color.colorPrimaryDark);
+
         Glide.with(this)
                 .load(mImageUrlCreator.getPosterImageUrl(movie))
                 .asBitmap()
@@ -117,19 +136,25 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
                         Palette palette = Palette.from(bitmap).generate();
-                        @ColorInt int background = palette.getVibrantColor(
-                                palette.getDominantColor(defaultColor)
-                        );
-                        mCollapsingToolbarLayout.setBackgroundColor(background);
-                        mCollapsingToolbarLayout.setContentScrimColor(background);
-
-                        getWindow().setStatusBarColor(
-                                palette.getDarkVibrantColor(
-                                        palette.getDominantColor(defaultColor)
-                                )
-                        );
+                        applyColors(palette);
                     }
                 })
                 .into(mPosterView);
+    }
+
+    private void applyColors(Palette palette) {
+        @ColorInt final int defaultColor
+                = ContextCompat.getColor(MovieDetailActivity.this, R.color.colorPrimaryDark);
+        @ColorInt int background = palette.getVibrantColor(
+                palette.getDominantColor(defaultColor)
+        );
+        mCollapsingToolbarLayout.setBackgroundColor(background);
+        mCollapsingToolbarLayout.setContentScrimColor(background);
+
+        getWindow().setStatusBarColor(
+                palette.getDarkVibrantColor(
+                        palette.getDominantColor(defaultColor)
+                )
+        );
     }
 }
