@@ -8,6 +8,7 @@ import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 
+import de.jonasrottmann.realmbrowser.RealmBrowser;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -26,6 +27,8 @@ public class App extends Application {
                 .build();
 
         initRealmDb();
+
+        RealmBrowser.addFilesShortcut(getApplicationContext());
     }
 
     private void initRealmDb() {
