@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -87,6 +88,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         new MovieDetailPresenter(this);
 
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.RIGHT);
+        getWindow().setEnterTransition(slide);
         postponeEnterTransition();
     }
 
