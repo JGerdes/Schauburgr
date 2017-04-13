@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +56,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @BindView(R.id.screeningList)
     RecyclerView mScreeningList;
+
+    @BindView(R.id.next_screenings_title)
+    TextView mNextScreeningsTitle;
 
     @Inject
     ImageUrlCreator mImageUrlCreator;
@@ -126,6 +130,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void showScreenings(RealmResults<Screening> screenings) {
         mScreeningsAdapter.setScreenings(screenings);
+        //hide "next screenings" title if there are no next screenings
+        mNextScreeningsTitle.setVisibility(screenings.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     private void initScreeningList() {
