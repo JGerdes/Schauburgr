@@ -31,7 +31,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -39,8 +38,7 @@ import io.realm.RealmResults;
  * @since 29.03.2017
  */
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View,
-        RealmChangeListener<Movie> {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -97,6 +95,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
+    protected void onDestroy() {
+        mPresenter.stop();
+        super.onDestroy();
+    }
+
+    @Override
     public void setPresenter(MovieDetailContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.loadMovie(movieId);
@@ -104,7 +108,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void onChange(Movie movie) {
+    public void showMovie(Movie movie) {
         setTitle(movie.getTitle());
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
@@ -119,12 +123,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     }
                 })
                 .into(mPosterView);
-    }
-
-    @Override
-    public void showMovie(Movie movie) {
-        movie.addChangeListener(this);
-        onChange(movie);
     }
 
     @Override
