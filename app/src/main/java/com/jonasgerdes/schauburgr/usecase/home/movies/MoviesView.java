@@ -1,6 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.movies;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,8 +16,9 @@ import android.view.animation.AnimationUtils;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
-import com.jonasgerdes.schauburgr.usecase.movie_detail.Henson;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,8 +99,8 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     }
 
     @Override
-    public void onMovieClicked(Movie movie) {
-        mPresenter.onMovieClicked(movie);
+    public void onMovieClicked(Movie movie, MovieHolder holder) {
+        MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
     }
 
     @Override
@@ -134,16 +134,6 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
                 hideError();
             }
         });
-    }
-
-    @Override
-    public void openDetails(Movie movie) {
-        Intent detailsIntent = Henson.with(getContext())
-                .gotoMovieDetailActivity()
-                .movieId(movie.getResourceId())
-                .build();
-
-        startActivity(detailsIntent);
     }
 
     @Override

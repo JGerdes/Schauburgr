@@ -78,9 +78,4 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         }
         mRealm.close();
     }
-
-    @Override
-    public void onMovieClicked(Movie movie) {
-        mView.openDetails(movie);
-    }
 }

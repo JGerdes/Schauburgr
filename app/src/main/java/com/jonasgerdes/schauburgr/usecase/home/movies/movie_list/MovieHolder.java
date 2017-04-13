@@ -117,4 +117,8 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         }
         return ContextCompat.getColor(context, colorRes);
     }
+
+    public ImageView getPosterView() {
+        return mPoster;
+    }
 }

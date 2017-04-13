@@ -1,5 +1,8 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -11,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.Slide;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,6 +86,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         initScreeningList();
 
         new MovieDetailPresenter(this);
+
+        postponeEnterTransition();
     }
 
     @Override
@@ -120,6 +126,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     public void onBitmapReady(Bitmap bitmap) {
                         Palette palette = Palette.from(bitmap).generate();
                         applyColors(palette);
+                        //start transition
+                        startPostponedEnterTransition();
                     }
                 })
                 .into(mPosterView);
@@ -154,5 +162,17 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         palette.getDominantColor(defaultColor)
                 )
         );
+    }
+
+    public static void start(Activity activity, Movie movie, ImageView posterThumbnail) {
+        Intent detailsIntent = Henson.with(activity)
+                .gotoMovieDetailActivity()
+                .movieId(movie.getResourceId())
+                .build();
+        String transitionName = activity.getString(R.string.transition_movie_poster);
+        posterThumbnail.setTransitionName(transitionName);
+        ActivityOptions options = ActivityOptions
+                .makeSceneTransitionAnimation(activity, posterThumbnail, transitionName);
+        activity.startActivity(detailsIntent, options.toBundle());
     }
 }

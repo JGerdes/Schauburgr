@@ -14,13 +14,11 @@ public interface MoviesContract {
     interface View extends BaseView<MoviesContract.Presenter> {
         void showError(String message);
         void showMovies(RealmResults<Movie> movies);
-        void openDetails(Movie movie);
 
     }
 
     interface Presenter extends BasePresenter {
         void loadMovies();
         void stop();
-        void onMovieClicked(Movie movie);
     }
 }

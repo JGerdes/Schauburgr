@@ -21,7 +21,7 @@ import io.realm.RealmResults;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     public interface MovieClickedListener {
-        void onMovieClicked(Movie movie);
+        void onMovieClicked(Movie movie, MovieHolder holder);
     }
 
     private List<Movie> mMovies = new ArrayList<>();
@@ -37,7 +37,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
             public void onClick(View v) {
                 if (mMovieClickedListener != null) {
                     Movie movie = mMovies.get(holder.getAdapterPosition());
-                    mMovieClickedListener.onMovieClicked(movie);
+                    mMovieClickedListener.onMovieClicked(movie, holder);
                 }
             }
         });
