@@ -32,7 +32,9 @@ public class ScreeningListAdapter extends RecyclerView.Adapter<ScreeningHolder> 
     @Override
     public void onBindViewHolder(ScreeningHolder holder, int position) {
         Screening screening = mScreenings.get(position);
-        holder.onBind(screening);
+        boolean isFirstForDate = position == 0
+                || !screening.isOnSameDate(mScreenings.get(position - 1));
+        holder.onBind(screening, isFirstForDate);
     }
 
     @Override

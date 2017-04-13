@@ -51,6 +51,11 @@ public class Screening extends RealmObject {
         this.hall = hall;
     }
 
+    public boolean isOnSameDate(Screening other) {
+        return getStartDate().toLocalDate()
+                .isEqual(other.getStartDate().toLocalDate());
+    }
+
 
     @Override
     public String toString() {

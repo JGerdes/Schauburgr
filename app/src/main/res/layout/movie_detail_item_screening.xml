@@ -9,12 +9,14 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="128sp"
+        android:layout_width="96sp"
+        android:gravity="left"
         android:layout_height="wrap_content"
-        tools:text="Donnerstag, 22.08"/>
+        tools:text="Do, 22.08"/>
 
     <TextView
         android:id="@+id/time"
+        android:gravity="left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="17:00"/>

@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.dagger.module;
 
+import android.content.res.Resources;
+
 import com.jonasgerdes.schauburgr.App;
 
 import javax.inject.Singleton;
@@ -19,5 +21,11 @@ public class AppModule {
     @Singleton
     App provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    Resources provideRessources() {
+        return mApplication.getResources();
     }
 }

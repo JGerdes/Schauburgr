@@ -66,9 +66,11 @@ public class GuidePresenter implements GuideContract.Presenter {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        realm.copyToRealmOrUpdate(guide);
+                        realm.deleteAll();
+                        realm.copyToRealm(guide);
                     }
                 });
+                realm.close();
             }
 
             @Override
