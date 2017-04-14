@@ -89,6 +89,7 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         String posterImageUrl = mImageUrlCreator.getPosterImageUrl(movie);
         Glide.with(context)
                 .load(posterImageUrl)
+                .error(R.drawable.no_network_poster)
                 .centerCrop()
                 .into(mPoster);
 

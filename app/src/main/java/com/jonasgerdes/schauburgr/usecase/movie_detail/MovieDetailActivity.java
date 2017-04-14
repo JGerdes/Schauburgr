@@ -6,6 +6,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -50,6 +51,11 @@ import io.realm.RealmResults;
 
 public class MovieDetailActivity extends AppCompatActivity
         implements MovieDetailContract.View, SwipeBackLayout.SwipeListener {
+
+    /**
+     * maximum delay (in ms) to wait for finish loading until activity is opened without transition
+     */
+    public static final int MAX_DELAY_FOR_TRANSITION = 500;
 
     @BindView(R.id.swipe_back_layout)
     SwipeBackLayout mSwipeBackLayout;
@@ -106,6 +112,14 @@ public class MovieDetailActivity extends AppCompatActivity
 
         getWindow().setEnterTransition(slide);
         postponeEnterTransition();
+
+        //if loading takes longer then 500ms, screw shared element transition and start anyway
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startPostponedEnterTransition();
+            }
+        }, MAX_DELAY_FOR_TRANSITION);
     }
 
     private void fixNestedScrollFlingBehavior() {
@@ -146,6 +160,7 @@ public class MovieDetailActivity extends AppCompatActivity
         Glide.with(this)
                 .load(mImageUrlCreator.getPosterImageUrl(movie))
                 .asBitmap()
+                .error(R.drawable.no_network_poster)
                 .listener(new GlideBitmapReadyListener() {
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
