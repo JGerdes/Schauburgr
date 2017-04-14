@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -33,6 +35,7 @@ import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
+import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
 
 import javax.inject.Inject;
 
@@ -46,7 +49,7 @@ import io.realm.RealmResults;
  */
 
 public class MovieDetailActivity extends AppCompatActivity
-        implements MovieDetailContract.View,SwipeBackLayout.SwipeListener {
+        implements MovieDetailContract.View, SwipeBackLayout.SwipeListener {
 
     @BindView(R.id.swipe_back_layout)
     SwipeBackLayout mSwipeBackLayout;
@@ -92,6 +95,8 @@ public class MovieDetailActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mSwipeBackLayout.setSwipeListener(this);
 
+        fixNestedScrollFlingBehavior();
+
         initScreeningList();
 
         new MovieDetailPresenter(this);
@@ -101,7 +106,14 @@ public class MovieDetailActivity extends AppCompatActivity
 
         getWindow().setEnterTransition(slide);
         postponeEnterTransition();
-}
+    }
+
+    private void fixNestedScrollFlingBehavior() {
+        AppBarLayout appBarLayout = ButterKnife.findById(this, R.id.appBarLayout);
+        CoordinatorLayout.LayoutParams params
+                = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        params.setBehavior(new NestedScrollViewBehavior());
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
