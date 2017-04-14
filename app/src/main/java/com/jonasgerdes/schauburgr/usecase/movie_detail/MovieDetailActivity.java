@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
+import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 
 import javax.inject.Inject;
 
@@ -43,7 +45,11 @@ import io.realm.RealmResults;
  * @since 29.03.2017
  */
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
+public class MovieDetailActivity extends AppCompatActivity
+        implements MovieDetailContract.View,SwipeBackLayout.SwipeListener {
+
+    @BindView(R.id.swipe_back_layout)
+    SwipeBackLayout mSwipeBackLayout;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -72,6 +78,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private MovieDetailContract.Presenter mPresenter;
     private ScreeningListAdapter mScreeningsAdapter;
 
+    @SuppressLint("RtlHardcoded")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +90,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mSwipeBackLayout.setSwipeListener(this);
 
         initScreeningList();
 
@@ -90,9 +98,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         Slide slide = new Slide();
         slide.setSlideEdge(Gravity.RIGHT);
+
         getWindow().setEnterTransition(slide);
         postponeEnterTransition();
-    }
+}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,5 +187,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         ActivityOptions options = ActivityOptions
                 .makeSceneTransitionAnimation(activity, posterThumbnail, transitionName);
         activity.startActivity(detailsIntent, options.toBundle());
+    }
+
+    @Override
+    public void onFullSwipeBack() {
+        finishAfterTransition();
+    }
+
+    @Override
+    public void onSwipe(float progress) {
+        //ignore
     }
 }

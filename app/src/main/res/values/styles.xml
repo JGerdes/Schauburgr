@@ -14,6 +14,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.Translucent" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="movie_attribute">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

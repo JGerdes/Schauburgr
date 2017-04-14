@@ -24,7 +24,7 @@
         <activity
             android:name=".usecase.movie_detail.MovieDetailActivity"
             android:parentActivityName=".usecase.home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Translucent"/>
     </application>
 
 </manifest>
