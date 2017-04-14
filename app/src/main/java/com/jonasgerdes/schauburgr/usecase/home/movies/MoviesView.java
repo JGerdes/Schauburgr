@@ -74,6 +74,12 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         new MoviesPresenter(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMovieListAdapter.setMovieClickedListener(this);
+    }
+
     private void initRefreshLayout() {
         mRefreshLayout.setOnRefreshListener(this);
         int triggerDistance = getContext()
@@ -87,7 +93,6 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mMovieList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
-        mMovieListAdapter.setMovieClickedListener(this);
     }
 
     @Override
@@ -101,6 +106,8 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     @Override
     public void onMovieClicked(Movie movie, MovieHolder holder) {
         MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
+        //prevent double tap opens activity twice (may be possible if loading takes a moment)
+        mMovieListAdapter.setMovieClickedListener(null);
     }
 
     @Override
