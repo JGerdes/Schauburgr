@@ -99,7 +99,6 @@ public class GuideView extends Fragment implements GuideContract.View,
     @Override
     public void showScreeningDays(RealmResults<ScreeningDay> screeningDays) {
         mDayListAdapter.setDays(screeningDays);
-        mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
         screeningDays.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
             @Override
             public void onChange(RealmResults<ScreeningDay> result) {
@@ -113,6 +112,11 @@ public class GuideView extends Fragment implements GuideContract.View,
                 hideError();
             }
         });
+        if(screeningDays.size() == 0) {
+            mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
+        } else {
+            mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+        }
     }
 
     @Override

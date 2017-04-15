@@ -40,18 +40,18 @@ public class GuidePresenter implements GuideContract.Presenter {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
-        showCachedDataOrFetch();
+        loadProgramIfNoData();
     }
 
-    private void showCachedDataOrFetch() {
+    private void loadProgramIfNoData() {
+        RealmResults<ScreeningDay> days
+                = mRealm.where(ScreeningDay.class)
+                .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                .findAllSorted("date", Sort.ASCENDING);
+        mView.showScreeningDays(days);
+
         if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
             loadProgram();
-        } else {
-            RealmResults<ScreeningDay> days
-                    = mRealm.where(ScreeningDay.class)
-                    .greaterThanOrEqualTo("date", new LocalDate().toDate())
-                    .findAllSorted("date", Sort.ASCENDING);
-            mView.showScreeningDays(days);
         }
     }
 
