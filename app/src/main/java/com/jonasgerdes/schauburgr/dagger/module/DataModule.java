@@ -17,6 +17,13 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Dagger module providing data related dependencies like database and network accessors
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
+ */
+
 @Module
 public class DataModule {
     String mBaseUrl;
@@ -63,6 +70,11 @@ public class DataModule {
         return new SchauburgImageUrlCreator(mBaseUrl);
     }
 
+    /**
+     * Provides a not singleton instance of realm db. Instance can and should be closed via
+     * {@link Realm#close()} when not used any more
+     * @return A instance of default realm database
+     */
     @Provides
     Realm provideRealm() {
        return Realm.getDefaultInstance();

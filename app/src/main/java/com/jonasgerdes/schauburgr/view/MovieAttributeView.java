@@ -14,9 +14,13 @@ import com.jonasgerdes.schauburgr.util.ViewUtils;
 import java.util.List;
 
 /**
+ * View which displays attributes (of a movie) in an horizontal list.
+ * Generally behaves like a {@link LinearLayout}, which it extends from.
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 31.03.2017
  */
+
 
 public class MovieAttributeView extends LinearLayout {
     public MovieAttributeView(Context context) {
@@ -40,10 +44,18 @@ public class MovieAttributeView extends LinearLayout {
         init();
     }
 
+    /**
+     * Setups view by setting orientation.
+     */
     private void init() {
         setOrientation(HORIZONTAL);
     }
 
+    /**
+     * Set attributes to show. Creates a {@link TextView} for each attribute, applies style
+     * and add it as child.
+     * @param attributes attributes titles to show
+     */
     public void setAttributes(List<String> attributes) {
         for (String attribute : attributes) {
             TextView attributeView = new TextView(getContext(), null, 0, R.style.movie_attribute);

@@ -3,14 +3,25 @@ package com.jonasgerdes.schauburgr.model;
 import android.support.annotation.StringRes;
 
 /**
- * Created by jonas on 08.03.2017.
+ * Model representation of a open source license to be shown in "about"-section of app.
+ * Holds string resource identifier for both title and body of a license
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 08.03.2017
  */
 
 public class OpenSourceLicense {
 
+    /**
+     * String resource of the title of the library license is for
+     */
     @StringRes
     private int title;
 
+    /**
+     * String resource of details of the license containing author of library, year, title of the
+     * license and the actual license text
+     */
     @StringRes
     private int body;
 

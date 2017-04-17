@@ -9,6 +9,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Dagger module providing app related dependencies like the app instance itself of resources
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
+ */
+
 @Module
 public class AppModule {
     App mApplication;

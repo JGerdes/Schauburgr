@@ -8,11 +8,26 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
- * Created by jonas on 05.03.2017.
+ * Model representation of a time on which screenings are shown. Used for grouping screenings at
+ * same times together.
+ * Contains a list of screenings.
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 05.03.2017
  */
 
 public class ScreeningTime extends RealmObject{
+
+    /**
+     * Time on which screenings take place. Date part is ignored and getter provides
+     * a {@link LocalTime} instance.
+     * {@link Date} is used since Realm can save these.
+     */
     private Date time;
+
+    /**
+     * Lists of screenings shown on specified time
+     */
     private RealmList<Screening> screenings = new RealmList<>();
 
     public LocalTime getTime() {

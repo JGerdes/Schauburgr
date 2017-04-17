@@ -14,6 +14,13 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+/**
+ * Dagger component used to inject dependencies.
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
+ */
+
 @Singleton
 @Component(modules = {AppModule.class, DataModule.class})
 public interface AppComponent {
