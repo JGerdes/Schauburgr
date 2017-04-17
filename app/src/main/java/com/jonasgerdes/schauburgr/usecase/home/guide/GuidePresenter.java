@@ -36,11 +36,19 @@ public class GuidePresenter implements GuideContract.Presenter {
     private GuideContract.View mView;
     private Call<Guide> mPendingCall;
 
-    public GuidePresenter(GuideContract.View view) {
+    @Override
+    public void attachView(GuideContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
         loadProgramIfNoData();
+    }
+
+    @Override
+    public void detachView() {
+        if (mPendingCall != null) {
+            mPendingCall.cancel();
+        }
     }
 
     private void loadProgramIfNoData() {
@@ -84,12 +92,5 @@ public class GuidePresenter implements GuideContract.Presenter {
                 }
             }
         });
-    }
-
-    @Override
-    public void stop() {
-        if (mPendingCall != null) {
-            mPendingCall.cancel();
-        }
     }
 }

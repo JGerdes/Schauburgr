@@ -18,7 +18,8 @@ public interface MoviesContract {
     }
 
     interface Presenter extends BasePresenter {
+        void attachView(MoviesContract.View view);
+        void detachView();
         void loadMovies();
-        void stop();
     }
 }

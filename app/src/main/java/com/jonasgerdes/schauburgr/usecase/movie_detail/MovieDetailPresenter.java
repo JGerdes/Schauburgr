@@ -21,12 +21,19 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     @Inject
     Realm mRealm;
 
-    private final MovieDetailContract.View mView;
+    private MovieDetailContract.View mView;
 
-    public MovieDetailPresenter(MovieDetailContract.View view) {
+    @Override
+    public void attachView(MovieDetailContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+    }
+
+    @Override
+    public void detachView() {
+        mRealm.removeAllChangeListeners();
+        mRealm.close();
     }
 
     @Override
@@ -44,11 +51,5 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                 .greaterThanOrEqualTo("startDate", new LocalDate().toDate())
                 .findAll();
         mView.showScreenings(screenings);
-    }
-
-    @Override
-    public void stop() {
-        mRealm.removeAllChangeListeners();
-        mRealm.close();
     }
 }

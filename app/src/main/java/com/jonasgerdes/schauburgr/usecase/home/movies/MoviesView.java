@@ -71,7 +71,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         initRecyclerView();
         initRefreshLayout();
 
-        new MoviesPresenter(this);
+        new MoviesPresenter().attachView(this);
     }
 
     @Override
@@ -97,10 +97,10 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         mRefreshLayout.setOnRefreshListener(null);
         mMovieList.clearAnimation();
-        mPresenter.stop();
+        mPresenter.detachView();
+        super.onDestroyView();
     }
 
     @Override

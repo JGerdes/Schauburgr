@@ -80,15 +80,15 @@ public class GuideView extends Fragment implements GuideContract.View,
 
         mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
 
-        new GuidePresenter(this);
+        new GuidePresenter().attachView(this);
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        mPresenter.detachView();
         mRefreshLayout.setOnRefreshListener(null);
         mDayList.clearAnimation();
-        mPresenter.stop();
+        super.onDestroyView();
     }
 
     @Override

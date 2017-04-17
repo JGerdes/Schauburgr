@@ -58,18 +58,24 @@ public class AboutView extends Fragment implements AboutContract.View {
         mLicenseList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
-        new AboutPresenter(this);
-    }
-
-    @Override
-    public void setPresenter(AboutContract.Presenter presenter) {
-        mPresenter = presenter;
+        new AboutPresenter().attachView(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mPresenter.loadLicenses();
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
+    @Override
+    public void setPresenter(AboutContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override

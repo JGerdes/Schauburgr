@@ -16,6 +16,8 @@ public interface AboutContract {
     }
 
     interface Presenter extends BasePresenter {
+        void attachView(AboutContract.View view);
+        void detachView();
         void loadLicenses();
     }
 }

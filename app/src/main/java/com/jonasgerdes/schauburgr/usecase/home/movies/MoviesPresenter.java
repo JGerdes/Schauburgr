@@ -31,11 +31,20 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private MoviesContract.View mView;
     private Call<Guide> mPendingCall;
 
-    public MoviesPresenter(MoviesContract.View view) {
+    @Override
+    public void attachView(MoviesContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
         showCachedMovies();
+    }
+
+    @Override
+    public void detachView() {
+        if (mPendingCall != null) {
+            mPendingCall.cancel();
+        }
+        mRealm.close();
     }
 
     private void showCachedMovies() {
@@ -69,13 +78,5 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 }
             }
         });
-    }
-
-    @Override
-    public void stop() {
-        if (mPendingCall != null) {
-            mPendingCall.cancel();
-        }
-        mRealm.close();
     }
 }

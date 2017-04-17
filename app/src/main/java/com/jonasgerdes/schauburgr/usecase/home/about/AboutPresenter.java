@@ -17,11 +17,17 @@ public class AboutPresenter implements AboutContract.Presenter {
 
     private AboutContract.View mView;
 
-    public AboutPresenter(AboutContract.View view) {
+    @Override
+    public void attachView(AboutContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
         mView.setVersionName(mApp.getVersionName());
+    }
+
+    @Override
+    public void detachView() {
+
     }
 
     @Override

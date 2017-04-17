@@ -105,7 +105,7 @@ public class MovieDetailActivity extends AppCompatActivity
 
         initScreeningList();
 
-        new MovieDetailPresenter(this);
+        new MovieDetailPresenter().attachView(this);
 
         Slide slide = new Slide();
         slide.setSlideEdge(Gravity.RIGHT);
@@ -141,7 +141,7 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        mPresenter.stop();
+        mPresenter.detachView();
         super.onDestroy();
     }
 

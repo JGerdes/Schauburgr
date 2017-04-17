@@ -14,7 +14,8 @@ public interface GuideContract {
     }
 
     interface Presenter extends BasePresenter {
+        void attachView(GuideContract.View view);
+        void detachView();
         void loadProgram();
-        void stop();
     }
 }
