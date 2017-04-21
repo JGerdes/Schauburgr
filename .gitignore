@@ -28,6 +28,7 @@ local.properties
 # the project can be imported from settings.gradle
 *.iml
 .idea/*
+.idea/
 # Forcibly including certain files we want propagated.
 !\.idea/codeStyleSettings.xml
 
