@@ -3,6 +3,7 @@ package com.jonasgerdes.schauburgr.usecase.movie_detail;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
 import org.joda.time.LocalDate;
 
@@ -20,6 +21,9 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Inject
     Realm mRealm;
+
+    @Inject
+    UrlProvider mUrlProvider;
 
     private MovieDetailContract.View mView;
 
@@ -41,6 +45,12 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void onStartWithMovieId(String movieId) {
         loadMovie(movieId);
         loadScreeningsFor(movieId);
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        String url = mUrlProvider.getReservationPageUrl(screening);
+        mView.openWebpage(url);
     }
 
 

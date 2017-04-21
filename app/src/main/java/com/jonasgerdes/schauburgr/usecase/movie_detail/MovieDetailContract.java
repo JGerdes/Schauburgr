@@ -16,10 +16,12 @@ public interface MovieDetailContract {
     interface View extends BaseView<MovieDetailContract.Presenter> {
         void showMovie(Movie movie);
         void showScreenings(RealmResults<Screening> screenings);
+        void openWebpage(String url);
 
     }
 
     interface Presenter extends BasePresenter<MovieDetailContract.View> {
         void onStartWithMovieId(String movieId);
+        void onScreeningSelected(Screening screening);
     }
 }

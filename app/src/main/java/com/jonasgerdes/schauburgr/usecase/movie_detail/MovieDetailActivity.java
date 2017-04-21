@@ -34,6 +34,8 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
@@ -50,7 +52,8 @@ import io.realm.RealmResults;
  */
 
 public class MovieDetailActivity extends AppCompatActivity
-        implements MovieDetailContract.View, SwipeBackLayout.SwipeListener {
+        implements MovieDetailContract.View, SwipeBackLayout.SwipeListener,
+        ScreeningSelectedListener {
 
     /**
      * maximum delay (in ms) to wait for finish loading until activity is opened without transition
@@ -80,6 +83,9 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @Inject
     UrlProvider mUrlProvider;
+
+    @Inject
+    ChromeCustomTabWrapper mChromeTab;
 
     @InjectExtra
     String movieId;
@@ -179,11 +185,17 @@ public class MovieDetailActivity extends AppCompatActivity
         mNextScreeningsTitle.setVisibility(screenings.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
+    @Override
+    public void openWebpage(String url) {
+        mChromeTab.open(this, url);
+    }
+
     private void initScreeningList() {
         mScreeningList.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         );
         mScreeningsAdapter = new ScreeningListAdapter();
+        mScreeningsAdapter.setScreeningSelectedListener(this);
         mScreeningList.setAdapter(mScreeningsAdapter);
     }
 
@@ -203,6 +215,21 @@ public class MovieDetailActivity extends AppCompatActivity
         );
     }
 
+    @Override
+    public void onFullSwipeBack() {
+        finishAfterTransition();
+    }
+
+    @Override
+    public void onSwipe(float progress) {
+        //ignore
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        mPresenter.onScreeningSelected(screening);
+    }
+
     public static void start(Activity activity, Movie movie, ImageView posterThumbnail) {
         Intent detailsIntent = Henson.with(activity)
                 .gotoMovieDetailActivity()
@@ -213,15 +240,5 @@ public class MovieDetailActivity extends AppCompatActivity
         ActivityOptions options = ActivityOptions
                 .makeSceneTransitionAnimation(activity, posterThumbnail, transitionName);
         activity.startActivity(detailsIntent, options.toBundle());
-    }
-
-    @Override
-    public void onFullSwipeBack() {
-        finishAfterTransition();
-    }
-
-    @Override
-    public void onSwipe(float progress) {
-        //ignore
     }
 }

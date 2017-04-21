@@ -19,8 +19,10 @@ import io.realm.RealmResults;
  * @since 29.03.2017
  */
 
-public class ScreeningListAdapter extends RecyclerView.Adapter<ScreeningHolder> {
+public class ScreeningListAdapter extends RecyclerView.Adapter<ScreeningHolder>
+        implements ScreeningSelectedListener {
     private List<Screening> mScreenings = new ArrayList<>();
+    private ScreeningSelectedListener mScreeningSelectedListener;
 
     @Override
     public ScreeningHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -30,11 +32,18 @@ public class ScreeningListAdapter extends RecyclerView.Adapter<ScreeningHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ScreeningHolder holder, int position) {
+    public void onBindViewHolder(final ScreeningHolder holder, int position) {
         Screening screening = mScreenings.get(position);
         boolean isFirstForDate = position == 0
                 || !screening.isOnSameDate(mScreenings.get(position - 1));
         holder.onBind(screening, isFirstForDate);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Screening selected = mScreenings.get(holder.getAdapterPosition());
+                onScreeningSelected(selected);
+            }
+        });
     }
 
     @Override
@@ -51,5 +60,16 @@ public class ScreeningListAdapter extends RecyclerView.Adapter<ScreeningHolder> 
                 notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        if (mScreeningSelectedListener != null) {
+            mScreeningSelectedListener.onScreeningSelected(screening);
+        }
+    }
+
+    public void setScreeningSelectedListener(ScreeningSelectedListener screeningSelectedListener) {
+        mScreeningSelectedListener = screeningSelectedListener;
     }
 }
