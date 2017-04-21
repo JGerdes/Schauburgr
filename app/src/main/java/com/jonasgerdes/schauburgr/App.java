@@ -28,7 +28,7 @@ public class App extends Application {
         super.onCreate();
 
         sAppComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
+                .appModule(new AppModule(this, mChromeTab))
                 .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
                 .build();
 
@@ -67,10 +67,6 @@ public class App extends Application {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public ChromeCustomTabWrapper getChromeTab() {
-        return mChromeTab;
     }
 
     public static AppComponent getAppComponent() {

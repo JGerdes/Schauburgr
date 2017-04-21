@@ -1,16 +1,11 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +21,7 @@ import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.ScreeningSelectedListener;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
 import javax.inject.Inject;
@@ -58,7 +54,7 @@ public class GuideView extends Fragment implements GuideContract.View,
     Resources mResources;
 
     @Inject
-    App mApp;
+    ChromeCustomTabWrapper mChromeTab;
 
     private GuideDaysAdapter mDayListAdapter;
     private Animation mUpdateAnimation;
@@ -100,7 +96,7 @@ public class GuideView extends Fragment implements GuideContract.View,
 
         new GuidePresenter().attachView(this);
 
-        mApp.getChromeTab().warmup();
+        mChromeTab.warmup();
     }
 
     @Override
@@ -147,15 +143,7 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     @Override
     public void openWebpage(String url) {
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        Bitmap icon = BitmapFactory.decodeResource(mResources, R.drawable.ic_arrow_back_white_24dp);
-        builder.setCloseButtonIcon(icon);
-        builder.setStartAnimations(getContext(), R.anim.slide_in_right, R.anim.none);
-        builder.setExitAnimations(getContext(), 0, R.anim.slide_out_right);
-        builder.setShowTitle(true);
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(getContext(), Uri.parse(url));
+        mChromeTab.open(getContext(), url);
     }
 
     @Override
