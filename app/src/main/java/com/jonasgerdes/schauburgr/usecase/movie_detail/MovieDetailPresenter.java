@@ -36,16 +36,22 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         mRealm.close();
     }
 
+
     @Override
-    public void loadMovie(String movieResourceId) {
+    public void onStartWithMovieId(String movieId) {
+        loadMovie(movieId);
+        loadScreeningsFor(movieId);
+    }
+
+
+    private void loadMovie(String movieResourceId) {
         Movie movie = mRealm.where(Movie.class)
                 .equalTo("resourceId", movieResourceId)
                 .findFirst();
         mView.showMovie(movie);
     }
 
-    @Override
-    public void loadScreeningsFor(String movieResourceId) {
+    private void loadScreeningsFor(String movieResourceId) {
         RealmResults<Screening> screenings = mRealm.where(Screening.class)
                 .equalTo("movie.resourceId", movieResourceId)
                 .greaterThanOrEqualTo("startDate", new LocalDate().toDate())

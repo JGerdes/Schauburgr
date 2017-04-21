@@ -21,7 +21,6 @@ import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -97,25 +96,17 @@ public class GuideView extends Fragment implements GuideContract.View,
     }
 
     @Override
-    public void showScreeningDays(RealmResults<ScreeningDay> screeningDays) {
+    public void showScreeningDays(RealmResults<ScreeningDay> screeningDays, boolean animate) {
         mDayListAdapter.setDays(screeningDays);
-        screeningDays.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
-            @Override
-            public void onChange(RealmResults<ScreeningDay> result) {
-                if (result.size() > 0) {
-                    mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
-                } else {
-                    mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
-                }
-                mDayList.startAnimation(mUpdateAnimation);
-                mRefreshLayout.setRefreshing(false);
-                hideError();
-            }
-        });
-        if(screeningDays.size() == 0) {
+        if (screeningDays.size() == 0) {
             mStateLayout.setState(StateToggleLayout.STATE_EMPTY);
         } else {
             mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
+        }
+        mRefreshLayout.setRefreshing(false);
+        hideError();
+        if (animate) {
+            mDayList.startAnimation(mUpdateAnimation);
         }
     }
 
@@ -136,7 +127,7 @@ public class GuideView extends Fragment implements GuideContract.View,
     @Override
     public void onRefresh() {
         hideError();
-        mPresenter.loadProgram();
+        mPresenter.onRefreshTriggered();
     }
 
     private void hideError() {

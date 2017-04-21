@@ -145,7 +145,7 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
 
     @Override
     public void onRefresh() {
-        mPresenter.loadMovies();
+        mPresenter.onRefreshTriggered();
         hideError();
     }
 

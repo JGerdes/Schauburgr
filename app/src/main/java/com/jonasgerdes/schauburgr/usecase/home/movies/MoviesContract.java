@@ -17,9 +17,7 @@ public interface MoviesContract {
 
     }
 
-    interface Presenter extends BasePresenter {
-        void attachView(MoviesContract.View view);
-        void detachView();
-        void loadMovies();
+    interface Presenter extends BasePresenter<MoviesContract.View> {
+        void onRefreshTriggered();
     }
 }

@@ -148,8 +148,7 @@ public class MovieDetailActivity extends AppCompatActivity
     @Override
     public void setPresenter(MovieDetailContract.Presenter presenter) {
         mPresenter = presenter;
-        mPresenter.loadMovie(movieId);
-        mPresenter.loadScreeningsFor(movieId);
+        mPresenter.onStartWithMovieId(movieId);
     }
 
     @Override

@@ -8,14 +8,11 @@ import io.realm.RealmResults;
 
 public interface GuideContract {
     interface View extends BaseView<GuideContract.Presenter> {
-        void showScreeningDays(RealmResults<ScreeningDay> screeningDays);
+        void showScreeningDays(RealmResults<ScreeningDay> screeningDays, boolean animate);
         void showError(String message);
-
     }
 
-    interface Presenter extends BasePresenter {
-        void attachView(GuideContract.View view);
-        void detachView();
-        void loadProgram();
+    interface Presenter extends BasePresenter<GuideContract.View> {
+        void onRefreshTriggered();
     }
 }

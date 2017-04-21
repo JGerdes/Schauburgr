@@ -23,6 +23,7 @@ public class AboutPresenter implements AboutContract.Presenter {
         mView = view;
         mView.setPresenter(this);
         mView.setVersionName(mApp.getVersionName());
+        loadLicenses();
     }
 
     @Override
@@ -30,8 +31,7 @@ public class AboutPresenter implements AboutContract.Presenter {
 
     }
 
-    @Override
-    public void loadLicenses() {
+    private void loadLicenses() {
         mView.setLicenses(
                 new OpenSourceLicense(
                         R.string.license_support_title,

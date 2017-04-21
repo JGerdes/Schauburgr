@@ -62,12 +62,6 @@ public class AboutView extends Fragment implements AboutContract.View {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.loadLicenses();
-    }
-
-    @Override
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();

@@ -15,6 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import retrofit2.Call;
@@ -35,13 +36,24 @@ public class GuidePresenter implements GuideContract.Presenter {
 
     private GuideContract.View mView;
     private Call<Guide> mPendingCall;
+    private RealmResults<ScreeningDay> mScreeningDays;
+    private boolean mDoAnimateNewData = false;
+
+    private RealmChangeListener<RealmResults<ScreeningDay>>
+            mChangeListener = new RealmChangeListener<RealmResults<ScreeningDay>>() {
+        @Override
+        public void onChange(RealmResults<ScreeningDay> screeningDays) {
+            mView.showScreeningDays(screeningDays, mDoAnimateNewData);
+            mDoAnimateNewData = false;
+        }
+    };
 
     @Override
     public void attachView(GuideContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
-        loadProgramIfNoData();
+        loadGuide();
     }
 
     @Override
@@ -49,36 +61,44 @@ public class GuidePresenter implements GuideContract.Presenter {
         if (mPendingCall != null) {
             mPendingCall.cancel();
         }
-    }
-
-    private void loadProgramIfNoData() {
-        RealmResults<ScreeningDay> days
-                = mRealm.where(ScreeningDay.class)
-                .greaterThanOrEqualTo("date", new LocalDate().toDate())
-                .findAllSorted("date", Sort.ASCENDING);
-        mView.showScreeningDays(days);
-
-        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
-            loadProgram();
-        }
+        mScreeningDays.removeAllChangeListeners();
+        mRealm.close();
     }
 
     @Override
-    public void loadProgram() {
+    public void onRefreshTriggered() {
+        //show user new data with animation
+        mDoAnimateNewData = true;
+        fetchGuideData();
+    }
+
+    private void loadGuide() {
+        mScreeningDays = mRealm.where(ScreeningDay.class)
+                .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                .findAllSorted("date", Sort.ASCENDING);
+        mChangeListener.onChange(mScreeningDays);
+        mScreeningDays.addChangeListener(mChangeListener);
+
+        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
+            //show animation on first load
+            mDoAnimateNewData = true;
+        }
+        fetchGuideData();
+    }
+
+    private void fetchGuideData() {
         mPendingCall = mApi.getFullGuide();
         mPendingCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
                 final List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+                mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
                         realm.deleteAll();
                         realm.copyToRealm(guide);
                     }
                 });
-                realm.close();
             }
 
             @Override
@@ -90,6 +110,7 @@ public class GuidePresenter implements GuideContract.Presenter {
                 } else {
                     mView.showError(t.getClass().getName());
                 }
+                mPendingCall = null;
             }
         });
     }

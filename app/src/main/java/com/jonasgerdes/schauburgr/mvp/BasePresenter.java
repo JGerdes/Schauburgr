@@ -7,5 +7,7 @@ package com.jonasgerdes.schauburgr.mvp;
  * @since 04.03.2017
  */
 
-public interface BasePresenter {
+public interface BasePresenter<T extends BaseView> {
+    void attachView(T view);
+    void detachView();
 }

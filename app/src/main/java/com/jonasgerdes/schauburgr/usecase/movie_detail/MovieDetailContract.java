@@ -19,10 +19,7 @@ public interface MovieDetailContract {
 
     }
 
-    interface Presenter extends BasePresenter {
-        void attachView(MovieDetailContract.View view);
-        void detachView();
-        void loadMovie(String movieResourceId);
-        void loadScreeningsFor(String movieResourceId);
+    interface Presenter extends BasePresenter<MovieDetailContract.View> {
+        void onStartWithMovieId(String movieId);
     }
 }
