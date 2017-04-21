@@ -1,32 +1,91 @@
 package com.jonasgerdes.schauburgr.model;
 
+import com.jonasgerdes.schauburgr.util.StringUtil;
+
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
- * Created by jonas on 04.03.2017.
+ * Model representation of a movie. Contains attributes like title, duration, genres and releaseDate
+ * as well as additional information (see {@link #extras}) e.g. if the movie is in 3d,
+ * Dolby Atmos, part of "Filmrolle" etc.
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
  */
 
-public class Movie {
+public class Movie extends RealmObject {
 
     public static final String GENRE_MET_OPERA = "Met Opera";
 
+    /**
+     * Common extras that are currently parsed and saved
+     */
+    public static final String EXTRA_3D = "3D";
+    public static final String EXTRA_ATMOS = "Atmos";
+    public static final String EXTRA_OT = "OT"; //Original-Ton
+    public static final String EXTRA_TIP = "Tip";
+    public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
 
+    /**
+     * Separator for concatenated extras and genres. Three semicolons in a row
+     * shouldn't be in any genre or extra name.
+     */
+    private static final String STRING_LIST_SEPARATOR = ";;;";
+
+
+    /**
+     * Resource id of movie (provided by API) to fetch movie poster image
+     */
+    @PrimaryKey
     private String resourceId;
-    private String title;
-    private DateTime releaseDate;
-    private long duration;
-    private int contentRating;
-    private String description;
-    private List<String> genres = new ArrayList<>();
-    private boolean is3D;
-    private boolean isAtmos;
-    private boolean isOT; //Original-Ton
-    private boolean isTip;
-    private boolean isReel; //"Filmrolle"-Aktion
 
+    /**
+     * Title of movie
+     */
+    private String title;
+
+    /**
+     * Release date of movie (usually of release in Germany, may vary though)
+     */
+    private Date releaseDate;
+
+    /**
+     * Duration of movie in seconds
+     */
+    private long duration;
+
+    /**
+     * USK rating of movie (0, 6, 12, 16 or 18)
+     */
+    private int contentRating;
+
+    /**
+     * Description of movie in general (may include actors, duration, content rating)
+     * and/or short teaser of the plot of movie. Also may include some additional information
+     * regarding the screening (like specials) and/or tickets prices etc.
+     */
+    private String description;
+
+    /**
+     * Concatenated string of all genres of the movie. Might be an empty string.
+     * A concatenated string of elements is used instead of RealmList<RealmString> due to reasons
+     * described here: https://hackernoon.com/realmlist-realmstring-is-an-anti-pattern-bfc10efb7ca5
+     */
+    private String genres = "";
+
+    /**
+     * Concatenated string of all extras of the movie. Might by empty.
+     * See {@link #genres} for explanation why a concatenated string is used.
+     */
+    private String extras = "";
 
     public String getResourceId() {
         return resourceId;
@@ -47,11 +106,15 @@ public class Movie {
     }
 
     public DateTime getReleaseDate() {
-        return releaseDate;
+        return new DateTime(releaseDate);
     }
 
     public Movie setReleaseDate(DateTime releaseDate) {
-        this.releaseDate = releaseDate;
+        if (releaseDate == null) {
+            this.releaseDate = null;
+        } else {
+            this.releaseDate = releaseDate.toDate();
+        }
         return this;
     }
 
@@ -82,68 +145,41 @@ public class Movie {
         return this;
     }
 
+    public List<String> getExtras() {
+        return Collections.unmodifiableList(Arrays.asList(extras.split(STRING_LIST_SEPARATOR)));
+    }
+
+    public void setExtras(List<String> extras) {
+        this.extras = StringUtil.concat(extras, STRING_LIST_SEPARATOR);
+    }
+
     public List<String> getGenres() {
-        return genres;
+        String genres = this.genres;
+        return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPARATOR)));
     }
 
     public void setGenres(List<String> genres) {
-        this.genres = genres;
+        this.genres = StringUtil.concat(genres, STRING_LIST_SEPARATOR);
     }
 
     public boolean is3D() {
-        return is3D;
-    }
-
-    public void set3D(boolean is3D) {
-        this.is3D = is3D;
+        return extras.contains(EXTRA_3D);
     }
 
     public boolean isAtmos() {
-        return isAtmos;
-    }
-
-    public void setAtmos(boolean atmos) {
-        isAtmos = atmos;
+        return extras.contains(EXTRA_ATMOS);
     }
 
     public boolean isOT() {
-        return isOT;
-    }
-
-    public void setOT(boolean OT) {
-        isOT = OT;
+        return extras.contains(EXTRA_OT);
     }
 
     public boolean isTip() {
-        return isTip;
-    }
-
-    public void setTip(boolean tip) {
-        isTip = tip;
+        return extras.contains(EXTRA_TIP);
     }
 
     public boolean isReel() {
-        return isReel;
+        return extras.contains(EXTRA_REEL);
     }
 
-    public void setReel(boolean reel) {
-        isReel = reel;
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "resourceId='" + resourceId + '\'' +
-                ", title='" + title + '\'' +
-                ", releaseDate=" + releaseDate +
-                ", duration=" + duration +
-                ", contentRating=" + contentRating +
-                ", description='" + description + '\'' +
-                ", is3D=" + is3D +
-                ", isAtmos=" + isAtmos +
-                ", isOT=" + isOT +
-                ", isTip=" + isTip +
-                ", isReel=" + isReel +
-                '}';
-    }
 }

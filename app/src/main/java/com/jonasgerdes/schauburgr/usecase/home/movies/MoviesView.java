@@ -1,68 +1,113 @@
 package com.jonasgerdes.schauburgr.usecase.home.movies;
 
-import android.content.Context;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.usecase.home.HomeView;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
-
-import java.util.List;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * Created by jonas on 05.03.2017.
  */
 
-public class MoviesView extends FrameLayout implements HomeView, MoviesContract.View {
+public class MoviesView extends Fragment implements MoviesContract.View, SwipeRefreshLayout
+        .OnRefreshListener, MovieListAdapter.MovieClickedListener {
     private MoviesContract.Presenter mPresenter;
+
+    @BindView(R.id.coordinator)
+    CoordinatorLayout mCoordinatorLayout;
 
     @BindView(R.id.movieList)
     RecyclerView mMovieList;
 
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
+
     private MovieListAdapter mMovieListAdapter;
+    private Animation mUpdateAnimation;
+    private Snackbar mSnackbar;
 
-    public MoviesView(@NonNull Context context) {
-        super(context);
-        init();
+    public static MoviesView newInstance() {
+        Bundle args = new Bundle();
+
+        MoviesView fragment = new MoviesView();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return LayoutInflater.from(getContext()).inflate(R.layout.home_movies, container, false);
     }
 
-    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_movies);
+        ButterKnife.bind(this, view);
+
+        mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
+
+        initRecyclerView();
+        initRefreshLayout();
+
+        new MoviesPresenter().attachView(this);
     }
 
-    public MoviesView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMovieListAdapter.setMovieClickedListener(this);
     }
 
-    private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.home_movies, this);
-        ButterKnife.bind(this);
-        new MoviesPresenter(this);
+    private void initRefreshLayout() {
+        mRefreshLayout.setOnRefreshListener(this);
+        int triggerDistance = getContext()
+                .getResources().getDimensionPixelSize(R.dimen.swipe_refresh_trigger_distance);
+        mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
+    }
+
+    private void initRecyclerView() {
         mMovieListAdapter = new MovieListAdapter();
         mMovieList.setAdapter(mMovieListAdapter);
         mMovieList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         );
+    }
 
+    @Override
+    public void onDestroyView() {
+        mRefreshLayout.setOnRefreshListener(null);
+        mMovieList.clearAnimation();
+        mPresenter.detachView();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onMovieClicked(Movie movie, MovieHolder holder) {
+        MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
+        //prevent double tap opens activity twice (may be possible if loading takes a moment)
+        mMovieListAdapter.setMovieClickedListener(null);
     }
 
     @Override
@@ -70,17 +115,43 @@ public class MoviesView extends FrameLayout implements HomeView, MoviesContract.
         mPresenter = presenter;
     }
 
+
     @Override
-    public void onStart() {
-        mPresenter.loadMovies();
+    public void showError(String message) {
+        mRefreshLayout.setRefreshing(false);
+        mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRefreshLayout.setRefreshing(true);
+                        onRefresh();
+                    }
+                });
+        mSnackbar.show();
     }
 
     @Override
-    public void onStop() {
-    }
-
-    @Override
-    public void showMovies(List<Movie> movies) {
+    public void showMovies(RealmResults<Movie> movies) {
         mMovieListAdapter.setMovies(movies);
+        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
+            @Override
+            public void onChange(RealmResults<Movie> element) {
+                mRefreshLayout.setRefreshing(false);
+                mMovieList.startAnimation(mUpdateAnimation);
+                hideError();
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.onRefreshTriggered();
+        hideError();
+    }
+
+    private void hideError() {
+        if (mSnackbar != null) {
+            mSnackbar.dismiss();
+        }
     }
 }

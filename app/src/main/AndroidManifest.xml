@@ -13,13 +13,18 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".usecase.home.HomeActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".usecase.movie_detail.MovieDetailActivity"
+            android:parentActivityName=".usecase.home.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent"/>
     </application>
 
 </manifest>

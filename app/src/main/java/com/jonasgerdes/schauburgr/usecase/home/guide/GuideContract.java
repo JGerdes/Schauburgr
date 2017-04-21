@@ -4,15 +4,15 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 
-import java.util.List;
+import io.realm.RealmResults;
 
 public interface GuideContract {
     interface View extends BaseView<GuideContract.Presenter> {
-        void showGuide(List<ScreeningDay> days);
-
+        void showScreeningDays(RealmResults<ScreeningDay> screeningDays, boolean animate);
+        void showError(String message);
     }
 
-    interface Presenter extends BasePresenter {
-        void loadProgram();
+    interface Presenter extends BasePresenter<GuideContract.View> {
+        void onRefreshTriggered();
     }
 }

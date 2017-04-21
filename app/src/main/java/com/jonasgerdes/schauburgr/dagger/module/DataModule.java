@@ -3,18 +3,26 @@ package com.jonasgerdes.schauburgr.dagger.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
 import com.jonasgerdes.schauburgr.network.image.SchauburgImageUrlCreator;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ * Dagger module providing data related dependencies like database and network accessors
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
+ */
 
 @Module
 public class DataModule {
@@ -60,6 +68,16 @@ public class DataModule {
     @Singleton
     ImageUrlCreator provideImageUrlCreator() {
         return new SchauburgImageUrlCreator(mBaseUrl);
+    }
+
+    /**
+     * Provides a not singleton instance of realm db. Instance can and should be closed via
+     * {@link Realm#close()} when not used any more
+     * @return A instance of default realm database
+     */
+    @Provides
+    Realm provideRealm() {
+       return Realm.getDefaultInstance();
     }
 
 

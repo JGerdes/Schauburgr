@@ -11,6 +11,9 @@ import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+
 /**
  * Created by jonas on 05.03.2017.
  */
@@ -33,12 +36,24 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
     }
 
     @Override
+    public void onViewDetachedFromWindow(DayHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.itemView.clearAnimation();
+    }
+
+    @Override
     public int getItemCount() {
         return mDays.size();
     }
 
-    public void setDays(List<ScreeningDay> days) {
+    public void setDays(RealmResults<ScreeningDay> days) {
         mDays = days;
         notifyDataSetChanged();
+        days.addChangeListener(new RealmChangeListener<RealmResults<ScreeningDay>>() {
+            @Override
+            public void onChange(RealmResults<ScreeningDay> element) {
+                notifyDataSetChanged();
+            }
+        });
     }
 }

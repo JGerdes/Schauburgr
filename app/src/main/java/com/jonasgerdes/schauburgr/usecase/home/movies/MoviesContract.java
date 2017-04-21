@@ -4,7 +4,7 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 
-import java.util.List;
+import io.realm.RealmResults;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -12,11 +12,12 @@ import java.util.List;
 
 public interface MoviesContract {
     interface View extends BaseView<MoviesContract.Presenter> {
-        void showMovies(List<Movie> movies);
+        void showError(String message);
+        void showMovies(RealmResults<Movie> movies);
 
     }
 
-    interface Presenter extends BasePresenter {
-        void loadMovies();
+    interface Presenter extends BasePresenter<MoviesContract.View> {
+        void onRefreshTriggered();
     }
 }

@@ -12,9 +12,9 @@ import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.ScreeningTime;
+import com.jonasgerdes.schauburgr.util.DateFormatUtil;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 
 public class DayHolder extends RecyclerView.ViewHolder {
 
-    private static final DateTimeFormatter FORMAT_DAY = DateTimeFormat.forPattern("EEEE, dd.MM.YYYY");
     private static final DateTimeFormatter FORMAT_TIME = DateTimeFormat.forPattern("HH:mm");
 
     @BindView(R.id.title)
@@ -46,7 +45,8 @@ public class DayHolder extends RecyclerView.ViewHolder {
     public void onBind(ScreeningDay day) {
         Context context = itemView.getContext();
         mScreeningList.removeAllViews();
-        String dayTitle = generateDayTitle(context, day.getDate());
+        String dayTitle
+                = DateFormatUtil.createRelativeDayTitle(context.getResources(), day.getDate());
         mDayTitle.setText(dayTitle);
 
         boolean isFirst = true;
@@ -79,20 +79,6 @@ public class DayHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private String generateDayTitle(Context context, LocalDate date) {
-        LocalDate today = new LocalDate();
-        if (date.isEqual(today)) {
-            return context.getString(R.string.day_title_today);
-        }
-        if (date.isEqual(today.plusDays(1))) {
-            return context.getString(R.string.day_title_tomorrow);
-        }
-        if (Days.daysBetween(today, date).getDays() <= 7) {
-            return date.dayOfWeek().getAsText();
-        }
-
-        return FORMAT_DAY.print(date);
-    }
 
     private TextView createTimeView(Context context, boolean isFirst) {
         TextView timeView = new TextView(context);

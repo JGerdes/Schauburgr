@@ -8,19 +8,35 @@ import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 
+import de.jonasrottmann.realmbrowser.RealmBrowser;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 
 public class App extends Application {
 
-    private static AppComponent mAppComponent;
+    private static AppComponent sAppComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mAppComponent = DaggerAppComponent.builder()
+        sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
                 .build();
+
+        initRealmDb();
+
+        RealmBrowser.addFilesShortcut(getApplicationContext());
+    }
+
+    private void initRealmDb() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     public String getVersionName() {
@@ -33,7 +49,7 @@ public class App extends Application {
     }
 
     public static AppComponent getAppComponent() {
-        return mAppComponent;
+        return sAppComponent;
     }
 
 }

@@ -2,31 +2,48 @@ package com.jonasgerdes.schauburgr.model;
 
 import org.joda.time.LocalTime;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
- * Created by jonas on 05.03.2017.
+ * Model representation of a time on which screenings are shown. Used for grouping screenings at
+ * same times together.
+ * Contains a list of screenings.
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 05.03.2017
  */
 
-public class ScreeningTime {
-    private LocalTime time;
-    private List<Screening> screenings = new ArrayList<>();
+public class ScreeningTime extends RealmObject{
+
+    /**
+     * Time on which screenings take place. Date part is ignored and getter provides
+     * a {@link LocalTime} instance.
+     * {@link Date} is used since Realm can save these.
+     */
+    private Date time;
+
+    /**
+     * Lists of screenings shown on specified time
+     */
+    private RealmList<Screening> screenings = new RealmList<>();
 
     public LocalTime getTime() {
-        return time;
+        return new LocalTime(time);
     }
 
     public ScreeningTime setTime(LocalTime time) {
-        this.time = time;
+        this.time = time.toDateTimeToday().toDate();
         return this;
     }
 
-    public List<Screening> getScreenings() {
+    public RealmList<Screening> getScreenings() {
         return screenings;
     }
 
-    public ScreeningTime setScreenings(List<Screening> screenings) {
+    public ScreeningTime setScreenings(RealmList<Screening> screenings) {
         this.screenings = screenings;
         return this;
     }

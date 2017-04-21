@@ -11,19 +11,37 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+
 /**
  * Created by jonas on 05.03.2017.
  */
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
 
+    public interface MovieClickedListener {
+        void onMovieClicked(Movie movie, MovieHolder holder);
+    }
+
     private List<Movie> mMovies = new ArrayList<>();
+    private MovieClickedListener mMovieClickedListener;
 
     @Override
     public MovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.home_movies_item_movie, parent, false);
-        return new MovieHolder(view);
+        final MovieHolder holder = new MovieHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMovieClickedListener != null) {
+                    Movie movie = mMovies.get(holder.getAdapterPosition());
+                    mMovieClickedListener.onMovieClicked(movie, holder);
+                }
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -37,8 +55,18 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
         return mMovies.size();
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(RealmResults<Movie> movies) {
         mMovies = movies;
         notifyDataSetChanged();
+        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
+            @Override
+            public void onChange(RealmResults<Movie> element) {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void setMovieClickedListener(MovieClickedListener movieClickedListener) {
+        mMovieClickedListener = movieClickedListener;
     }
 }

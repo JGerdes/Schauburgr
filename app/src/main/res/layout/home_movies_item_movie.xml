@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +8,8 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
-    >
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             app:layout_constraintDimensionRatio="w,3:4"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@color/colorAccent"/>
+            app:srcCompat="@color/colorAccent" />
 
         <TextView
             android:id="@+id/title"
@@ -45,7 +45,7 @@
             app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="A Cure For Wellness"/>
+            tools:text="A Cure For Wellness" />
 
         <TextView
             android:id="@+id/genre"
@@ -57,7 +57,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="Thriller, Horror"/>
+            tools:text="Thriller, Horror" />
 
         <TextView
             android:id="@+id/contentRating"
@@ -72,7 +72,7 @@
             android:textSize="12sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/genre"
             app:layout_constraintRight_toRightOf="parent"
-            tools:text="ab 16"/>
+            tools:text="ab 16" />
 
         <TextView
             android:id="@+id/duration"
@@ -89,7 +89,7 @@
             app:layout_constraintLeft_toRightOf="@+id/poster"
             app:layout_constraintTop_toBottomOf="@+id/genre"
             app:layout_constraintVertical_bias="0.0"
-            tools:text="128 Min"/>
+            tools:text="128 Min" />
 
         <TextView
             android:id="@+id/labelOT"
@@ -97,7 +97,7 @@
             android:layout_marginRight="8dp"
             android:text="OT"
             app:layout_constraintBaseline_toBaselineOf="@+id/duration"
-            app:layout_constraintRight_toLeftOf="@+id/labelReel"/>
+            app:layout_constraintRight_toLeftOf="@+id/labelReel" />
 
         <TextView
             android:id="@+id/labelReel"
@@ -105,7 +105,7 @@
             android:layout_marginRight="8dp"
             android:text="Filmrolle"
             app:layout_constraintBaseline_toBaselineOf="@+id/duration"
-            app:layout_constraintRight_toLeftOf="@+id/labelAtmos"/>
+            app:layout_constraintRight_toLeftOf="@+id/labelAtmos" />
 
         <TextView
             android:id="@+id/labelAtmos"
@@ -113,7 +113,7 @@
             android:layout_marginRight="12dp"
             android:text="Atmos"
             app:layout_constraintBaseline_toBaselineOf="@+id/duration"
-            app:layout_constraintRight_toLeftOf="@+id/label3d"/>
+            app:layout_constraintRight_toLeftOf="@+id/label3d" />
 
         <TextView
             android:id="@+id/label3d"
@@ -121,7 +121,7 @@
             android:layout_marginRight="16dp"
             android:text="3D"
             app:layout_constraintBaseline_toBaselineOf="@+id/duration"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

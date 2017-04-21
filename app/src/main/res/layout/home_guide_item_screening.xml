@@ -24,51 +24,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="A Cure for Wellness"/>
 
-    <TextView
-        android:id="@+id/labelTip"
-        style="@style/movie_attribute"
-        android:layout_weight="0"
-        android:text="Tipp"
-        android:textAllCaps="true"/>
-
-    <TextView
-        android:id="@+id/labelReel"
-        style="@style/movie_attribute"
-        android:layout_weight="0"
-        android:text="Filmrolle"
-        android:textAllCaps="true"/>
-
-    <TextView
-        android:id="@+id/labelOT"
-        style="@style/movie_attribute"
-        android:layout_weight="0"
-        android:text="OT"/>
-
-    <TextView
-        android:id="@+id/label3d"
-        style="@style/movie_attribute"
-        android:layout_weight="0"
-        android:text="3D"/>
-
-
-    <TextView
-        android:id="@+id/labelAtmos"
-        style="@style/movie_attribute"
-        android:layout_weight="0"
-        android:text="ATMOS"/>
+    <com.jonasgerdes.schauburgr.view.MovieAttributeView
+        android:id="@+id/attibute_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/labelHall"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        style="@style/hall_icon"
         android:layout_weight="0"
-        android:background="@drawable/background_rounded_rect_light"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="?android:textColorPrimaryInverse"
-        android:textStyle="bold"
         tools:text="6"/>
 
 </LinearLayout>

@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
@@ -9,11 +7,17 @@ import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import org.joda.time.LocalDate;
 
-import java.util.ArrayList;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,40 +27,90 @@ import retrofit2.Response;
  */
 
 public class GuidePresenter implements GuideContract.Presenter {
-    private static final String TAG = "AboutPresenter";
 
     @Inject
     SchauburgApi mApi;
 
-    private GuideContract.View mView;
+    @Inject
+    Realm mRealm;
 
-    public GuidePresenter(GuideContract.View view) {
+    private GuideContract.View mView;
+    private Call<Guide> mPendingCall;
+    private RealmResults<ScreeningDay> mScreeningDays;
+    private boolean mDoAnimateNewData = false;
+
+    private RealmChangeListener<RealmResults<ScreeningDay>>
+            mChangeListener = new RealmChangeListener<RealmResults<ScreeningDay>>() {
+        @Override
+        public void onChange(RealmResults<ScreeningDay> screeningDays) {
+            mView.showScreeningDays(screeningDays, mDoAnimateNewData);
+            mDoAnimateNewData = false;
+        }
+    };
+
+    @Override
+    public void attachView(GuideContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
+        loadGuide();
     }
 
+    @Override
+    public void detachView() {
+        if (mPendingCall != null) {
+            mPendingCall.cancel();
+        }
+        mScreeningDays.removeAllChangeListeners();
+        mRealm.close();
+    }
 
     @Override
-    public void loadProgram() {
-        mApi.getFullGuide().enqueue(new Callback<Guide>() {
+    public void onRefreshTriggered() {
+        //show user new data with animation
+        mDoAnimateNewData = true;
+        fetchGuideData();
+    }
+
+    private void loadGuide() {
+        mScreeningDays = mRealm.where(ScreeningDay.class)
+                .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                .findAllSorted("date", Sort.ASCENDING);
+        mChangeListener.onChange(mScreeningDays);
+        mScreeningDays.addChangeListener(mChangeListener);
+
+        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
+            //show animation on first load
+            mDoAnimateNewData = true;
+        }
+        fetchGuideData();
+    }
+
+    private void fetchGuideData() {
+        mPendingCall = mApi.getFullGuide();
+        mPendingCall.enqueue(new Callback<Guide>() {
             @Override
             public void onResponse(Call<Guide> call, Response<Guide> response) {
-                List<ScreeningDay> allDays = response.body().getScreeningsGroupedByStartTime();
-                List<ScreeningDay> daysToShow = new ArrayList<>();
-                //don't show past days
-                LocalDate today = new LocalDate();
-                for (ScreeningDay day : allDays) {
-                    if (!day.getDate().isBefore(today)) {
-                        daysToShow.add(day);
+                final List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.deleteAll();
+                        realm.copyToRealm(guide);
                     }
-                }
-                mView.showGuide(daysToShow);
+                });
             }
 
             @Override
             public void onFailure(Call<Guide> call, Throwable t) {
-                Log.e(TAG, "onFailure: ", t);
+                if (t instanceof SocketTimeoutException
+                        || t instanceof UnknownHostException
+                        || t instanceof SocketException) {
+                    mView.showError("Keine Internetverbindung :(");
+                } else {
+                    mView.showError(t.getClass().getName());
+                }
+                mPendingCall = null;
             }
         });
     }

@@ -15,7 +15,6 @@ public interface AboutContract {
 
     }
 
-    interface Presenter extends BasePresenter {
-        void loadLicenses();
+    interface Presenter extends BasePresenter<AboutContract.View> {
     }
 }

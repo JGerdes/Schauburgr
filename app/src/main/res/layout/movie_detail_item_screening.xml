@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="96sp"
+        android:gravity="left"
+        android:layout_height="wrap_content"
+        tools:text="Do, 22.08"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="17:00"/>
+
+    <com.jonasgerdes.schauburgr.view.MovieAttributeView
+        android:id="@id/attibute_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/labelHall"
+        style="@style/hall_icon"
+        android:layout_weight="0"
+        tools:text="6"/>
+
+</LinearLayout>

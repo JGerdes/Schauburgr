@@ -8,7 +8,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by jonas on 04.03.2017.
+ * Parser for screenings retrieved via schauburg-cineworld.de "API".
+ * Create instances of {@link Screening} based on single lines which define a screening as
+ * JavaScript object (via a constructor though, not as JSON)
+ * Sample screening definition:
+ * timetable[0] = new seance('12','1703051400','43161','0','1');
+ * Attributes like movie-id, start date/time, ressource-id, etc are extracted via regex.
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 04.03.2017
  */
 
 public class ScreeningParser {
@@ -34,8 +42,15 @@ public class ScreeningParser {
         mPattern = Pattern.compile(REGEX_SCREENING);
     }
 
-
+    /**
+     * Creates a {@link Screening} instance by parsing give line from "API"
+     * @param line single JavaScript line calling screening constructor (as used in schauburg "API")
+     * @return new instance of {@link Screening} with data parse from line or null if parsing fails
+     */
     public Screening parse(String line, List<Movie> movies) {
+        //in the javascript to parse, all screenings are put in an array called "timetable", so this
+        //is the simples way to test whether we have a line containing a screening construction and
+        //can parse it
         if (!line.startsWith("timetable[")) {
             return null;
         }

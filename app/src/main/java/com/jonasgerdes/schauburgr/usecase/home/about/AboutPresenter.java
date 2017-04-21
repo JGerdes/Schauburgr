@@ -17,15 +17,21 @@ public class AboutPresenter implements AboutContract.Presenter {
 
     private AboutContract.View mView;
 
-    public AboutPresenter(AboutContract.View view) {
+    @Override
+    public void attachView(AboutContract.View view) {
         App.getAppComponent().inject(this);
         mView = view;
         mView.setPresenter(this);
         mView.setVersionName(mApp.getVersionName());
+        loadLicenses();
     }
 
     @Override
-    public void loadLicenses() {
+    public void detachView() {
+
+    }
+
+    private void loadLicenses() {
         mView.setLicenses(
                 new OpenSourceLicense(
                         R.string.license_support_title,
@@ -36,6 +42,9 @@ public class AboutPresenter implements AboutContract.Presenter {
                 new OpenSourceLicense(
                         R.string.license_dagger_title,
                         R.string.license_dagger_body),
+                new OpenSourceLicense(
+                        R.string.license_dart_title,
+                        R.string.license_dart_body),
                 new OpenSourceLicense(
                         R.string.license_glide_title,
                         R.string.license_glide_body),
@@ -52,8 +61,14 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_okhttp_title,
                         R.string.license_okhttp_body),
                 new OpenSourceLicense(
+                        R.string.license_realm_core_title,
+                        R.string.license_realm_core_body),
+                new OpenSourceLicense(
+                        R.string.license_realm_java_title,
+                        R.string.license_realm_java_body),
+                new OpenSourceLicense(
                         R.string.license_retrofit_title,
                         R.string.license_retrofit_body)
-        );
+                );
     }
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.util.ViewUtils;
+import com.jonasgerdes.schauburgr.view.MovieAttributeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,24 +23,11 @@ public class ScreeningView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
 
-    @BindView(R.id.label3d)
-    TextView mLabel3D;
-
-    @BindView(R.id.labelAtmos)
-    TextView mLabelAtmos;
-
-    @BindView(R.id.labelOT)
-    TextView mLabelOT;
-
     @BindView(R.id.labelHall)
     TextView mLabelHall;
 
-
-    @BindView(R.id.labelReel)
-    TextView mLabelReel;
-
-    @BindView(R.id.labelTip)
-    TextView mLabelTip;
+    @BindView(R.id.attibute_list)
+    MovieAttributeView mAttributeList;
 
     public ScreeningView(Context context) {
         super(context);
@@ -67,13 +54,9 @@ public class ScreeningView extends FrameLayout {
         ButterKnife.bind(this);
     }
 
-    void bindScreening(Screening screening) {
+    public void bindScreening(Screening screening) {
         mTitle.setText(screening.getMovie().getTitle());
-        ViewUtils.setVisible(mLabel3D, screening.getMovie().is3D());
-        ViewUtils.setVisible(mLabelAtmos, screening.getMovie().isAtmos());
-        ViewUtils.setVisible(mLabelOT, screening.getMovie().isOT());
-        ViewUtils.setVisible(mLabelReel, screening.getMovie().isReel());
-        ViewUtils.setVisible(mLabelTip, screening.getMovie().isTip());
+        mAttributeList.setAttributes(screening.getMovie().getExtras());
         mLabelHall.setText(String.valueOf(screening.getHall()));
     }
 }
