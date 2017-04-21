@@ -2,9 +2,12 @@ package com.jonasgerdes.schauburgr.usecase.home.guide;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.net.SocketException;
@@ -30,6 +33,9 @@ public class GuidePresenter implements GuideContract.Presenter {
 
     @Inject
     SchauburgApi mApi;
+
+    @Inject
+    UrlProvider mUrlProvider;
 
     @Inject
     Realm mRealm;
@@ -70,6 +76,15 @@ public class GuidePresenter implements GuideContract.Presenter {
         //show user new data with animation
         mDoAnimateNewData = true;
         fetchGuideData();
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        //only open reservation page if screening hasn't started yet
+        if (screening.getStartDate().isAfter(new DateTime())) {
+            String url = mUrlProvider.getReservationPageUrl(screening);
+            mView.openWebpage(url);
+        }
     }
 
     private void loadGuide() {

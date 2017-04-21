@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class MovieHolder extends RecyclerView.ViewHolder {
 
     @Inject
-    ImageUrlCreator mImageUrlCreator;
+    UrlProvider mUrlProvider;
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -86,7 +86,7 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         }
         mGenre.setText(genreString);
 
-        String posterImageUrl = mImageUrlCreator.getPosterImageUrl(movie);
+        String posterImageUrl = mUrlProvider.getPosterImageUrl(movie);
         Glide.with(context)
                 .load(posterImageUrl)
                 .error(R.drawable.no_network_poster)

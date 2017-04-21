@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,8 +17,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
+import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
 
 import butterknife.BindView;
@@ -28,7 +32,7 @@ import io.realm.RealmResults;
  */
 
 public class GuideView extends Fragment implements GuideContract.View,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, ScreeningSelectedListener {
     private GuideContract.Presenter mPresenter;
 
     @BindView(R.id.coordinator)
@@ -68,6 +72,7 @@ public class GuideView extends Fragment implements GuideContract.View,
         ButterKnife.bind(this, view);
 
         mDayListAdapter = new GuideDaysAdapter();
+        mDayListAdapter.setListener(this);
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
@@ -125,9 +130,21 @@ public class GuideView extends Fragment implements GuideContract.View,
     }
 
     @Override
+    public void openWebpage(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
+    @Override
     public void onRefresh() {
         hideError();
         mPresenter.onRefreshTriggered();
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        mPresenter.onScreeningSelected(screening);
     }
 
     private void hideError() {

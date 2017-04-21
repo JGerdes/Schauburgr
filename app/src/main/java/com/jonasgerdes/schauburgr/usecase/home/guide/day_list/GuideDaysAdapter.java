@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ import io.realm.RealmResults;
  * Created by jonas on 05.03.2017.
  */
 
-public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
+public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder>
+        implements ScreeningSelectedListener{
 
     private List<ScreeningDay> mDays = new ArrayList<>();
+    private ScreeningSelectedListener mListener;
 
     @Override
     public DayHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,7 +35,7 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
     @Override
     public void onBindViewHolder(DayHolder holder, int position) {
         ScreeningDay day = mDays.get(position);
-        holder.onBind(day);
+        holder.onBind(day, this);
     }
 
     @Override
@@ -55,5 +58,16 @@ public class GuideDaysAdapter extends RecyclerView.Adapter<DayHolder> {
                 notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        if(mListener != null) {
+            mListener.onScreeningSelected(screening);
+        }
+    }
+
+    public void setListener(ScreeningSelectedListener listener) {
+        mListener = listener;
     }
 }

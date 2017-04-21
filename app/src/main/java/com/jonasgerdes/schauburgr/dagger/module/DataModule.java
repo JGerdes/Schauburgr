@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
-import com.jonasgerdes.schauburgr.network.image.SchauburgImageUrlCreator;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+import com.jonasgerdes.schauburgr.network.url.SchauburgUrlProvider;
 
 import javax.inject.Singleton;
 
@@ -66,8 +66,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    ImageUrlCreator provideImageUrlCreator() {
-        return new SchauburgImageUrlCreator(mBaseUrl);
+    UrlProvider provideImageUrlCreator() {
+        return new SchauburgUrlProvider(mBaseUrl);
     }
 
     /**

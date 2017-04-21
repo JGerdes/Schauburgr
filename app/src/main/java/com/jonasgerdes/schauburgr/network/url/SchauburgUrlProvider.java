@@ -1,18 +1,19 @@
-package com.jonasgerdes.schauburgr.network.image;
+package com.jonasgerdes.schauburgr.network.url;
 
 import android.util.Base64;
 
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.model.Screening;
 
 /**
- * Implementation of a ImageUrlCreator which provides a url to an image for a movie poster on the
- * server of the schauburg website by passing a movie instance.
+ * Implementation of a UrlProvider which provides urls to webpages and resources like images on the
+ * server of the schauburg website.
  *
- * @see ImageUrlCreator
+ * @see UrlProvider
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 07.03.2017
  */
-public class SchauburgImageUrlCreator implements ImageUrlCreator {
+public class SchauburgUrlProvider implements UrlProvider {
 
     /**
      * Base url containing a trailing forward slash (e.g. "http://schauburg-cineworld.com/")
@@ -20,10 +21,10 @@ public class SchauburgImageUrlCreator implements ImageUrlCreator {
     private String mBaseUrl;
 
     /**
-     * Create a new instance of an ImageUrlCreator for the schauburg webiste
+     * Create a new instance of an UrlProvider for the schauburg webiste
      * @param baseUrl Base url containing a trailing forward slash
      */
-    public SchauburgImageUrlCreator(String baseUrl) {
+    public SchauburgUrlProvider(String baseUrl) {
         mBaseUrl = baseUrl;
     }
 
@@ -41,5 +42,18 @@ public class SchauburgImageUrlCreator implements ImageUrlCreator {
         byte[] titleBytes = movie.getTitle().getBytes();
         String fingerprint = Base64.encodeToString(titleBytes, Base64.URL_SAFE | Base64.NO_PADDING);
         return mBaseUrl + "generated/" + movie.getResourceId() + ".jpg?f=" + fingerprint;
+    }
+
+    /**
+     * Creates an url to an webpage which enables visitor to create a reservation and/or by tickets
+     * for seats for the given screening.
+     * @param screening Screening which should be create a reservation for
+     * @return web url to webpage showing reservation/purchase
+     */
+    @Override
+    public String getReservationPageUrl(Screening screening) {
+        String url = mBaseUrl + "?page_id=6608&showId=";
+        url += screening.getResourceId();
+        return url;
     }
 }

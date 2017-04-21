@@ -42,7 +42,7 @@ public class DayHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void onBind(ScreeningDay day) {
+    public void onBind(ScreeningDay day, final ScreeningSelectedListener listener) {
         Context context = itemView.getContext();
         mScreeningList.removeAllViews();
         String dayTitle
@@ -59,23 +59,31 @@ public class DayHolder extends RecyclerView.ViewHolder {
             TextView timeView = createTimeView(context, isFirst);
             timeView.setText(FORMAT_TIME.print(screeningTime.getTime()));
             mScreeningList.addView(timeView);
-            makeGrey(timeView, isPast);
+            toggleEnabled(timeView, !isPast);
 
-            for (Screening screening : screeningTime.getScreenings()) {
+            for (final Screening screening : screeningTime.getScreenings()) {
                 ScreeningView screeningView = new ScreeningView(context);
                 screeningView.bindScreening(screening);
                 mScreeningList.addView(screeningView);
-                makeGrey(screeningView, isPast);
+                screeningView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onScreeningSelected(screening);
+                    }
+                });
+                toggleEnabled(screeningView, !isPast);
             }
             isFirst = false;
         }
     }
 
-    private void makeGrey(View timeView, boolean doMakeGrey) {
-        if (doMakeGrey) {
-            timeView.setAlpha(0.5f);
+    private void toggleEnabled(View view, boolean isEnabled) {
+        if (isEnabled) {
+            view.setAlpha(1f);
         } else {
-            timeView.setAlpha(1f);
+            view.setAlpha(0.5f);
+            view.setClickable(false);
+
         }
     }
 

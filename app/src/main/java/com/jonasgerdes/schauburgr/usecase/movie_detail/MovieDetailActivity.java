@@ -32,7 +32,7 @@ import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
@@ -79,7 +79,7 @@ public class MovieDetailActivity extends AppCompatActivity
     TextView mNextScreeningsTitle;
 
     @Inject
-    ImageUrlCreator mImageUrlCreator;
+    UrlProvider mUrlProvider;
 
     @InjectExtra
     String movieId;
@@ -157,7 +157,7 @@ public class MovieDetailActivity extends AppCompatActivity
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
         Glide.with(this)
-                .load(mImageUrlCreator.getPosterImageUrl(movie))
+                .load(mUrlProvider.getPosterImageUrl(movie))
                 .asBitmap()
                 .error(R.drawable.no_network_poster)
                 .listener(new GlideBitmapReadyListener() {

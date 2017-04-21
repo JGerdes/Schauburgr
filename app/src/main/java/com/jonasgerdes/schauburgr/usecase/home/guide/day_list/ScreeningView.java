@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -58,5 +59,15 @@ public class ScreeningView extends FrameLayout {
         mTitle.setText(screening.getMovie().getTitle());
         mAttributeList.setAttributes(screening.getMovie().getExtras());
         mLabelHall.setText(String.valueOf(screening.getHall()));
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        super.setOnClickListener(l);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }
