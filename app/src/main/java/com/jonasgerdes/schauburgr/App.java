@@ -1,12 +1,16 @@
 package com.jonasgerdes.schauburgr;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.pm.PackageManager;
+import android.support.customtabs.CustomTabsClient;
+import android.support.customtabs.CustomTabsServiceConnection;
 
 import com.jonasgerdes.schauburgr.dagger.component.AppComponent;
 import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
 import de.jonasrottmann.realmbrowser.RealmBrowser;
 import io.realm.Realm;
@@ -16,6 +20,8 @@ import io.realm.RealmConfiguration;
 public class App extends Application {
 
     private static AppComponent sAppComponent;
+
+    private ChromeCustomTabWrapper mChromeTab = new ChromeCustomTabWrapper();
 
     @Override
     public void onCreate() {
@@ -27,6 +33,7 @@ public class App extends Application {
                 .build();
 
         initRealmDb();
+        initChromeCustomTabs();
 
         RealmBrowser.addFilesShortcut(getApplicationContext());
     }
@@ -39,6 +46,20 @@ public class App extends Application {
         Realm.setDefaultConfiguration(config);
     }
 
+    private void initChromeCustomTabs() {
+        CustomTabsClient.bindCustomTabsService(this, "com.android.chrome",
+                new CustomTabsServiceConnection() {
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {}
+
+                    @Override
+                    public void onCustomTabsServiceConnected(ComponentName name,
+                                                             CustomTabsClient client) {
+                        mChromeTab.setClient(client);
+                    }
+                });
+    }
+
     public String getVersionName() {
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -46,6 +67,10 @@ public class App extends Application {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ChromeCustomTabWrapper getChromeTab() {
+        return mChromeTab;
     }
 
     public static AppComponent getAppComponent() {

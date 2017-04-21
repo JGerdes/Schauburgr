@@ -1,12 +1,16 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +20,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +54,12 @@ public class GuideView extends Fragment implements GuideContract.View,
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
+    @Inject
+    Resources mResources;
+
+    @Inject
+    App mApp;
+
     private GuideDaysAdapter mDayListAdapter;
     private Animation mUpdateAnimation;
     private Snackbar mSnackbar;
@@ -70,6 +83,7 @@ public class GuideView extends Fragment implements GuideContract.View,
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.title_guide);
         ButterKnife.bind(this, view);
+        App.getAppComponent().inject(this);
 
         mDayListAdapter = new GuideDaysAdapter();
         mDayListAdapter.setListener(this);
@@ -85,6 +99,8 @@ public class GuideView extends Fragment implements GuideContract.View,
         mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
 
         new GuidePresenter().attachView(this);
+
+        mApp.getChromeTab().warmup();
     }
 
     @Override
@@ -131,9 +147,15 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     @Override
     public void openWebpage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        Bitmap icon = BitmapFactory.decodeResource(mResources, R.drawable.ic_arrow_back_white_24dp);
+        builder.setCloseButtonIcon(icon);
+        builder.setStartAnimations(getContext(), R.anim.slide_in_right, R.anim.none);
+        builder.setExitAnimations(getContext(), 0, R.anim.slide_out_right);
+        builder.setShowTitle(true);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(getContext(), Uri.parse(url));
     }
 
     @Override

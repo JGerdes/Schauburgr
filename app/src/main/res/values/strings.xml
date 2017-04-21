@@ -20,5 +20,6 @@
         \n\nAlle Angaben sind ohne Gewähr; es wird keine Garantie für die Richtig- und Vollständigkeit der dargestellten Informationen gegeben und keine Haftung für eventuell verursachte Schäden übernommen.</string>
     <string name="about_open_source_title">OpenSource-Lizenzen</string>
     <string name="snackbar_action_refresh">Neu laden</string>
+    <string name="chrome_tab_reservation_action_goto_movie">zum Film</string>
 
 </resources>

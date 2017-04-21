@@ -4,6 +4,7 @@ import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 import com.jonasgerdes.schauburgr.usecase.home.about.AboutPresenter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuidePresenter;
+import com.jonasgerdes.schauburgr.usecase.home.guide.GuideView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesPresenter;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
@@ -37,4 +38,6 @@ public interface AppComponent {
     void inject(MovieDetailPresenter movieDetailPresenter);
 
     void inject(ScreeningHolder screeningHolder);
+
+    void inject(GuideView guideView);
 }
