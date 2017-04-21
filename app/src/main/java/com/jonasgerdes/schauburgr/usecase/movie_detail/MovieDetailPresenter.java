@@ -5,7 +5,7 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
-import org.joda.time.LocalDate;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -64,7 +64,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private void loadScreeningsFor(String movieResourceId) {
         RealmResults<Screening> screenings = mRealm.where(Screening.class)
                 .equalTo("movie.resourceId", movieResourceId)
-                .greaterThanOrEqualTo("startDate", new LocalDate().toDate())
+                .greaterThanOrEqualTo("startDate", new Date())
                 .findAll();
         mView.showScreenings(screenings);
     }
