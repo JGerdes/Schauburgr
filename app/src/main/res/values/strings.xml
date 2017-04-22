@@ -30,5 +30,9 @@
     <string name="movie_list_category_specials">Außer der Reihe</string>
     <string name="movie_list_category_comedy">Zum Lachen</string>
     <string name="movie_list_category_3d">In 3D</string>
+    <string name="movie_list_category_specials_subtitle">Für Arthouse-Fans und Opernfreunde</string>
+    <string name="movie_list_category_thriller_subtitle">Spannende Thriller und Horrorfilme</string>
+    <string name="movie_list_category_atmos">Atmosphärischer Sound</string>
+    <string name="movie_list_category_atmos_subtitle">Filme in Dolby Atmos</string>
 
 </resources>

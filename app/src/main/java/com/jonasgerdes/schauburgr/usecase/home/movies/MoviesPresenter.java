@@ -70,6 +70,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_thriller)
+                .setSubTitle(R.string.movie_list_category_thriller_subtitle)
                 .setMovies(getThrillerMovies())
         );
 
@@ -80,21 +81,27 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_3d)
-                .setMovies(get3dMovies())
+                .setMovies(getMoviesWithExtra(Movie.EXTRA_3D))
+        );
+
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_atmos)
+                .setSubTitle(R.string.movie_list_category_atmos_subtitle)
+                .setMovies(getMoviesWithExtra(Movie.EXTRA_ATMOS))
         );
 
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_specials)
+                .setSubTitle(R.string.movie_list_category_specials_subtitle)
                 .setMovies(getSpecialMovies())
         );
-
 
         mView.showMovieCategories(mCategories);
 
     }
 
     private void addCategoryIfReasonable(MovieCategory category) {
-        if(isReasonable(category)) {
+        if (isReasonable(category)) {
             mCategories.add(category);
         }
     }
@@ -160,9 +167,9 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .findAllSorted("releaseDate", Sort.DESCENDING);
     }
 
-    private RealmResults<Movie> get3dMovies() {
+    private RealmResults<Movie> getMoviesWithExtra(String extra) {
         return mRealm.where(Movie.class)
-                .contains("extras", Movie.EXTRA_3D)
+                .contains("extras", extra)
                 .findAllSorted("releaseDate", Sort.DESCENDING);
     }
 

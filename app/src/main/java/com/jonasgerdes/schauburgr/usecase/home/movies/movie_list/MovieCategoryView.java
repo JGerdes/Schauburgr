@@ -27,6 +27,9 @@ public class MovieCategoryView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
 
+    @BindView(R.id.subtitle)
+    TextView mSubTitle;
+
     @BindView(R.id.movieList)
     RecyclerView mMovieList;
 
@@ -64,6 +67,11 @@ public class MovieCategoryView extends FrameLayout {
     public void bindCategory(MovieCategory category) {
         mTitle.setText(category.getTitle());
         mMovieListAdapter.setMovies(category.getMovies());
+        if (category.getSubTitle() != -1) {
+            mSubTitle.setText(category.getSubTitle());
+        } else {
+            mSubTitle.setVisibility(GONE);
+        }
     }
 
     public void setMovieSelectedListener(MovieListAdapter.MovieClickedListener listener) {

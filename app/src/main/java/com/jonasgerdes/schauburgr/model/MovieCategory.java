@@ -12,7 +12,7 @@ import io.realm.RealmResults;
 public class MovieCategory {
 
     private @StringRes int title;
-    private @StringRes int subTitle;
+    private @StringRes int subTitle = -1;
     private RealmResults<Movie> movies;
 
     public int getTitle() {
