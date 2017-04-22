@@ -44,7 +44,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmResults;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -161,6 +160,11 @@ public class MovieDetailActivity extends AppCompatActivity
     public void showMovie(Movie movie) {
         setTitle(movie.getTitle());
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
+        mScreeningsAdapter.setScreenings(movie.getScreenings());
+        //hide "next screenings" title if there are no next screenings
+        mNextScreeningsTitle.setVisibility(
+                movie.getScreenings().size() == 0 ? View.GONE : View.VISIBLE
+        );
 
         Glide.with(this)
                 .load(mUrlProvider.getPosterImageUrl(movie))
@@ -176,13 +180,6 @@ public class MovieDetailActivity extends AppCompatActivity
                     }
                 })
                 .into(mPosterView);
-    }
-
-    @Override
-    public void showScreenings(RealmResults<Screening> screenings) {
-        mScreeningsAdapter.setScreenings(screenings);
-        //hide "next screenings" title if there are no next screenings
-        mNextScreeningsTitle.setVisibility(screenings.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override

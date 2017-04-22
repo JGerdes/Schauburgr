@@ -2,7 +2,6 @@ package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -17,14 +16,16 @@ import android.widget.LinearLayout;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.model.MovieCategory;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.CompactMovieHolder;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieCategoryView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmResults;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -109,16 +110,22 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     }
 
     @Override
-    public void addMovieCategory(@StringRes int categoryName, RealmResults<Movie> movies) {
+    public void addMovieCategory(MovieCategory category) {
         MovieCategoryView movieCategoryView = new MovieCategoryView(getContext());
         movieCategoryView.setLayoutParams(new LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        movieCategoryView.setTitle(categoryName);
-        movieCategoryView.setMovies(movies);
+        movieCategoryView.bindCategory(category);
         movieCategoryView.setMovieSelectedListener(this);
         mCategoryContainer.addView(movieCategoryView);
+    }
+
+    @Override
+    public void showMovieCategories(List<MovieCategory> categories) {
+        for (MovieCategory category : categories) {
+            addMovieCategory(category);
+        }
     }
 
     @Override

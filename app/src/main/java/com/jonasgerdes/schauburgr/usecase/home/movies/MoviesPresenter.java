@@ -4,10 +4,12 @@ import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.model.MovieCategory;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,6 +26,11 @@ import retrofit2.Response;
  */
 
 public class MoviesPresenter implements MoviesContract.Presenter {
+
+    /**
+     * Minimun count of movies in a category to actually show the category
+     */
+    private static final int CATEGORY_SHOW_THRESHOLD = 3;
     @Inject
     SchauburgApi mApi;
 
@@ -32,6 +39,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private MoviesContract.View mView;
     private Call<Guide> mPendingCall;
+    private List<MovieCategory> mCategories = new ArrayList<>();
 
     @Override
     public void attachView(MoviesContract.View view) {
@@ -50,57 +58,49 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     private void showCachedMovies() {
-        /*RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
-        mView.addMovieCategory(R.string.movie_list_category_top, movies);
-        RealmResults<Movie> newest = mRealm.where(Movie.class)
-                .isNotNull("releaseDate")
-                .lessThan("releaseDate", new LocalDate().minusDays(10).toDate())
-                .findAllSorted("releaseDate");
-        mView.addMovieCategory(R.string.movie_list_category_new, newest);*/
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_action)
+                .setMovies(getActionMovies())
+        );
 
-        RealmResults<Movie> action = mRealm.where(Movie.class)
-                .contains("genres", "Action")
-                .greaterThanOrEqualTo("contentRating", 12)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_action, action);
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_comedy)
+                .setMovies(getComedyMovies())
+        );
 
-        RealmResults<Movie> comedy = mRealm.where(Movie.class)
-                .contains("genres", "Komödie")
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_comedy, comedy);
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_thriller)
+                .setMovies(getThrillerMovies())
+        );
 
-        RealmResults<Movie> thriller = mRealm.where(Movie.class)
-                .contains("genres", "Thriller")
-                .or()
-                .contains("genres", "Horror")
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_thriller, thriller);
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_kids)
+                .setMovies(getKidsMovies())
+        );
 
-        RealmResults<Movie> kids = mRealm.where(Movie.class)
-                .contains("genres", "Animation")
-                .or()
-                .contains("genres", "Familie")
-                .lessThanOrEqualTo("contentRating", 6)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_kids, kids);
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_3d)
+                .setMovies(get3dMovies())
+        );
 
-        RealmResults<Movie> d3 = mRealm.where(Movie.class)
-                .contains("extras", Movie.EXTRA_3D)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_3d, d3);
-
-        RealmResults<Movie> specials = mRealm.where(Movie.class)
-                .contains("genres", "Met Opera")
-                .or()
-                .contains("extras", Movie.EXTRA_REEL)
-                .or()
-                .contains("extras", Movie.EXTRA_TIP)
-                .or()
-                .contains("extras", Movie.EXTRA_OT)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
-        mView.addMovieCategory(R.string.movie_list_category_specials, specials);
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_specials)
+                .setMovies(getSpecialMovies())
+        );
 
 
+        mView.showMovieCategories(mCategories);
+
+    }
+
+    private void addCategoryIfReasonable(MovieCategory category) {
+        if(isReasonable(category)) {
+            mCategories.add(category);
+        }
+    }
+
+    private boolean isReasonable(MovieCategory category) {
+        return category.getMovies().size() >= CATEGORY_SHOW_THRESHOLD;
     }
 
     @Override
@@ -128,5 +128,53 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 }
             }
         });
+    }
+
+    private RealmResults<Movie> getActionMovies() {
+        return mRealm.where(Movie.class)
+                .contains("genres", "Action")
+                .greaterThanOrEqualTo("contentRating", 12)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> getComedyMovies() {
+        return mRealm.where(Movie.class)
+                .contains("genres", "Komödie")
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> getThrillerMovies() {
+        return mRealm.where(Movie.class)
+                .contains("genres", "Thriller")
+                .or()
+                .contains("genres", "Horror")
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> getKidsMovies() {
+        return mRealm.where(Movie.class)
+                .contains("genres", "Animation")
+                .or()
+                .contains("genres", "Familie")
+                .lessThanOrEqualTo("contentRating", 6)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> get3dMovies() {
+        return mRealm.where(Movie.class)
+                .contains("extras", Movie.EXTRA_3D)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> getSpecialMovies() {
+        return mRealm.where(Movie.class)
+                .contains("genres", "Met Opera")
+                .or()
+                .contains("extras", Movie.EXTRA_REEL)
+                .or()
+                .contains("extras", Movie.EXTRA_TIP)
+                .or()
+                .contains("extras", Movie.EXTRA_OT)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
     }
 }

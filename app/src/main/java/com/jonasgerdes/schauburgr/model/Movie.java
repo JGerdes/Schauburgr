@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -86,6 +88,9 @@ public class Movie extends RealmObject {
      * See {@link #genres} for explanation why a concatenated string is used.
      */
     private String extras = "";
+
+    @LinkingObjects("movie")
+    private final RealmResults<Screening> mScreenings = null;
 
     public String getResourceId() {
         return resourceId;
@@ -182,4 +187,7 @@ public class Movie extends RealmObject {
         return extras.contains(EXTRA_REEL);
     }
 
+    public RealmResults<Screening> getScreenings() {
+        return mScreenings;
+    }
 }
