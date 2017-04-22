@@ -12,13 +12,11 @@ import java.util.List;
 
 public interface MoviesContract {
     interface View extends BaseView<MoviesContract.Presenter> {
-        void showError(String message);
         void addMovieCategory(MovieCategory category);
         void showMovieCategories(List<MovieCategory> categories);
 
     }
 
     interface Presenter extends BasePresenter<MoviesContract.View> {
-        void onRefreshTriggered();
     }
 }
