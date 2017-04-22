@@ -71,6 +71,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_3d)
+                .setBackground(R.drawable.background_category_3d)
                 .setMovies(getMoviesWithExtra(Movie.EXTRA_3D))
         );
 

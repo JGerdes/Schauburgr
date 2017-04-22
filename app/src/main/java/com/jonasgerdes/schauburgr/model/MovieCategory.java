@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.model;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 import io.realm.RealmResults;
@@ -13,6 +14,7 @@ public class MovieCategory {
 
     private @StringRes int title;
     private @StringRes int subTitle = -1;
+    private @DrawableRes int background = -1;
     private RealmResults<Movie> movies;
 
     public int getTitle() {
@@ -30,6 +32,15 @@ public class MovieCategory {
 
     public MovieCategory setSubTitle(int subTitle) {
         this.subTitle = subTitle;
+        return this;
+    }
+
+    public int getBackground() {
+        return background;
+    }
+
+    public MovieCategory setBackground(int background) {
+        this.background = background;
         return this;
     }
 

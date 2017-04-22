@@ -8,11 +8,13 @@ import android.support.annotation.StyleRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.MovieCategory;
+import com.jonasgerdes.schauburgr.util.OffsetDecoration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +25,9 @@ import butterknife.ButterKnife;
  */
 
 public class MovieCategoryView extends FrameLayout {
+
+    @BindView(R.id.root)
+    View mRoot;
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -71,6 +76,11 @@ public class MovieCategoryView extends FrameLayout {
             mSubTitle.setText(category.getSubTitle());
         } else {
             mSubTitle.setVisibility(GONE);
+        }
+
+        if (category.getBackground() != -1) {
+            mRoot.setBackgroundResource(category.getBackground());
+            mMovieList.addItemDecoration(new OffsetDecoration(0, 480));
         }
     }
 
