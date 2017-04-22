@@ -2,27 +2,28 @@ package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.CompactMovieHolder;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieCategoryView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -36,13 +37,12 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     @BindView(R.id.coordinator)
     CoordinatorLayout mCoordinatorLayout;
 
-    @BindView(R.id.movieList)
-    RecyclerView mMovieList;
-
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
-    private MovieListAdapter mMovieListAdapter;
+    @BindView(R.id.categoryContainer)
+    LinearLayout mCategoryContainer;
+
     private Animation mUpdateAnimation;
     private Snackbar mSnackbar;
 
@@ -67,18 +67,11 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         ButterKnife.bind(this, view);
 
         mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
-
-        initRecyclerView();
         initRefreshLayout();
 
         new MoviesPresenter().attachView(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMovieListAdapter.setMovieClickedListener(this);
-    }
 
     private void initRefreshLayout() {
         mRefreshLayout.setOnRefreshListener(this);
@@ -87,28 +80,13 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         mRefreshLayout.setDistanceToTriggerSync(triggerDistance);
     }
 
-    private void initRecyclerView() {
-        mMovieListAdapter = new MovieListAdapter();
-        mMovieList.setAdapter(mMovieListAdapter);
-        mMovieList.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
-        );
-    }
-
     @Override
     public void onDestroyView() {
         mRefreshLayout.setOnRefreshListener(null);
-        mMovieList.clearAnimation();
         mPresenter.detachView();
         super.onDestroyView();
     }
 
-    @Override
-    public void onMovieClicked(Movie movie, MovieHolder holder) {
-        MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
-        //prevent double tap opens activity twice (may be possible if loading takes a moment)
-        mMovieListAdapter.setMovieClickedListener(null);
-    }
 
     @Override
     public void setPresenter(MoviesContract.Presenter presenter) {
@@ -131,16 +109,16 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
     }
 
     @Override
-    public void showMovies(RealmResults<Movie> movies) {
-        mMovieListAdapter.setMovies(movies);
-        movies.addChangeListener(new RealmChangeListener<RealmResults<Movie>>() {
-            @Override
-            public void onChange(RealmResults<Movie> element) {
-                mRefreshLayout.setRefreshing(false);
-                mMovieList.startAnimation(mUpdateAnimation);
-                hideError();
-            }
-        });
+    public void addMovieCategory(@StringRes int categoryName, RealmResults<Movie> movies) {
+        MovieCategoryView movieCategoryView = new MovieCategoryView(getContext());
+        movieCategoryView.setLayoutParams(new LinearLayoutCompat.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        movieCategoryView.setTitle(categoryName);
+        movieCategoryView.setMovies(movies);
+        movieCategoryView.setMovieSelectedListener(this);
+        mCategoryContainer.addView(movieCategoryView);
     }
 
     @Override
@@ -153,5 +131,10 @@ public class MoviesView extends Fragment implements MoviesContract.View, SwipeRe
         if (mSnackbar != null) {
             mSnackbar.dismiss();
         }
+    }
+
+    @Override
+    public void onMovieClicked(Movie movie, CompactMovieHolder holder) {
+        MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
     }
 }

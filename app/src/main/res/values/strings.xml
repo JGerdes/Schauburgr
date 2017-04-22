@@ -22,4 +22,13 @@
     <string name="snackbar_action_refresh">Neu laden</string>
     <string name="chrome_tab_reservation_action_goto_movie">zum Film</string>
 
+    <string name="movie_list_category_top">Top Filme</string>
+    <string name="movie_list_category_new">Neuheiten</string>
+    <string name="movie_list_category_kids">Für Kinder</string>
+    <string name="movie_list_category_action">Action</string>
+    <string name="movie_list_category_thriller">Zum Nägel kauen</string>
+    <string name="movie_list_category_specials">Außer der Reihe</string>
+    <string name="movie_list_category_comedy">Zum Lachen</string>
+    <string name="movie_list_category_3d">In 3D</string>
+
 </resources>

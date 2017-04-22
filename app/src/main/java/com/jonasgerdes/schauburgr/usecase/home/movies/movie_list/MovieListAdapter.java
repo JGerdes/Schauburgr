@@ -18,20 +18,20 @@ import io.realm.RealmResults;
  * Created by jonas on 05.03.2017.
  */
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
+public class MovieListAdapter extends RecyclerView.Adapter<CompactMovieHolder> {
 
     public interface MovieClickedListener {
-        void onMovieClicked(Movie movie, MovieHolder holder);
+        void onMovieClicked(Movie movie, CompactMovieHolder holder);
     }
 
     private List<Movie> mMovies = new ArrayList<>();
     private MovieClickedListener mMovieClickedListener;
 
     @Override
-    public MovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CompactMovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_movies_item_movie, parent, false);
-        final MovieHolder holder = new MovieHolder(view);
+                .inflate(R.layout.home_movies_item_movie_compact, parent, false);
+        final CompactMovieHolder holder = new CompactMovieHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,7 +45,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MovieHolder holder, int position) {
+    public void onBindViewHolder(CompactMovieHolder holder, int position) {
         Movie movie = mMovies.get(position);
         holder.onBind(movie);
     }

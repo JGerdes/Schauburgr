@@ -1,6 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.home.movies;
 
 import com.jonasgerdes.schauburgr.App;
+import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,8 +50,57 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     private void showCachedMovies() {
-        RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
-        mView.showMovies(movies);
+        /*RealmResults<Movie> movies = mRealm.where(Movie.class).findAll();
+        mView.addMovieCategory(R.string.movie_list_category_top, movies);
+        RealmResults<Movie> newest = mRealm.where(Movie.class)
+                .isNotNull("releaseDate")
+                .lessThan("releaseDate", new LocalDate().minusDays(10).toDate())
+                .findAllSorted("releaseDate");
+        mView.addMovieCategory(R.string.movie_list_category_new, newest);*/
+
+        RealmResults<Movie> action = mRealm.where(Movie.class)
+                .contains("genres", "Action")
+                .greaterThanOrEqualTo("contentRating", 12)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_action, action);
+
+        RealmResults<Movie> comedy = mRealm.where(Movie.class)
+                .contains("genres", "Komödie")
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_comedy, comedy);
+
+        RealmResults<Movie> thriller = mRealm.where(Movie.class)
+                .contains("genres", "Thriller")
+                .or()
+                .contains("genres", "Horror")
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_thriller, thriller);
+
+        RealmResults<Movie> kids = mRealm.where(Movie.class)
+                .contains("genres", "Animation")
+                .or()
+                .contains("genres", "Familie")
+                .lessThanOrEqualTo("contentRating", 6)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_kids, kids);
+
+        RealmResults<Movie> d3 = mRealm.where(Movie.class)
+                .contains("extras", Movie.EXTRA_3D)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_3d, d3);
+
+        RealmResults<Movie> specials = mRealm.where(Movie.class)
+                .contains("genres", "Met Opera")
+                .or()
+                .contains("extras", Movie.EXTRA_REEL)
+                .or()
+                .contains("extras", Movie.EXTRA_TIP)
+                .or()
+                .contains("extras", Movie.EXTRA_OT)
+                .findAllSorted("releaseDate", Sort.DESCENDING);
+        mView.addMovieCategory(R.string.movie_list_category_specials, specials);
+
+
     }
 
     @Override

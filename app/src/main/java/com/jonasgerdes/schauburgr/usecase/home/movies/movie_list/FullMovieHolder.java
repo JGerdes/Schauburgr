@@ -2,7 +2,6 @@ package com.jonasgerdes.schauburgr.usecase.home.movies.movie_list;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
@@ -28,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by jonas on 05.03.2017.
  */
 
-public class MovieHolder extends RecyclerView.ViewHolder {
+public class FullMovieHolder extends RecyclerView.ViewHolder{
 
     @Inject
     UrlProvider mUrlProvider;
@@ -60,7 +59,7 @@ public class MovieHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.poster)
     ImageView mPoster;
 
-    public MovieHolder(View itemView) {
+    public FullMovieHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         App.getAppComponent().inject(this);
@@ -68,7 +67,6 @@ public class MovieHolder extends RecyclerView.ViewHolder {
 
     public void onBind(Movie movie) {
         Context context = itemView.getContext();
-        Resources resources = context.getResources();
         mTitle.setText(movie.getTitle());
         mDuration.setText(movie.getDuration() + " Min");
         mContentRating.setText("ab " + movie.getContentRating());
