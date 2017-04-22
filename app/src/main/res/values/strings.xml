@@ -13,10 +13,11 @@
     <string name="about_idea">Idee, Programmierung</string>
     <string name="about_jonas_gerdes">Jonas Gerdes\nwww.jonasgerdes.com</string>
     <string name="about_github">Schauburgr ist OpenSource.\nQuelltext verfügbar unter\nhttps://github.com/JGerdes/Schauburgr</string>
-    <string name="about_data_source">Datenquelle</string>
+    <string name="about_data_source">Datenquellen</string>
     <string name="about_schauburg">Schauburg-Cineworld\nwww.schauburg-cineworld.de</string>
     <string name="about_disclaimer_title">Disclaimer</string>
-    <string name="about_disclaimer">Schauburgr ist eine inoffizielle App und steht in keiner direkten Verbindung zur Schauburg-Cinewold. Die Daten werden von der Website geladen; entsprechende Rechte sind dem Impressum der Schauburg-Cineworld zu entnehmen.
+    <string name="about_disclaimer">Schauburgr ist eine inoffizielle App und steht in keiner direkten Verbindung zur Schauburg-Cinewold oder kinoheld.de. Basisdaten wie Vorstellungszeiten, Namen der Filme, etc. werden von der Website des Kinos geladen; entsprechende Rechte sind dem Impressum der Schauburg-Cineworld zu entnehmen.
+        \nWeiterführende Daten werden der API von TMDb entnommen.
         \n\nAlle Angaben sind ohne Gewähr; es wird keine Garantie für die Richtig- und Vollständigkeit der dargestellten Informationen gegeben und keine Haftung für eventuell verursachte Schäden übernommen.</string>
     <string name="about_open_source_title">OpenSource-Lizenzen</string>
     <string name="snackbar_action_refresh">Neu laden</string>
@@ -36,5 +37,7 @@
     <string name="movie_list_category_atmos_subtitle">Filme in Dolby Atmos</string>
     <string name="movie_list_category_long">Sitzfleisch mitbringen</string>
     <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
+    <string name="about_data_source_screenings">Vorstellungszeiten, Basisinformationen</string>
+    <string name="about_data_source_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
 
 </resources>
