@@ -25,6 +25,16 @@ import io.realm.annotations.PrimaryKey;
 
 public class Movie extends RealmObject {
 
+    /**
+     * Duration at which movie starts to be of excess length
+     */
+    public static final long DURATION_EXCESS_LENGTH_STATE_1 = 125;
+
+    /**
+     * Duration at which movie starts to be in advanced excess length
+     */
+    public static final long DURATION_EXCESS_LENGTH_STATE_2 = 140;
+
     public static final String GENRE_MET_OPERA = "Met Opera";
 
     /**

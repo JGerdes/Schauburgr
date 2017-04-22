@@ -144,7 +144,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private RealmResults<Movie> getExcessLengthMovies() {
         return mRealm.where(Movie.class)
-                .greaterThanOrEqualTo("duration", 125)
+                .greaterThanOrEqualTo("duration", Movie.DURATION_EXCESS_LENGTH_STATE_1)
                 .not().contains("genres", "Met Opera")
                 .findAllSorted("duration", Sort.DESCENDING);
     }
