@@ -68,11 +68,11 @@ dependencies {
     compile 'joda-time:joda-time:2.9.7'
 
     //debug and testing
-    debugCompile ('com.github.jonasrottmann.realm-browser:realm-browser:v0.0.9') {
+    debugCompile ('com.github.jonasrottmann.realm-browser:realm-browser:0.0.11') {
         exclude group: 'com.android.support';
     }
-    testCompile 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:v0.0.9'
-    releaseCompile 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:v0.0.9'
+    testCompile 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:0.0.11'
+    releaseCompile 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:0.0.11'
 
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
