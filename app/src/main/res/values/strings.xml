@@ -34,5 +34,7 @@
     <string name="movie_list_category_thriller_subtitle">Spannende Thriller und Horrorfilme</string>
     <string name="movie_list_category_atmos">Atmosphärischer Sound</string>
     <string name="movie_list_category_atmos_subtitle">Filme in Dolby Atmos</string>
+    <string name="movie_list_category_long">Sitzfleisch mitbringen</string>
+    <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
 
 </resources>

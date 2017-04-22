@@ -91,6 +91,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         );
 
         addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_long)
+                .setSubTitle(R.string.movie_list_category_long_subtitle)
+                .setMovies(getExcessLengthMovies())
+        );
+
+        addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_specials)
                 .setSubTitle(R.string.movie_list_category_specials_subtitle)
                 .setMovies(getSpecialMovies())
@@ -171,6 +177,13 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         return mRealm.where(Movie.class)
                 .contains("extras", extra)
                 .findAllSorted("releaseDate", Sort.DESCENDING);
+    }
+
+    private RealmResults<Movie> getExcessLengthMovies() {
+        return mRealm.where(Movie.class)
+                .greaterThanOrEqualTo("duration", 125)
+                .not().contains("genres", "Met Opera")
+                .findAllSorted("duration", Sort.DESCENDING);
     }
 
     private RealmResults<Movie> getSpecialMovies() {
