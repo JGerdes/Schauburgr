@@ -2,7 +2,7 @@ package com.jonasgerdes.schauburgr.network.tmdb;
 
 import com.jonasgerdes.schauburgr.model.tmdb.SearchResponse;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -16,12 +16,12 @@ import retrofit2.http.Query;
 public interface TheMovieDatabaseApi {
 
     @GET("search/movie")
-    Call<SearchResponse> search(
+    Observable<SearchResponse> search(
             @Query("query") String query
     );
 
     @GET("search/movie")
-    Call<SearchResponse> search(
+    Observable<SearchResponse> search(
             @Query("query") String query,
             @Query("year") int year
     );

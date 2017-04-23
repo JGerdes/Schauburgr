@@ -74,6 +74,7 @@ public class DataModule {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(mTheMovieDatabaseBaseUrl)
                 .client(okHttpClient)
                 .build();

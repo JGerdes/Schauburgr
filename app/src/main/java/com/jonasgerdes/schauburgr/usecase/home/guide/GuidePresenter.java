@@ -1,9 +1,15 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.App;
+import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.tmdb.SearchResult;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
 import org.joda.time.DateTime;
@@ -12,6 +18,7 @@ import org.joda.time.LocalDate;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,7 +37,10 @@ import io.realm.Sort;
 public class GuidePresenter implements GuideContract.Presenter {
 
     @Inject
-    SchauburgApi mApi;
+    SchauburgApi mSchauburgApi;
+
+    @Inject
+    TheMovieDatabaseApi mTMDbApi;
 
     @Inject
     UrlProvider mUrlProvider;
@@ -43,9 +53,9 @@ public class GuidePresenter implements GuideContract.Presenter {
     private RealmResults<ScreeningDay> mScreeningDays;
     private boolean mDoAnimateNewData = false;
 
-    private RealmChangeListener<RealmResults<ScreeningDay>> mChangeListener =  screeningDays -> {
-            mView.showScreeningDays(screeningDays, mDoAnimateNewData);
-            mDoAnimateNewData = false;
+    private RealmChangeListener<RealmResults<ScreeningDay>> mChangeListener = screeningDays -> {
+        mView.showScreeningDays(screeningDays, mDoAnimateNewData);
+        mDoAnimateNewData = false;
     };
 
     @Override
@@ -96,27 +106,54 @@ public class GuidePresenter implements GuideContract.Presenter {
     }
 
     private void fetchGuideData() {
-        mDisposables.add(mApi.getFullGuide()
+        mDisposables.add(mSchauburgApi.getFullGuide()
                 .subscribeOn(Schedulers.io())
+                .doOnNext(this::saveGuide)
+                .flatMapIterable(Guide::getMovies)
+                //work around since you can't pass variable down the stream
+                //see https://github.com/square/retrofit/issues/855
+                .flatMap(movie -> mTMDbApi.search(movie.getTitle())
+                        .map(searchResponse -> {
+                            setTMDbId(movie, searchResponse.getResults());
+                            return searchResponse;
+                        }))
+                .ignoreElements()
                 .observeOn(AndroidSchedulers.mainThread())
-                .onN
-                .subscribe((guide) -> {
-                    try(Realm r = Realm.getDefaultInstance()) {
-                        r.executeTransaction((realm) -> {
-                            realm.deleteAll();
-                            realm.copyToRealm(guide.getScreeningsGroupedByStartTime());
-                        });
-                    }
-                }, (error) -> {
-                    if (error instanceof SocketTimeoutException
-                            || error instanceof UnknownHostException
-                            || error instanceof SocketException) {
-                        mView.showError("Keine Internetverbindung :(");
-                    } else {
-                        mView.showError(error.getClass().getName());
-                    }
-                })
+                .subscribe(() -> {/*ignored*/}, this::showError)
         );
 
+    }
+
+    private void showError(Throwable error) {
+        if (error instanceof SocketTimeoutException
+                || error instanceof UnknownHostException
+                || error instanceof SocketException) {
+            mView.showError("Keine Internetverbindung :(");
+        } else {
+            mView.showError(error.getClass().getName());
+        }
+    }
+
+    private void setTMDbId(Movie movie, List<SearchResult> results) {
+        if (results.size() == 0) {
+            return;
+        }
+        movie.setTmdbId(results.get(0).getId());
+        Log.d("GuidePresener", "found for " + movie.getTitle() + ": " + results.get(0).getTitle());
+        try (Realm r = Realm.getDefaultInstance()) {
+            r.executeTransaction((realm) -> {
+                realm.copyToRealmOrUpdate(movie);
+            });
+        }
+    }
+
+
+    private void saveGuide(Guide guide) {
+        try (Realm r = Realm.getDefaultInstance()) {
+            r.executeTransaction((realm) -> {
+                realm.deleteAll();
+                realm.copyToRealm(guide.getScreeningsGroupedByStartTime());
+            });
+        }
     }
 }

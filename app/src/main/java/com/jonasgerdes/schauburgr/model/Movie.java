@@ -26,6 +26,11 @@ import io.realm.annotations.PrimaryKey;
 public class Movie extends RealmObject {
 
     /**
+     * Used when movie hasn't got any TMDb id (or no matching movie was found for title)
+     */
+    private static final int NO_ID = -1;
+
+    /**
      * Duration at which movie starts to be of excess length
      */
     public static final long DURATION_EXCESS_LENGTH_STATE_1 = 125;
@@ -36,7 +41,6 @@ public class Movie extends RealmObject {
     public static final long DURATION_EXCESS_LENGTH_STATE_2 = 140;
 
     public static final String GENRE_MET_OPERA = "Met Opera";
-
     /**
      * Common extras that are currently parsed and saved
      */
@@ -44,8 +48,8 @@ public class Movie extends RealmObject {
     public static final String EXTRA_ATMOS = "Atmos";
     public static final String EXTRA_OT = "OT"; //Original-Ton
     public static final String EXTRA_TIP = "Tip";
-    public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
 
+    public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
     /**
      * Separator for concatenated extras and genres. Three semicolons in a row
      * shouldn't be in any genre or extra name.
@@ -58,6 +62,11 @@ public class Movie extends RealmObject {
      */
     @PrimaryKey
     private String resourceId;
+
+    /**
+     * Id in TheMovieDatabase
+     */
+    private int tmdbId = NO_ID;
 
     /**
      * Title of movie
@@ -108,6 +117,15 @@ public class Movie extends RealmObject {
 
     public Movie setResourceId(String resourceId) {
         this.resourceId = resourceId;
+        return this;
+    }
+
+    public int getTmdbId() {
+        return tmdbId;
+    }
+
+    public Movie setTmdbId(int tmdbId) {
+        this.tmdbId = tmdbId;
         return this;
     }
 
