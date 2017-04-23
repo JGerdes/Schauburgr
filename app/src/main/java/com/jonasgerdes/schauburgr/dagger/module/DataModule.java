@@ -20,6 +20,7 @@ import dagger.Provides;
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -56,6 +57,7 @@ public class DataModule {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(new SchauburgGuideConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(mSchauburgBaseUrl)
                 .client(okHttpClient)
                 .build();

@@ -32,6 +32,10 @@ android {
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2/"'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -69,6 +73,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //util

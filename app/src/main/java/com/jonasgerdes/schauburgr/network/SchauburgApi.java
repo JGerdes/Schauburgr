@@ -2,7 +2,7 @@ package com.jonasgerdes.schauburgr.network;
 
 import com.jonasgerdes.schauburgr.model.Guide;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 
 /**
@@ -15,5 +15,5 @@ import retrofit2.http.GET;
 public interface SchauburgApi {
 
     @GET("generated/data.js")
-    Call<Guide> getFullGuide();
+    Observable<Guide> getFullGuide();
 }
