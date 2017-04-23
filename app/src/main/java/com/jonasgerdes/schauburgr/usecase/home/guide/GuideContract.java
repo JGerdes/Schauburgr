@@ -15,6 +15,7 @@ public interface GuideContract {
     }
 
     interface Presenter extends BasePresenter<GuideContract.View> {
+        void loadGuide(boolean forceRefresh);
         void onRefreshTriggered();
         void onScreeningSelected(Screening screening);
     }

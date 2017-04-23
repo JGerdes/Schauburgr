@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
@@ -65,7 +63,6 @@ public class GuidePresenter implements GuideContract.Presenter {
         mView = view;
 
         mView.setPresenter(this);
-        loadGuide();
     }
 
     @Override
@@ -91,7 +88,7 @@ public class GuidePresenter implements GuideContract.Presenter {
         }
     }
 
-    private void loadGuide() {
+    public void loadGuide(boolean forceRefresh) {
         mScreeningDays = mRealm.where(ScreeningDay.class)
                 .greaterThanOrEqualTo("date", new LocalDate().toDate())
                 .findAllSorted("date", Sort.ASCENDING);
@@ -102,7 +99,9 @@ public class GuidePresenter implements GuideContract.Presenter {
             //show animation on first load
             mDoAnimateNewData = true;
         }
-        fetchGuideData();
+        if (forceRefresh) {
+            fetchGuideData();
+        }
     }
 
     private void fetchGuideData() {
@@ -139,7 +138,6 @@ public class GuidePresenter implements GuideContract.Presenter {
             return;
         }
         movie.setTmdbId(results.get(0).getId());
-        Log.d("GuidePresener", "found for " + movie.getTitle() + ": " + results.get(0).getTitle());
         try (Realm r = Realm.getDefaultInstance()) {
             r.executeTransaction((realm) -> {
                 realm.copyToRealmOrUpdate(movie);

@@ -36,6 +36,12 @@ import io.realm.RealmResults;
 
 public class GuideView extends Fragment implements GuideContract.View,
         SwipeRefreshLayout.OnRefreshListener, ScreeningSelectedListener {
+
+    /**
+     * Key for arguments providing information whether first forces refresh was done
+     */
+    private static final String ARGUMENT_FIRST_TIME_LOADED = "ARGUMENT_FIRST_TIME_LOADED";
+
     private GuideContract.Presenter mPresenter;
 
     @BindView(R.id.coordinator)
@@ -110,6 +116,8 @@ public class GuideView extends Fragment implements GuideContract.View,
     @Override
     public void setPresenter(GuideContract.Presenter presenter) {
         mPresenter = presenter;
+        boolean forceRefresh = !getArguments().getBoolean(ARGUMENT_FIRST_TIME_LOADED, false);
+        presenter.loadGuide(forceRefresh);
     }
 
     @Override
@@ -125,6 +133,8 @@ public class GuideView extends Fragment implements GuideContract.View,
         if (animate) {
             mDayList.startAnimation(mUpdateAnimation);
         }
+        //prevent another forced refresh
+        getArguments().putBoolean(ARGUMENT_FIRST_TIME_LOADED, true);
     }
 
     @Override
