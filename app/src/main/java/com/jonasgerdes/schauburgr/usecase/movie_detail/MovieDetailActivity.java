@@ -3,11 +3,14 @@ package com.jonasgerdes.schauburgr.usecase.movie_detail;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -37,6 +40,7 @@ import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningL
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
+import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
 
@@ -65,20 +69,35 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.poster)
-    ImageView mPosterView;
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    @BindView(R.id.title)
+    TextView mTitleView;
+
+    @BindView(R.id.genre)
+    TextView mGenreView;
+
+    @BindView(R.id.duration)
+    TextView mDurationView;
+
+    @BindView(R.id.contentRating)
+    TextView mContentRating;
 
     @BindView(R.id.description)
     TextView mDescriptionView;
-
-    @BindView(R.id.collapsing_toolbar_layout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     @BindView(R.id.screeningList)
     RecyclerView mScreeningList;
 
     @BindView(R.id.next_screenings_title)
     TextView mNextScreeningsTitle;
+
+    @BindView(R.id.poster)
+    ImageView mPosterView;
+
+    @BindView(R.id.cover)
+    ImageView mCoverView;
 
     @Inject
     UrlProvider mUrlProvider;
@@ -97,6 +116,7 @@ public class MovieDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        setTitle("");
 
         App.getAppComponent().inject(this);
         ButterKnife.bind(this);
@@ -158,7 +178,13 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @Override
     public void showMovie(Movie movie) {
-        setTitle(movie.getTitle());
+        mTitleView.setText(movie.getTitle());
+        mGenreView.setText(StringUtil.concat(movie.getGenres(), ", "));
+        mDurationView.setText(movie.getDuration() + " Min");
+        @ColorInt int color = getContentRatingColor(this, movie.getContentRating());
+        mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
+        mContentRating.setText("ab " + movie.getContentRating());
+
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
         mScreeningsAdapter.setScreenings(movie.getScreenings());
         //hide "next screenings" title if there are no next screenings
@@ -180,6 +206,12 @@ public class MovieDetailActivity extends AppCompatActivity
                     }
                 })
                 .into(mPosterView);
+
+
+        Glide.with(this)
+                .load(mUrlProvider.getPosterImageUrl(movie))
+                .error(R.drawable.no_network_poster)
+                .into(mCoverView);
     }
 
     @Override
@@ -225,6 +257,30 @@ public class MovieDetailActivity extends AppCompatActivity
     @Override
     public void onScreeningSelected(Screening screening) {
         mPresenter.onScreeningSelected(screening);
+    }
+
+    private
+    @ColorInt
+    int getContentRatingColor(Context context, int contentRating) {
+        @ColorRes int colorRes;
+        switch (contentRating) {
+            case 6:
+                colorRes = R.color.colorContentRating6;
+                break;
+            case 12:
+                colorRes = R.color.colorContentRating12;
+                break;
+            case 16:
+                colorRes = R.color.colorContentRating16;
+                break;
+            case 18:
+                colorRes = R.color.colorContentRating18;
+                break;
+            default:
+                colorRes = R.color.colorContentRating0;
+                break;
+        }
+        return ContextCompat.getColor(context, colorRes);
     }
 
     public static void start(Activity activity, Movie movie, ImageView posterThumbnail) {
