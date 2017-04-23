@@ -1,12 +1,17 @@
 package com.jonasgerdes.schauburgr.dagger.module;
 
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jonasgerdes.schauburgr.BuildConfig;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.network.tmdb.ApiKeyInterceptor;
+import com.jonasgerdes.schauburgr.network.tmdb.LanguageInterceptor;
+import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
 import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
-import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 import com.jonasgerdes.schauburgr.network.url.SchauburgUrlProvider;
+import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
 import javax.inject.Singleton;
 
@@ -26,48 +31,57 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DataModule {
-    String mBaseUrl;
+    String mSchauburgBaseUrl;
+    String mTheMovieDatabaseBaseUrl;
 
-    public DataModule(String mBaseUrl) {
-        this.mBaseUrl = mBaseUrl;
+    public DataModule(String schauburgBaseUrl, String theMovieDatabaseBaseUrl) {
+        mSchauburgBaseUrl = schauburgBaseUrl;
+        mTheMovieDatabaseBaseUrl = theMovieDatabaseBaseUrl;
     }
 
     @Provides
     @Singleton
     Gson provideGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
     }
 
-    @Provides
-    @Singleton
-    OkHttpClient provideOkhttpClient() {
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
-        return client.build();
-    }
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
+    SchauburgApi provideSchauburgApi(Gson gson) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(new SchauburgGuideConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(mBaseUrl)
+                .baseUrl(mSchauburgBaseUrl)
                 .client(okHttpClient)
                 .build();
-        return retrofit;
-    }
-
-    @Provides
-    @Singleton
-    SchauburgApi provideSchauburgApi(Retrofit retrofit) {
         return retrofit.create(SchauburgApi.class);
     }
 
     @Provides
     @Singleton
+    TheMovieDatabaseApi provideTheMovieDatabaseApi(Gson gson) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ApiKeyInterceptor(BuildConfig.API_KEY_TMDB))
+                .addInterceptor(new LanguageInterceptor(LanguageInterceptor.GERMAN))
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(mTheMovieDatabaseBaseUrl)
+                .client(okHttpClient)
+                .build();
+        return retrofit.create(TheMovieDatabaseApi.class);
+    }
+
+    @Provides
+    @Singleton
     UrlProvider provideImageUrlCreator() {
-        return new SchauburgUrlProvider(mBaseUrl);
+        return new SchauburgUrlProvider(mSchauburgBaseUrl);
     }
 
     /**

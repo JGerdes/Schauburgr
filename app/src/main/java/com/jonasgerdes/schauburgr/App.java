@@ -19,6 +19,7 @@ import io.realm.RealmConfiguration;
 
 public class App extends Application {
 
+    private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/";
     private static AppComponent sAppComponent;
 
     private ChromeCustomTabWrapper mChromeTab = new ChromeCustomTabWrapper();
@@ -29,7 +30,7 @@ public class App extends Application {
 
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this, mChromeTab))
-                .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL))
+                .dataModule(new DataModule(BuildConfig.SERVER_BASE_URL, THE_MOVIE_DATABASE_URL))
                 .build();
 
         initRealmDb();
