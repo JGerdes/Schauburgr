@@ -111,13 +111,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         return mRealm.where(Movie.class)
                 .contains("genres", "Action")
                 .greaterThanOrEqualTo("contentRating", 12)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getComedyMovies() {
         return mRealm.where(Movie.class)
                 .contains("genres", "Komödie")
-                .findAllSorted("releaseDate", Sort.DESCENDING);
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getThrillerMovies() {
@@ -125,7 +127,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .contains("genres", "Thriller")
                 .or()
                 .contains("genres", "Horror")
-                .findAllSorted("releaseDate", Sort.DESCENDING);
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getKidsMovies() {
@@ -134,20 +137,23 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .or()
                 .contains("genres", "Familie")
                 .lessThanOrEqualTo("contentRating", 6)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getMoviesWithExtra(String extra) {
         return mRealm.where(Movie.class)
                 .contains("extras", extra)
-                .findAllSorted("releaseDate", Sort.DESCENDING);
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getExcessLengthMovies() {
         return mRealm.where(Movie.class)
                 .greaterThanOrEqualTo("duration", Movie.DURATION_EXCESS_LENGTH_STATE_1)
                 .not().contains("genres", "Met Opera")
-                .findAllSorted("duration", Sort.DESCENDING);
+                .findAllSorted("duration", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getSpecialMovies() {
