@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
@@ -124,6 +126,7 @@ public class GuidePresenter implements GuideContract.Presenter {
     }
 
     private void showError(Throwable error) {
+        Log.e("GuidePresenter", "error while fetching data", error);
         if (error instanceof SocketTimeoutException
                 || error instanceof UnknownHostException
                 || error instanceof SocketException) {
@@ -138,6 +141,7 @@ public class GuidePresenter implements GuideContract.Presenter {
             return;
         }
         movie.setTmdbId(results.get(0).getId());
+        movie.setReleaseDate(results.get(0).getReleaseDate());
         try (Realm r = Realm.getDefaultInstance()) {
             r.executeTransaction((realm) -> {
                 realm.copyToRealmOrUpdate(movie);

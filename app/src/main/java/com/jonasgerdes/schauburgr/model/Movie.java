@@ -154,6 +154,11 @@ public class Movie extends RealmObject {
         return new DateTime(releaseDate);
     }
 
+    public Movie setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+        return this;
+    }
+
     public Movie setReleaseDate(DateTime releaseDate) {
         if (releaseDate == null) {
             this.releaseDate = null;

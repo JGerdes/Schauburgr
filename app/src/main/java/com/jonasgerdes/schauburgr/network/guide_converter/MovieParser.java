@@ -114,7 +114,6 @@ public class MovieParser {
         if (matcher.find()) {
             movie = new Movie();
             movie.setResourceId(matcher.group(1));
-            movie.setReleaseDate(SchauburgGuideConverter.parseDate(matcher.group(3)));
             movie.setDuration(Long.parseLong(matcher.group(4)));
             movie.setContentRating(Integer.parseInt(matcher.group(5)));
 

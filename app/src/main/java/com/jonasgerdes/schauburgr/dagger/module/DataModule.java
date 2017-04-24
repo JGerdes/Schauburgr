@@ -6,12 +6,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.BuildConfig;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
 import com.jonasgerdes.schauburgr.network.tmdb.ApiKeyInterceptor;
+import com.jonasgerdes.schauburgr.network.tmdb.DateDeserializer;
 import com.jonasgerdes.schauburgr.network.tmdb.LanguageInterceptor;
 import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
-import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
 import com.jonasgerdes.schauburgr.network.url.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+
+import java.util.Date;
 
 import javax.inject.Singleton;
 
@@ -44,7 +47,8 @@ public class DataModule {
     @Singleton
     Gson provideGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapter(Date.class, new DateDeserializer());
         return gsonBuilder.create();
     }
 
@@ -90,11 +94,12 @@ public class DataModule {
     /**
      * Provides a not singleton instance of realm db. Instance can and should be closed via
      * {@link Realm#close()} when not used any more
+     *
      * @return A instance of default realm database
      */
     @Provides
     Realm provideRealm() {
-       return Realm.getDefaultInstance();
+        return Realm.getDefaultInstance();
     }
 
 

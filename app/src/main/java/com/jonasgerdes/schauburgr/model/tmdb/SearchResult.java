@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.model.tmdb;
 
+import java.util.Date;
+
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 22.04.2017
@@ -11,6 +13,7 @@ public class SearchResult {
     private String posterPath;
     private String backdropPath;
     private String overview;
+    private Date releaseDate;
 
     public String getTitle() {
         return title;
@@ -54,6 +57,15 @@ public class SearchResult {
 
     public SearchResult setOverview(String overview) {
         this.overview = overview;
+        return this;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public SearchResult setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
         return this;
     }
 }
