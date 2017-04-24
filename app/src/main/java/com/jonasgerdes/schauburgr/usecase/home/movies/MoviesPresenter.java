@@ -6,6 +6,8 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.MovieCategory;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     private void showCachedMovies() {
+
+        mCategories.add(new MovieCategory()
+                .setTitle(R.string.movie_list_category_new)
+                .setMovies(getNewMovies())
+        );
+
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_action)
                 .setMovies(getActionMovies())
@@ -105,6 +113,13 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private boolean isReasonable(MovieCategory category) {
         return category.getMovies().size() >= CATEGORY_SHOW_THRESHOLD;
+    }
+
+    private RealmResults<Movie> getNewMovies() {
+        return mRealm.where(Movie.class)
+                .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(28).toDate())
+                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .where().distinct("title");
     }
 
     private RealmResults<Movie> getActionMovies() {
