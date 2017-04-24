@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -47,10 +48,12 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                 .equalTo("resourceId", movieId)
                 .findFirst();
         mView.showMovie(movie);
-        RealmResults<Screening> screenings = movie.getScreenings()
-                .where()
+        //sometimes there are same movies with different extras (3D, atmos)
+        //find all screenings of movies regardless of extra-splitting
+        RealmResults<Screening> screenings = mRealm.where(Screening.class)
+                .equalTo("movie.title", movie.getTitle())
                 .greaterThan("startDate", new Date())
-                .findAll();
+                .findAllSorted("startDate", Sort.ASCENDING);
         mView.showScreenings(screenings);
     }
 
