@@ -5,6 +5,8 @@ import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 
+import io.realm.RealmResults;
+
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 29.03.2017
@@ -13,6 +15,7 @@ import com.jonasgerdes.schauburgr.mvp.BaseView;
 public interface MovieDetailContract {
     interface View extends BaseView<MovieDetailContract.Presenter> {
         void showMovie(Movie movie);
+        void showScreenings(RealmResults<Screening> screenings);
         void openWebpage(String url);
 
     }

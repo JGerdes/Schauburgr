@@ -5,9 +5,12 @@ import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -44,6 +47,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                 .equalTo("resourceId", movieId)
                 .findFirst();
         mView.showMovie(movie);
+        RealmResults<Screening> screenings = movie.getScreenings()
+                .where()
+                .greaterThan("startDate", new Date())
+                .findAll();
+        mView.showScreenings(screenings);
     }
 
     @Override
