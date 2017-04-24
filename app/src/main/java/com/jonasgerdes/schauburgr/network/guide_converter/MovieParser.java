@@ -129,12 +129,17 @@ public class MovieParser {
             description = remove(description, mDurationPattern);
             description = remove(description, mContentRatingPattern);
             description = remove(description, mLocationPattern);
-            description = description.trim();
             movie.setDescription(description);
 
             movie.setGenres(parseFromDescription(movie, mGenrePattern));
             movie.setDirectors(parseFromDescription(movie, mDirectorPattern));
             movie.setCast(parseFromDescription(movie, mCastPattern));
+
+            //clean up whitespace
+            description = movie.getDescription();
+            description = description.trim();
+            description = removeLineBreaks(description);
+            movie.setDescription(description);
 
             parseAndAddGenresFromTitle(movie);
         } else {
@@ -142,6 +147,19 @@ public class MovieParser {
         }
 
         return movie;
+    }
+
+    /**
+     * Removes leading HTML line break tags
+     *
+     * @param description to remove line breaks from
+     * @return Cleaned description
+     */
+    private String removeLineBreaks(String description) {
+        while (description.startsWith("<br>")) {
+            description = description.substring(4, description.length());
+        }
+        return description;
     }
 
     /**
