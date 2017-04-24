@@ -103,6 +103,18 @@ public class Movie extends RealmObject {
     private String genres = "";
 
     /**
+     * Concatenated string of directors of the movie. Might by empty.
+     * See {@link #genres} for explanation why a concatenated string is used.
+     */
+    private String directors = "";
+
+    /**
+     * Concatenated string of cast of the movie. Might by empty.
+     * See {@link #genres} for explanation why a concatenated string is used.
+     */
+    private String cast = "";
+
+    /**
      * Concatenated string of all extras of the movie. Might by empty.
      * See {@link #genres} for explanation why a concatenated string is used.
      */
@@ -178,21 +190,36 @@ public class Movie extends RealmObject {
         return this;
     }
 
+    public List<String> getGenres() {
+        return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPARATOR)));
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = StringUtil.concat(genres, STRING_LIST_SEPARATOR);
+    }
+
+    public List<String> getDirectors() {
+        return Collections.unmodifiableList(Arrays.asList(directors.split(STRING_LIST_SEPARATOR)));
+    }
+
+    public void setDirectors(List<String> directors) {
+        this.directors = StringUtil.concat(directors, STRING_LIST_SEPARATOR);
+    }
+
+    public List<String> getCast() {
+        return Collections.unmodifiableList(Arrays.asList(cast.split(STRING_LIST_SEPARATOR)));
+    }
+
+    public void setCast(List<String> cast) {
+        this.cast = StringUtil.concat(cast, STRING_LIST_SEPARATOR);
+    }
+
     public List<String> getExtras() {
         return Collections.unmodifiableList(Arrays.asList(extras.split(STRING_LIST_SEPARATOR)));
     }
 
     public void setExtras(List<String> extras) {
         this.extras = StringUtil.concat(extras, STRING_LIST_SEPARATOR);
-    }
-
-    public List<String> getGenres() {
-        String genres = this.genres;
-        return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPARATOR)));
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = StringUtil.concat(genres, STRING_LIST_SEPARATOR);
     }
 
     public boolean is3D() {
