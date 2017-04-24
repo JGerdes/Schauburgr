@@ -126,14 +126,14 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         return mRealm.where(Movie.class)
                 .contains("genres", "Action")
                 .greaterThanOrEqualTo("contentRating", 12)
-                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
 
     private RealmResults<Movie> getComedyMovies() {
         return mRealm.where(Movie.class)
                 .contains("genres", "Komödie")
-                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
 
@@ -142,7 +142,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .contains("genres", "Thriller")
                 .or()
                 .contains("genres", "Horror")
-                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
 
@@ -152,14 +152,14 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .or()
                 .contains("genres", "Familie")
                 .lessThanOrEqualTo("contentRating", 6)
-                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
 
     private RealmResults<Movie> getMoviesWithExtra(String extra) {
         return mRealm.where(Movie.class)
                 .contains("extras", extra)
-                .findAllSorted("releaseDate", Sort.DESCENDING)
+                .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
 
