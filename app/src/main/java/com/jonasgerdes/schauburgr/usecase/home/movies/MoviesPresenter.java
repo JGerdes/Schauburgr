@@ -56,12 +56,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .setMovies(getNewMovies())
         );
 
-        addCategoryIfReasonable(new MovieCategory()
+        mCategories.add(new MovieCategory()
                 .setTitle(R.string.movie_list_category_action)
                 .setMovies(getActionMovies())
         );
 
-        addCategoryIfReasonable(new MovieCategory()
+        mCategories.add(new MovieCategory()
                 .setTitle(R.string.movie_list_category_comedy)
                 .setMovies(getComedyMovies())
         );
@@ -72,7 +72,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .setMovies(getThrillerMovies())
         );
 
-        addCategoryIfReasonable(new MovieCategory()
+        mCategories.add(new MovieCategory()
                 .setTitle(R.string.movie_list_category_kids)
                 .setMovies(getKidsMovies())
         );
@@ -117,7 +117,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private RealmResults<Movie> getNewMovies() {
         return mRealm.where(Movie.class)
-                .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(28).toDate())
+                .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(14).toDate())
                 .findAllSorted("releaseDate", Sort.DESCENDING)
                 .where().distinct("title");
     }
@@ -133,6 +133,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private RealmResults<Movie> getComedyMovies() {
         return mRealm.where(Movie.class)
                 .contains("genres", "Komödie")
+                //don't include family and animation movies,
+                //otherwise (almost) all kids movies end up here
+                .not().contains("genres", "Familie")
+                .not().contains("genres", "Animation")
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().distinct("title");
     }
