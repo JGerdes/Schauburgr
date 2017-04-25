@@ -7,7 +7,7 @@ import com.jonasgerdes.schauburgr.model.Guide;
 import com.jonasgerdes.schauburgr.model.Movie;
 import com.jonasgerdes.schauburgr.model.Screening;
 import com.jonasgerdes.schauburgr.model.ScreeningDay;
-import com.jonasgerdes.schauburgr.model.tmdb.SearchResult;
+import com.jonasgerdes.schauburgr.model.tmdb.search.SearchResult;
 import com.jonasgerdes.schauburgr.network.SchauburgApi;
 import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
 import com.jonasgerdes.schauburgr.network.url.UrlProvider;
@@ -113,7 +113,7 @@ public class GuidePresenter implements GuideContract.Presenter {
                 .flatMapIterable(Guide::getMovies)
                 //work around since you can't pass variable down the stream
                 //see https://github.com/square/retrofit/issues/855
-                .flatMap(movie -> mTMDbApi.search(movie.getTitle())
+                .flatMap(movie -> mTMDbApi.search(movie.getTitle(), 2017)
                         .map(searchResponse -> {
                             setTMDbId(movie, searchResponse.getResults());
                             return searchResponse;
@@ -140,8 +140,11 @@ public class GuidePresenter implements GuideContract.Presenter {
         if (results.size() == 0) {
             return;
         }
-        movie.setTmdbId(results.get(0).getId());
-        movie.setReleaseDate(results.get(0).getReleaseDate());
+        SearchResult result = results.get(0);
+        movie.setTmdbId(result.getId());
+        movie.setReleaseDate(result.getReleaseDate());
+        movie.setHdPosterUrl("https://image.tmdb.org/t/p/w500" + result.getPosterPath());
+        movie.setCoverUrl("https://image.tmdb.org/t/p/w780" + result.getBackdropPath());
         try (Realm r = Realm.getDefaultInstance()) {
             r.executeTransaction((realm) -> {
                 realm.copyToRealmOrUpdate(movie);

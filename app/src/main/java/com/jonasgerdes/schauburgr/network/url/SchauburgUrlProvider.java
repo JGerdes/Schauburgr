@@ -9,8 +9,8 @@ import com.jonasgerdes.schauburgr.model.Screening;
  * Implementation of a UrlProvider which provides urls to webpages and resources like images on the
  * server of the schauburg website.
  *
- * @see UrlProvider
  * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @see UrlProvider
  * @since 07.03.2017
  */
 public class SchauburgUrlProvider implements UrlProvider {
@@ -22,6 +22,7 @@ public class SchauburgUrlProvider implements UrlProvider {
 
     /**
      * Create a new instance of an UrlProvider for the schauburg webiste
+     *
      * @param baseUrl Base url containing a trailing forward slash
      */
     public SchauburgUrlProvider(String baseUrl) {
@@ -32,11 +33,16 @@ public class SchauburgUrlProvider implements UrlProvider {
      * Get url of an image file of the poster of given movie. Creates a fingerprint for
      * movie using it's {@link Movie#resourceId} and {@link Movie#title} to enable caching file
      * preventing loading of wrong images.
+     *
      * @param movie instance of movie to get the poster url for
      * @return web url to an image file showing a movie poster
      */
     @Override
     public String getPosterImageUrl(Movie movie) {
+        //return hd url of is
+        if (movie.getHdPosterUrl() != null) {
+            return movie.getHdPosterUrl();
+        }
         //encode title as base64 and append it to url to prevent issue when same image is used for
         //different movie while still allowing image to be cached as long as used for same movie
         byte[] titleBytes = movie.getTitle().getBytes();
@@ -47,6 +53,7 @@ public class SchauburgUrlProvider implements UrlProvider {
     /**
      * Creates an url to an webpage which enables visitor to create a reservation and/or by tickets
      * for seats for the given screening.
+     *
      * @param screening Screening which should be create a reservation for
      * @return web url to webpage showing reservation/purchase
      */

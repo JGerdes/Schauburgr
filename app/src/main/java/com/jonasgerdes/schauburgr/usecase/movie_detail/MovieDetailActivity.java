@@ -221,10 +221,11 @@ public class MovieDetailActivity extends AppCompatActivity
                 .into(mPosterView);
 
 
-        Glide.with(this)
-                .load(mUrlProvider.getPosterImageUrl(movie))
-                .error(R.drawable.no_network_poster)
-                .into(mCoverView);
+        if(movie.getCoverUrl() != null) {
+            Glide.with(this)
+                    .load(movie.getCoverUrl())
+                    .into(mCoverView);
+        }
     }
 
     @Override

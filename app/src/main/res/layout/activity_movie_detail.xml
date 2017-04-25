@@ -62,7 +62,7 @@
                 <ImageView
                     android:id="@+id/poster"
                     android:layout_width="144dp"
-                    android:layout_height="192dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:layout_marginLeft="16dp"
@@ -73,6 +73,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_height="192dp"
                     tools:src="@color/colorPrimaryDark"/>
 
 
@@ -145,8 +146,8 @@
                     android:id="@+id/director"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_director_light_24dp"
@@ -162,8 +163,8 @@
                     android:id="@+id/cast"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_cast_light_24dp"

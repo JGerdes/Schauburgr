@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model.tmdb;
+package com.jonasgerdes.schauburgr.model.tmdb.search;
 
 import java.util.Date;
 

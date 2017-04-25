@@ -120,6 +120,9 @@ public class Movie extends RealmObject {
      */
     private String extras = "";
 
+    private String mHdPosterUrl;
+    private String mCoverUrl;
+
     @LinkingObjects("movie")
     private final RealmResults<Screening> mScreenings = null;
 
@@ -249,5 +252,23 @@ public class Movie extends RealmObject {
 
     public RealmResults<Screening> getScreenings() {
         return mScreenings;
+    }
+
+    public String getHdPosterUrl() {
+        return mHdPosterUrl;
+    }
+
+    public Movie setHdPosterUrl(String hdPosterUrl) {
+        mHdPosterUrl = hdPosterUrl;
+        return this;
+    }
+
+    public String getCoverUrl() {
+        return mCoverUrl;
+    }
+
+    public Movie setCoverUrl(String coverUrl) {
+        mCoverUrl = coverUrl;
+        return this;
     }
 }
