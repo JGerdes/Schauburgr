@@ -85,6 +85,12 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.contentRating)
     TextView mContentRating;
 
+    @BindView(R.id.director)
+    TextView mDirector;
+
+    @BindView(R.id.cast)
+    TextView mCast;
+
     @BindView(R.id.description)
     TextView mDescriptionView;
 
@@ -185,6 +191,17 @@ public class MovieDetailActivity extends AppCompatActivity
         @ColorInt int color = getContentRatingColor(this, movie.getContentRating());
         mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
         mContentRating.setText("ab " + movie.getContentRating());
+        if (movie.getDirectors().isEmpty()) {
+            mDirector.setVisibility(View.GONE);
+        } else {
+            mDirector.setText(StringUtil.concat(movie.getDirectors(), ", "));
+        }
+
+        if (movie.getCast().isEmpty()) {
+            mCast.setVisibility(View.GONE);
+        } else {
+            mCast.setText(StringUtil.concat(movie.getCast(), ", "));
+        }
 
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 

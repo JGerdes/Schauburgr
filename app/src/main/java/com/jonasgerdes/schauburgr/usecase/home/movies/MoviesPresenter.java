@@ -26,7 +26,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     /**
      * Minimun count of movies in a category to actually show the category
      */
-    private static final int CATEGORY_SHOW_THRESHOLD = 3;
+    private static final int CATEGORY_SHOW_THRESHOLD = 2;
     @Inject
     SchauburgApi mApi;
 
@@ -51,17 +51,18 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private void showCachedMovies() {
 
+        //always show new movies
         mCategories.add(new MovieCategory()
                 .setTitle(R.string.movie_list_category_new)
                 .setMovies(getNewMovies())
         );
 
-        mCategories.add(new MovieCategory()
+        addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_action)
                 .setMovies(getActionMovies())
         );
 
-        mCategories.add(new MovieCategory()
+        addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_comedy)
                 .setMovies(getComedyMovies())
         );
@@ -72,7 +73,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .setMovies(getThrillerMovies())
         );
 
-        mCategories.add(new MovieCategory()
+        addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_kids)
                 .setMovies(getKidsMovies())
         );
@@ -83,11 +84,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .setMovies(getMoviesWithExtra(Movie.EXTRA_3D))
         );
 
-        addCategoryIfReasonable(new MovieCategory()
-                .setTitle(R.string.movie_list_category_atmos)
-                .setSubTitle(R.string.movie_list_category_atmos_subtitle)
-                .setMovies(getMoviesWithExtra(Movie.EXTRA_ATMOS))
-        );
 
         addCategoryIfReasonable(new MovieCategory()
                 .setTitle(R.string.movie_list_category_long)
@@ -95,10 +91,17 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .setMovies(getExcessLengthMovies())
         );
 
+        //always add special movies
         mCategories.add(new MovieCategory()
                 .setTitle(R.string.movie_list_category_specials)
                 .setSubTitle(R.string.movie_list_category_specials_subtitle)
                 .setMovies(getSpecialMovies())
+        );
+
+        addCategoryIfReasonable(new MovieCategory()
+                .setTitle(R.string.movie_list_category_atmos)
+                .setSubTitle(R.string.movie_list_category_atmos_subtitle)
+                .setMovies(getMoviesWithExtra(Movie.EXTRA_ATMOS))
         );
 
         mView.showMovieCategories(mCategories);
