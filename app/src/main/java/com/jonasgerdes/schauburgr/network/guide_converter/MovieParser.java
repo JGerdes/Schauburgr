@@ -38,7 +38,9 @@ public class MovieParser {
 
     //description content patterns
     private static final String REGEX_DESCRIPTION_GENRE = "Genre:? (.*?)<br>";
-    private static final String REGEX_DESCRIPTION_DIRECTOR = "(?>Regie|Von):? (.*?)<br>";
+    //safety threshold of max. 30 (and min 5) chars as name for director to prevent
+    //capturing sentences starting with "Von" as director
+    private static final String REGEX_DESCRIPTION_DIRECTOR = "(?>Regie|Von):? (.{5,30}?)<br>";
     //cast is often start with "Cast:", but sometimes just with "Mit ".
     //also sometimes it ends with "und mehr" or "mehr"
     private static final String REGEX_DESCRIPTION_CAST
