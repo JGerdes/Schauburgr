@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -41,6 +42,12 @@ public class GuidePresenter implements GuideContract.Presenter {
         mView = view;
 
         mView.setPresenter(this);
+
+        mDisposables.add(
+                mMovieRepository.getIsLoading()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mView::showIsLoading)
+        );
     }
 
     @Override

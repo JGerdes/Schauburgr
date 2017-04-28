@@ -128,7 +128,6 @@ public class GuideView extends Fragment implements GuideContract.View,
         } else {
             mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
         }
-        mRefreshLayout.setRefreshing(false);
         hideError();
         if (animate) {
             mDayList.startAnimation(mUpdateAnimation);
@@ -138,13 +137,16 @@ public class GuideView extends Fragment implements GuideContract.View,
     }
 
     @Override
+    public void showIsLoading(boolean show) {
+        mRefreshLayout.setRefreshing(show);
+    }
+
+    @Override
     public void showError(String message) {
-        mRefreshLayout.setRefreshing(false);
         mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mRefreshLayout.setRefreshing(true);
                         onRefresh();
                     }
                 });

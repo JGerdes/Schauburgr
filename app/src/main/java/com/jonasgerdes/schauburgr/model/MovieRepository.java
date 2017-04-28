@@ -1,16 +1,17 @@
 package com.jonasgerdes.schauburgr.model;
 
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
-import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
-import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 
 import org.joda.time.LocalDate;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -26,6 +27,7 @@ public class MovieRepository implements Disposable {
     private SchauburgDataLoader mSchauburgDataLoader;
     private TheMovieDatabaseDataLoader mTheMovieDatabaseDataLoader;
     private CompositeDisposable mDisposables = new CompositeDisposable();
+    private BehaviorSubject<Boolean> mIsLoading = BehaviorSubject.createDefault(false);
 
     public MovieRepository(SchauburgDataLoader schauburgDataLoader,
                            TheMovieDatabaseDataLoader theMovieDatabaseDataLoader) {
@@ -34,12 +36,17 @@ public class MovieRepository implements Disposable {
         mRealm = Realm.getDefaultInstance();
     }
 
+    public Observable<Boolean> getIsLoading() {
+        return mIsLoading.hide();
+    }
+
     public void loadMovieData() {
+        mIsLoading.onNext(true);
         mDisposables.add(mSchauburgDataLoader.fetchGuideData()
                 .flatMapIterable(Guide::getMovies)
                 .concatMap(mTheMovieDatabaseDataLoader::searchAndSaveMovie)
                 .ignoreElements()
-                .subscribe());
+                .subscribe(() -> mIsLoading.onNext(false)));
     }
 
     public Observable<RealmResults<ScreeningDay>> getScreeningDays() {

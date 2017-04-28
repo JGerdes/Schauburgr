@@ -10,6 +10,7 @@ import io.realm.RealmResults;
 public interface GuideContract {
     interface View extends BaseView<GuideContract.Presenter> {
         void showScreeningDays(RealmResults<ScreeningDay> screeningDays, boolean animate);
+        void showIsLoading(boolean show);
         void showError(String message);
         void openWebpage(String url);
     }
