@@ -12,6 +12,7 @@ public interface GuideContract {
         void showScreeningDays(RealmResults<ScreeningDay> screeningDays, boolean animate);
         void showIsLoading(boolean show);
         void showError(String message);
+        void hideError();
         void openWebpage(String url);
     }
 

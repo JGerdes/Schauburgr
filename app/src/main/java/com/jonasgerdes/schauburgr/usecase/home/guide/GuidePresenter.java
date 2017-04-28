@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.NetworkState;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
@@ -43,11 +44,26 @@ public class GuidePresenter implements GuideContract.Presenter {
 
         mView.setPresenter(this);
 
-        mDisposables.add(
-                mMovieRepository.getIsLoading()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(mView::showIsLoading)
+        mDisposables.add(mMovieRepository.getNetworkState()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleNetworkState)
         );
+    }
+
+    private void handleNetworkState(NetworkState state) {
+        switch (state.getState()) {
+            case NetworkState.STATE_DEFAULT:
+                mView.showIsLoading(false);
+                mView.hideError();
+                return;
+            case NetworkState.STATE_LOADING:
+                mView.showIsLoading(true);
+                mView.hideError();
+                return;
+            case NetworkState.STATE_ERROR:
+                mView.showIsLoading(false);
+                mView.showError(state.getMessage());
+        }
     }
 
     @Override

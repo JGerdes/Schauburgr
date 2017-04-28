@@ -169,7 +169,8 @@ public class GuideView extends Fragment implements GuideContract.View,
         mPresenter.onScreeningSelected(screening);
     }
 
-    private void hideError() {
+    @Override
+    public void hideError() {
         if (mSnackbar != null) {
             mSnackbar.dismiss();
         }

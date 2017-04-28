@@ -8,6 +8,10 @@ import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 
 import org.joda.time.LocalDate;
 
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -15,6 +19,7 @@ import io.reactivex.subjects.BehaviorSubject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import retrofit2.HttpException;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -27,7 +32,8 @@ public class MovieRepository implements Disposable {
     private SchauburgDataLoader mSchauburgDataLoader;
     private TheMovieDatabaseDataLoader mTheMovieDatabaseDataLoader;
     private CompositeDisposable mDisposables = new CompositeDisposable();
-    private BehaviorSubject<Boolean> mIsLoading = BehaviorSubject.createDefault(false);
+    private BehaviorSubject<NetworkState> mState
+            = BehaviorSubject.createDefault(NetworkState.DEFAULT);
 
     public MovieRepository(SchauburgDataLoader schauburgDataLoader,
                            TheMovieDatabaseDataLoader theMovieDatabaseDataLoader) {
@@ -36,17 +42,43 @@ public class MovieRepository implements Disposable {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public Observable<Boolean> getIsLoading() {
-        return mIsLoading.hide();
+    public Observable<NetworkState> getNetworkState() {
+        return mState.hide();
     }
 
     public void loadMovieData() {
-        mIsLoading.onNext(true);
+        mState.onNext(NetworkState.LOADING);
         mDisposables.add(mSchauburgDataLoader.fetchGuideData()
                 .flatMapIterable(Guide::getMovies)
                 .concatMap(mTheMovieDatabaseDataLoader::searchAndSaveMovie)
                 .ignoreElements()
-                .subscribe(() -> mIsLoading.onNext(false)));
+                .subscribe(() -> mState.onNext(NetworkState.DEFAULT), this::propagateErrorState)
+        );
+    }
+
+    private void propagateErrorState(Throwable throwable) {
+        NetworkState state = new NetworkState(NetworkState.STATE_ERROR);
+        if (throwable instanceof HttpException) {
+            HttpException httpError = ((HttpException) throwable);
+            state.setHttpStatusCode(httpError.code());
+            switch (httpError.code()) {
+                case 429:
+                    state.setMessage("Zu schnelle Abfragen, warte kurz!");
+                    break;
+                default:
+                    state.setMessage(httpError.getMessage());
+            }
+        } else {
+            if (throwable instanceof SocketTimeoutException
+                    || throwable instanceof UnknownHostException
+                    || throwable instanceof SocketException) {
+                state.setMessage("Keine Internetverbindung :(");
+            } else {
+                state.setMessage(throwable.getClass().getCanonicalName());
+            }
+        }
+
+        mState.onNext(state);
     }
 
     public Observable<RealmResults<ScreeningDay>> getScreeningDays() {
