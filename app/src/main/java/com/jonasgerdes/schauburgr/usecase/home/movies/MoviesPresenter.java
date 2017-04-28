@@ -3,9 +3,9 @@ package com.jonasgerdes.schauburgr.usecase.home.movies;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.MovieCategory;
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -28,7 +27,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Inject
     SchauburgApi mApi;
 
-    CompositeDisposable mDisposables = new CompositeDisposable();
 
     @Inject
     MovieRepository mMovieRepository;
@@ -46,14 +44,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void detachView() {
-        mDisposables.dispose();
     }
 
     private void showCachedMovies() {
 
         List<Observable<MovieCategory>> categories = new ArrayList<>();
 
-        //always show new movies
         categories.add(mMovieRepository.getNewMovies()
                 .map(movies -> new MovieCategory()
                         .setTitle(R.string.movie_list_category_new)
@@ -100,7 +96,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         .setMovies(movies))
         );
 
-        //always add special movies
         categories.add(mMovieRepository.getSpecialMovies()
                 .map(movies -> new MovieCategory()
                         .setTitle(R.string.movie_list_category_specials)

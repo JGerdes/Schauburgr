@@ -4,7 +4,6 @@ import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposables;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
@@ -18,13 +17,13 @@ public class RealmObservable {
     private static final String TAG = "RealmObservable";
 
     public static <E extends RealmModel> Observable<RealmResults<E>>
-    from(final RealmResults<E> results, Realm realm) {
+    from(final RealmResults<E> results) {
         return Observable.create(emitter -> {
+            Log.d(TAG, "create observable");
             final RealmChangeListener<RealmResults<E>> listener = emitter::onNext;
             emitter.setDisposable(Disposables.fromRunnable(() -> {
                         Log.d(TAG, "dispose list");
                         results.removeChangeListener(listener);
-                        realm.close();
                     })
             );
             results.addChangeListener(listener);
@@ -32,13 +31,13 @@ public class RealmObservable {
         });
     }
 
-    public static <E extends RealmObject> Observable<E> from(final E object, Realm realm) {
+    public static <E extends RealmObject> Observable<E> from(final E object) {
         return Observable.create(emitter -> {
+            Log.d(TAG, "create observable " + object.getClass().getCanonicalName());
             final RealmChangeListener<E> listener = emitter::onNext;
             emitter.setDisposable(Disposables.fromRunnable(() -> {
                         Log.d(TAG, "dispose " + object.getClass().getCanonicalName());
                         object.removeChangeListener(listener);
-                        realm.close();
                     })
             );
             object.addChangeListener(listener);

@@ -65,6 +65,8 @@ public class MoviesView extends Fragment implements MoviesContract.View,
     }
 
 
+
+
     @Override
     public void onDestroyView() {
         mDisposables.dispose();
