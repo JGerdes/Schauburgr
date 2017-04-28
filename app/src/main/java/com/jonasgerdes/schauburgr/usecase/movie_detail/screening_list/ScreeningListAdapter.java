@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 import java.util.ArrayList;
 import java.util.List;

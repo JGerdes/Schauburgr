@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model;
+package com.jonasgerdes.schauburgr.model.schauburg.entity;
 
 import java.util.ArrayList;
 import java.util.List;

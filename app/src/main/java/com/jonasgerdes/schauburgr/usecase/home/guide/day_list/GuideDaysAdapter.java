@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 
 import java.util.ArrayList;
 import java.util.List;

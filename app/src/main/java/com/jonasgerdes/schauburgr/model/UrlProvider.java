@@ -1,7 +1,7 @@
-package com.jonasgerdes.schauburgr.network.url;
+package com.jonasgerdes.schauburgr.model;
 
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 /**
  * Interface for a UrlProvider which provides urls to webpages or resources likes images.

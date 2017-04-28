@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model;
+package com.jonasgerdes.schauburgr.model.schauburg.entity;
 
 import android.support.annotation.StringRes;
 

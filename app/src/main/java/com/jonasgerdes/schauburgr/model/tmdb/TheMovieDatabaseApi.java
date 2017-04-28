@@ -1,6 +1,6 @@
-package com.jonasgerdes.schauburgr.network.tmdb;
+package com.jonasgerdes.schauburgr.model.tmdb;
 
-import com.jonasgerdes.schauburgr.model.tmdb.search.SearchResponse;
+import com.jonasgerdes.schauburgr.model.tmdb.entity.search.SearchResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

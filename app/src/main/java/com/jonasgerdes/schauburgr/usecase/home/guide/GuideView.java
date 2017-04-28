@@ -17,8 +17,8 @@ import android.view.animation.AnimationUtils;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;

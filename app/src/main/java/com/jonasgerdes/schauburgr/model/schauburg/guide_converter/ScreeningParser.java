@@ -1,7 +1,7 @@
-package com.jonasgerdes.schauburgr.network.guide_converter;
+package com.jonasgerdes.schauburgr.model.schauburg.guide_converter;
 
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 import java.util.List;
 import java.util.regex.Matcher;

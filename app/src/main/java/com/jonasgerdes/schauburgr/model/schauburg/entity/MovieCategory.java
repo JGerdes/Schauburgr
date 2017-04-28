@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model;
+package com.jonasgerdes.schauburgr.model.schauburg.entity;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -47,6 +47,7 @@ public class MovieCategory {
     public RealmResults<Movie> getMovies() {
         return movies;
     }
+
 
     public MovieCategory setMovies(RealmResults<Movie> movies) {
         this.movies = movies;

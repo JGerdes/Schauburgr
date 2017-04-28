@@ -1,8 +1,8 @@
-package com.jonasgerdes.schauburgr.network.guide_converter;
+package com.jonasgerdes.schauburgr.model.schauburg.guide_converter;
 
 import android.text.Html;
 
-import com.jonasgerdes.schauburgr.model.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 
 import java.util.ArrayList;

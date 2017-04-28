@@ -1,9 +1,9 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
 import com.jonasgerdes.schauburgr.App;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 
 import java.util.Date;
 

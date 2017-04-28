@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.MovieCategory;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.MovieCategory;
 import com.jonasgerdes.schauburgr.util.OffsetDecoration;
 
 import butterknife.BindView;

@@ -1,6 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list;
 
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>

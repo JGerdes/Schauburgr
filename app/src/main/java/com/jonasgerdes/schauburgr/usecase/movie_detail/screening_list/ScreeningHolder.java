@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.util.DateFormatUtil;
 import com.jonasgerdes.schauburgr.view.MovieAttributeView;
 

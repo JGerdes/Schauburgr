@@ -1,7 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 

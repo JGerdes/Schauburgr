@@ -9,9 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
-import com.jonasgerdes.schauburgr.model.ScreeningTime;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningTime;
 import com.jonasgerdes.schauburgr.util.DateFormatUtil;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 

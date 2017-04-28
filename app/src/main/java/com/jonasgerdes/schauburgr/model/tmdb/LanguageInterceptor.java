@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.network.tmdb;
+package com.jonasgerdes.schauburgr.model.tmdb;
 
 import java.io.IOException;
 
@@ -12,11 +12,14 @@ import okhttp3.Response;
  * @since 22.04.2017
  */
 
-public class ApiKeyInterceptor implements Interceptor {
-    private String mApiKey;
+public class LanguageInterceptor implements Interceptor {
 
-    public ApiKeyInterceptor(String apiKey) {
-        mApiKey = apiKey;
+    public static final String GERMAN = "de-DE";
+
+    private String mLanguage;
+
+    public LanguageInterceptor(String language) {
+        mLanguage = language;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ApiKeyInterceptor implements Interceptor {
         HttpUrl url = request.url();
 
         HttpUrl newUrl = url.newBuilder()
-                .addQueryParameter("api_key", mApiKey)
+                .addQueryParameter("language", mLanguage)
                 .build();
 
         Request newRequest = request.newBuilder()

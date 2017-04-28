@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.network.tmdb;
+package com.jonasgerdes.schauburgr.model.tmdb;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

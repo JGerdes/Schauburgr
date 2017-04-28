@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.MovieCategory;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.MovieCategory;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.CompactMovieHolder;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieCategoryView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
@@ -22,6 +22,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by jonas on 05.03.2017.
@@ -37,6 +39,7 @@ public class MoviesView extends Fragment implements MoviesContract.View,
     LinearLayout mCategoryContainer;
 
     private MoviesContract.Presenter mPresenter;
+    private CompositeDisposable mDisposables = new CompositeDisposable();
 
     public static MoviesView newInstance() {
         Bundle args = new Bundle();
@@ -64,6 +67,7 @@ public class MoviesView extends Fragment implements MoviesContract.View,
 
     @Override
     public void onDestroyView() {
+        mDisposables.dispose();
         mPresenter.detachView();
         super.onDestroyView();
     }
@@ -76,22 +80,22 @@ public class MoviesView extends Fragment implements MoviesContract.View,
 
 
     @Override
-    public void addMovieCategory(MovieCategory category) {
+    public void addMovieCategory(Observable<MovieCategory> category) {
         MovieCategoryView movieCategoryView = new MovieCategoryView(getContext());
         movieCategoryView.setLayoutParams(new LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        movieCategoryView.bindCategory(category);
         movieCategoryView.setMovieSelectedListener(this);
         mCategoryContainer.addView(movieCategoryView);
+        mDisposables.add(
+                category.subscribe(movieCategoryView::bindCategory)
+        );
     }
 
     @Override
-    public void showMovieCategories(List<MovieCategory> categories) {
-        for (MovieCategory category : categories) {
-            addMovieCategory(category);
-        }
+    public void showMovieCategories(List<Observable<MovieCategory>> categories) {
+        categories.forEach(this::addMovieCategory);
     }
 
     @Override

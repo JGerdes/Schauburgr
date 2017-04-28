@@ -1,7 +1,7 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 

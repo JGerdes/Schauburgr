@@ -2,7 +2,7 @@ package com.jonasgerdes.schauburgr.usecase.home.about;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 
 import javax.inject.Inject;
 

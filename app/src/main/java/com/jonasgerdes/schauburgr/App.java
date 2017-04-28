@@ -15,6 +15,7 @@ import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import de.jonasrottmann.realmbrowser.RealmBrowser;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.rx.RealmObservableFactory;
 
 
 public class App extends Application {
@@ -43,6 +44,7 @@ public class App extends Application {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
+                .rxFactory(new RealmObservableFactory())
                 .build();
         Realm.setDefaultConfiguration(config);
     }

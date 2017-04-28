@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model;
+package com.jonasgerdes.schauburgr.model.schauburg.entity;
 
 import org.joda.time.DateTime;
 

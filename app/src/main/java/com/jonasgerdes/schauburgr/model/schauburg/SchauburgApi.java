@@ -1,6 +1,6 @@
-package com.jonasgerdes.schauburgr.network;
+package com.jonasgerdes.schauburgr.model.schauburg;
 
-import com.jonasgerdes.schauburgr.model.Guide;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

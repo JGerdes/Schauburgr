@@ -2,6 +2,8 @@ package com.jonasgerdes.schauburgr.dagger.component;
 
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
+import com.jonasgerdes.schauburgr.usecase.home.HomeActivity;
 import com.jonasgerdes.schauburgr.usecase.home.about.AboutPresenter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuidePresenter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuideView;
@@ -43,4 +45,8 @@ public interface AppComponent {
     void inject(GuideView guideView);
 
     void inject(CompactMovieHolder compactMovieHolder);
+
+    void inject(SchauburgDataLoader schauburgDataLoader);
+
+    void inject(HomeActivity homeActivity);
 }

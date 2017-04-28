@@ -3,14 +3,10 @@ package com.jonasgerdes.schauburgr.usecase.home.guide;
 import android.util.Log;
 
 import com.jonasgerdes.schauburgr.App;
-import com.jonasgerdes.schauburgr.model.Guide;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
-import com.jonasgerdes.schauburgr.model.tmdb.search.SearchResult;
-import com.jonasgerdes.schauburgr.network.SchauburgApi;
-import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
-import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -18,13 +14,10 @@ import org.joda.time.LocalDate;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -37,10 +30,7 @@ import io.realm.Sort;
 public class GuidePresenter implements GuideContract.Presenter {
 
     @Inject
-    SchauburgApi mSchauburgApi;
-
-    @Inject
-    TheMovieDatabaseApi mTMDbApi;
+    MovieRepository mMovieRepository;
 
     @Inject
     UrlProvider mUrlProvider;
@@ -78,7 +68,7 @@ public class GuidePresenter implements GuideContract.Presenter {
     public void onRefreshTriggered() {
         //show user new data with animation
         mDoAnimateNewData = true;
-        fetchGuideData();
+        mMovieRepository.loadMovieData();
     }
 
     @Override
@@ -102,27 +92,8 @@ public class GuidePresenter implements GuideContract.Presenter {
             mDoAnimateNewData = true;
         }
         if (forceRefresh) {
-            fetchGuideData();
+            mMovieRepository.loadMovieData();
         }
-    }
-
-    private void fetchGuideData() {
-        mDisposables.add(mSchauburgApi.getFullGuide()
-                .subscribeOn(Schedulers.io())
-                .doOnNext(this::saveGuide)
-                .flatMapIterable(Guide::getMovies)
-                //work around since you can't pass variable down the stream
-                //see https://github.com/square/retrofit/issues/855
-                .flatMap(movie -> mTMDbApi.search(movie.getTitle(), 2017)
-                        .map(searchResponse -> {
-                            setTMDbId(movie, searchResponse.getResults());
-                            return searchResponse;
-                        }))
-                .ignoreElements()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {/*ignored*/}, this::showError)
-        );
-
     }
 
     private void showError(Throwable error) {
@@ -136,29 +107,4 @@ public class GuidePresenter implements GuideContract.Presenter {
         }
     }
 
-    private void setTMDbId(Movie movie, List<SearchResult> results) {
-        if (results.size() == 0) {
-            return;
-        }
-        SearchResult result = results.get(0);
-        movie.setTmdbId(result.getId());
-        movie.setReleaseDate(result.getReleaseDate());
-        movie.setHdPosterUrl("https://image.tmdb.org/t/p/w500" + result.getPosterPath());
-        movie.setCoverUrl("https://image.tmdb.org/t/p/w780" + result.getBackdropPath());
-        try (Realm r = Realm.getDefaultInstance()) {
-            r.executeTransaction((realm) -> {
-                realm.copyToRealmOrUpdate(movie);
-            });
-        }
-    }
-
-
-    private void saveGuide(Guide guide) {
-        try (Realm r = Realm.getDefaultInstance()) {
-            r.executeTransaction((realm) -> {
-                realm.deleteAll();
-                realm.copyToRealm(guide.getScreeningsGroupedByStartTime());
-            });
-        }
-    }
 }

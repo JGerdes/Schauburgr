@@ -5,14 +5,17 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.BuildConfig;
-import com.jonasgerdes.schauburgr.network.SchauburgApi;
-import com.jonasgerdes.schauburgr.network.guide_converter.SchauburgGuideConverter;
-import com.jonasgerdes.schauburgr.network.tmdb.ApiKeyInterceptor;
-import com.jonasgerdes.schauburgr.network.tmdb.DateDeserializer;
-import com.jonasgerdes.schauburgr.network.tmdb.LanguageInterceptor;
-import com.jonasgerdes.schauburgr.network.tmdb.TheMovieDatabaseApi;
-import com.jonasgerdes.schauburgr.network.url.SchauburgUrlProvider;
-import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
+import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
+import com.jonasgerdes.schauburgr.model.schauburg.guide_converter.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.model.tmdb.ApiKeyInterceptor;
+import com.jonasgerdes.schauburgr.model.tmdb.DateDeserializer;
+import com.jonasgerdes.schauburgr.model.tmdb.LanguageInterceptor;
+import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseApi;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 
 import java.util.Date;
 
@@ -100,6 +103,15 @@ public class DataModule {
     @Provides
     Realm provideRealm() {
         return Realm.getDefaultInstance();
+    }
+
+    @Provides
+    @Singleton
+    MovieRepository provideMovieRepository(SchauburgApi schauburgApi, TheMovieDatabaseApi tMDbApi) {
+        return new MovieRepository(
+                new SchauburgDataLoader(schauburgApi),
+                new TheMovieDatabaseDataLoader(tMDbApi)
+        );
     }
 
 

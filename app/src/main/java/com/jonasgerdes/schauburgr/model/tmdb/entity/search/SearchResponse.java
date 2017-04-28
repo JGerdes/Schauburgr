@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model.tmdb.search;
+package com.jonasgerdes.schauburgr.model.tmdb.entity.search;
 
 import java.util.List;
 

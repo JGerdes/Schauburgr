@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.network.url.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
