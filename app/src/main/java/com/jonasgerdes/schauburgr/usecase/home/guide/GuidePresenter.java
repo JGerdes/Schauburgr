@@ -4,12 +4,10 @@ import android.util.Log;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
-import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
-import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -18,10 +16,6 @@ import java.net.UnknownHostException;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -35,18 +29,10 @@ public class GuidePresenter implements GuideContract.Presenter {
     @Inject
     UrlProvider mUrlProvider;
 
-    @Inject
-    Realm mRealm;
 
     private GuideContract.View mView;
     private CompositeDisposable mDisposables;
-    private RealmResults<ScreeningDay> mScreeningDays;
     private boolean mDoAnimateNewData = false;
-
-    private RealmChangeListener<RealmResults<ScreeningDay>> mChangeListener = screeningDays -> {
-        mView.showScreeningDays(screeningDays, mDoAnimateNewData);
-        mDoAnimateNewData = false;
-    };
 
     @Override
     public void attachView(GuideContract.View view) {
@@ -60,8 +46,6 @@ public class GuidePresenter implements GuideContract.Presenter {
     @Override
     public void detachView() {
         mDisposables.dispose();
-        mScreeningDays.removeAllChangeListeners();
-        mRealm.close();
     }
 
     @Override
@@ -81,16 +65,16 @@ public class GuidePresenter implements GuideContract.Presenter {
     }
 
     public void loadGuide(boolean forceRefresh) {
-        mScreeningDays = mRealm.where(ScreeningDay.class)
-                .greaterThanOrEqualTo("date", new LocalDate().toDate())
-                .findAllSorted("date", Sort.ASCENDING);
-        mChangeListener.onChange(mScreeningDays);
-        mScreeningDays.addChangeListener(mChangeListener);
-
-        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
-            //show animation on first load
-            mDoAnimateNewData = true;
-        }
+        mDisposables.add(mMovieRepository.getScreeningDays()
+                .subscribe(screeningDays -> {
+                    //show animation on first load
+                    if (screeningDays.size() == 0) {
+                        mDoAnimateNewData = true;
+                    }
+                    mView.showScreeningDays(screeningDays, mDoAnimateNewData);
+                    mDoAnimateNewData = false;
+                })
+        );
         if (forceRefresh) {
             mMovieRepository.loadMovieData();
         }

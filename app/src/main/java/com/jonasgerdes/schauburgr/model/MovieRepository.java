@@ -1,6 +1,7 @@
 package com.jonasgerdes.schauburgr.model;
 
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
@@ -38,6 +39,14 @@ public class MovieRepository implements Disposable {
                 .concatMap(mTheMovieDatabaseDataLoader::searchAndSaveMovie)
                 .ignoreElements()
                 .subscribe());
+    }
+
+    public Observable<RealmResults<ScreeningDay>> getScreeningDays() {
+        Realm realm = Realm.getDefaultInstance();
+        return RealmObservable.from(realm.where(ScreeningDay.class)
+                        .greaterThanOrEqualTo("date", new LocalDate().toDate())
+                        .findAllSorted("date", Sort.ASCENDING),
+                realm);
     }
 
     public Observable<RealmResults<Movie>> getActionMovies() {
