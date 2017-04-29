@@ -4,7 +4,6 @@ import com.jonasgerdes.schauburgr.util.StringUtil;
 
 import org.joda.time.DateTime;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -199,7 +198,9 @@ public class Movie extends RealmObject {
     }
 
     public List<String> getGenres() {
-        return Collections.unmodifiableList(Arrays.asList(genres.split(STRING_LIST_SEPARATOR)));
+        return Collections.unmodifiableList(
+                StringUtil.splitWithoutEmpty(genres, STRING_LIST_SEPARATOR)
+        );
     }
 
     public void setGenres(List<String> genres) {
@@ -207,7 +208,9 @@ public class Movie extends RealmObject {
     }
 
     public List<String> getDirectors() {
-        return Collections.unmodifiableList(Arrays.asList(directors.split(STRING_LIST_SEPARATOR)));
+        return Collections.unmodifiableList(
+                StringUtil.splitWithoutEmpty(directors, STRING_LIST_SEPARATOR)
+        );
     }
 
     public void setDirectors(List<String> directors) {
@@ -215,7 +218,9 @@ public class Movie extends RealmObject {
     }
 
     public List<String> getCast() {
-        return Collections.unmodifiableList(Arrays.asList(cast.split(STRING_LIST_SEPARATOR)));
+        return Collections.unmodifiableList(
+                StringUtil.splitWithoutEmpty(cast, STRING_LIST_SEPARATOR)
+        );
     }
 
     public void setCast(List<String> cast) {
@@ -223,7 +228,9 @@ public class Movie extends RealmObject {
     }
 
     public List<String> getExtras() {
-        return Collections.unmodifiableList(Arrays.asList(extras.split(STRING_LIST_SEPARATOR)));
+        return Collections.unmodifiableList(
+                StringUtil.splitWithoutEmpty(extras, STRING_LIST_SEPARATOR)
+        );
     }
 
     public void setExtras(List<String> extras) {

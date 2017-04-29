@@ -19,10 +19,8 @@ public class RealmObservable {
     public static <E extends RealmModel> Observable<RealmResults<E>>
     from(final RealmResults<E> results) {
         return Observable.create(emitter -> {
-            Log.d(TAG, "create observable");
             final RealmChangeListener<RealmResults<E>> listener = emitter::onNext;
             emitter.setDisposable(Disposables.fromRunnable(() -> {
-                        Log.d(TAG, "dispose list");
                         results.removeChangeListener(listener);
                     })
             );
@@ -33,10 +31,8 @@ public class RealmObservable {
 
     public static <E extends RealmObject> Observable<E> from(final E object) {
         return Observable.create(emitter -> {
-            Log.d(TAG, "create observable " + object.getClass().getCanonicalName());
             final RealmChangeListener<E> listener = emitter::onNext;
             emitter.setDisposable(Disposables.fromRunnable(() -> {
-                        Log.d(TAG, "dispose " + object.getClass().getCanonicalName());
                         object.removeChangeListener(listener);
                     })
             );

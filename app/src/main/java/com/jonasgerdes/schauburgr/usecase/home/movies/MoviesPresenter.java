@@ -20,19 +20,13 @@ import io.reactivex.Observable;
 
 public class MoviesPresenter implements MoviesContract.Presenter {
 
-    /**
-     * Minimun count of movies in a category to actually show the category
-     */
-    private static final int CATEGORY_SHOW_THRESHOLD = 2;
     @Inject
     SchauburgApi mApi;
-
 
     @Inject
     MovieRepository mMovieRepository;
 
     private MoviesContract.View mView;
-    private List<MovieCategory> mCategories = new ArrayList<>();
 
     @Override
     public void attachView(MoviesContract.View view) {
