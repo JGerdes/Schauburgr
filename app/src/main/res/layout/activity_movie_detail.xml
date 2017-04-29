@@ -68,6 +68,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginStart="16dp"
+                    android:minHeight="192dp"
                     android:transitionName="@string/transition_movie_poster"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
