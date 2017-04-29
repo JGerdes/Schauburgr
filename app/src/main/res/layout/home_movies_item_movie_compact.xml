@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -8,9 +9,22 @@
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground">
 
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="#30000000"
+            android:scaleType="center"
+            android:src="@drawable/ic_sync_white_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/poster"
+            app:layout_constraintLeft_toLeftOf="@+id/poster"
+            app:layout_constraintRight_toRightOf="@+id/poster"
+            app:layout_constraintTop_toTopOf="@+id/poster"/>
 
         <ImageView
             android:id="@+id/poster"
@@ -23,8 +37,7 @@
             app:layout_constraintDimensionRatio="w,3:4"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@color/colorAccent" />
+            app:layout_constraintVertical_bias="0.0"/>
 
         <TextView
             android:id="@+id/title"
@@ -36,8 +49,8 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:lines="2"
             android:maxLines="2"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -45,7 +58,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/poster"
-            tools:text="A Cure For Wellness" />
+            tools:text="A Cure For Wellness"/>
 
 
     </android.support.constraint.ConstraintLayout>
