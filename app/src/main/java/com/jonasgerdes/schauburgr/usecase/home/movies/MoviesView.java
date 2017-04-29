@@ -40,6 +40,12 @@ public class MoviesView extends Fragment implements MoviesContract.View,
 
     private MoviesContract.Presenter mPresenter;
     private CompositeDisposable mDisposables = new CompositeDisposable();
+    /**
+     * Whether opening of a detail activity is currently in process. Since it takes a moment to load
+     * poster with glide, user can click fast leading to multiple instances of
+     * {@link MovieDetailActivity} to be opened
+     */
+    private boolean mIsOpeningDetails = false;
 
     public static MoviesView newInstance() {
         Bundle args = new Bundle();
@@ -64,8 +70,11 @@ public class MoviesView extends Fragment implements MoviesContract.View,
         new MoviesPresenter().attachView(this);
     }
 
-
-
+    @Override
+    public void onResume() {
+        mIsOpeningDetails = false;
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView() {
@@ -102,6 +111,10 @@ public class MoviesView extends Fragment implements MoviesContract.View,
 
     @Override
     public void onMovieClicked(Movie movie, CompactMovieHolder holder) {
-        MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
+        //prevent opening details twice
+        if (!mIsOpeningDetails) {
+            mIsOpeningDetails = true;
+            MovieDetailActivity.start(getActivity(), movie, holder.getPosterView());
+        }
     }
 }
