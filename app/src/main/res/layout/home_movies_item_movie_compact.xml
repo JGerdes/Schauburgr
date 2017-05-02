@@ -15,12 +15,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/loading_indicator"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:background="#30000000"
             android:scaleType="center"
-            android:src="@drawable/ic_sync_white_24dp"
+            android:src="@drawable/anim_loading_rotation_white_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/poster"
             app:layout_constraintLeft_toLeftOf="@+id/poster"
             app:layout_constraintRight_toRightOf="@+id/poster"
@@ -32,6 +33,7 @@
             android:layout_height="192dp"
             android:layout_marginBottom="0dp"
             android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginTop="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,3:4"
