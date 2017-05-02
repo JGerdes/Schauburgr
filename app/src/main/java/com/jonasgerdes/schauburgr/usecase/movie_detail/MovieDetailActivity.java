@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
@@ -33,9 +34,9 @@ import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
-import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
@@ -105,6 +106,9 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @BindView(R.id.cover)
     ImageView mCoverView;
+
+    @BindView(R.id.loading_indicator)
+    ImageView mLoadingIndicator;
 
     @Inject
     UrlProvider mUrlProvider;
@@ -205,6 +209,8 @@ public class MovieDetailActivity extends AppCompatActivity
 
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
+        ((AnimatedVectorDrawable) mLoadingIndicator.getDrawable()).start();
+
         Glide.with(this)
                 .load(mUrlProvider.getPosterImageUrl(movie))
                 .asBitmap()
@@ -214,6 +220,7 @@ public class MovieDetailActivity extends AppCompatActivity
                     public void onBitmapReady(Bitmap bitmap) {
                         Palette palette = Palette.from(bitmap).generate();
                         applyColors(palette);
+                        mLoadingIndicator.setVisibility(View.GONE);
                         //start transition
                         startPostponedEnterTransition();
                     }

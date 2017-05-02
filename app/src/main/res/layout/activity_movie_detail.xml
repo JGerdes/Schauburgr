@@ -60,6 +60,19 @@
                 android:descendantFocusability="blocksDescendants">
 
                 <ImageView
+                    android:id="@+id/loading_indicator"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="#30000000"
+                    android:scaleType="center"
+                    android:src="@drawable/anim_loading_rotation_white_24dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/poster"
+                    app:layout_constraintLeft_toLeftOf="@+id/poster"
+                    app:layout_constraintRight_toRightOf="@+id/poster"
+                    app:layout_constraintTop_toTopOf="@+id/poster"/>
+
+                <ImageView
                     android:id="@+id/poster"
                     android:layout_width="144dp"
                     android:layout_height="wrap_content"
@@ -74,8 +87,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_height="192dp"
-                    tools:src="@color/colorPrimaryDark"/>
+                    tools:layout_height="192dp"/>
 
 
                 <TextView
