@@ -3,6 +3,7 @@ package com.jonasgerdes.schauburgr.model;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 
@@ -11,6 +12,7 @@ import org.joda.time.LocalDate;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -157,6 +159,26 @@ public class MovieRepository implements Disposable {
                 .or()
                 .contains("extras", Movie.EXTRA_OT)
                 .findAllSorted("releaseDate", Sort.DESCENDING));
+    }
+
+    public Observable<Movie> getMovieById(String movieId) {
+        return RealmObservable.from(mRealm.where(Movie.class)
+                .equalTo("resourceId", movieId)
+                .findFirst());
+    }
+
+    /**
+     * Finds all screenings for given movie and movies which are actually the same by looking at
+     * the title of the movie and ignoring different extras like 3D, atmos etc.
+     *
+     * @param movie Movie to find screenings for
+     * @return Observable RealmResult list of screenings for given and similar movies
+     */
+    public Observable<RealmResults<Screening>> getAllScreeningsFor(Movie movie) {
+        return RealmObservable.from(mRealm.where(Screening.class)
+                .equalTo("movie.title", movie.getTitle())
+                .greaterThan("startDate", new Date())
+                .findAllSorted("startDate", Sort.ASCENDING));
     }
 
     @Override

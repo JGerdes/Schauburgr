@@ -6,16 +6,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.BuildConfig;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
-import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.guide_converter.SchauburgGuideConverter;
 import com.jonasgerdes.schauburgr.model.tmdb.ApiKeyInterceptor;
 import com.jonasgerdes.schauburgr.model.tmdb.DateDeserializer;
 import com.jonasgerdes.schauburgr.model.tmdb.LanguageInterceptor;
 import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseApi;
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
-import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.tmdb.TheMovieDatabaseDataLoader;
 
 import java.util.Date;
 
@@ -23,7 +23,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -94,16 +93,6 @@ public class DataModule {
         return new SchauburgUrlProvider(mSchauburgBaseUrl);
     }
 
-    /**
-     * Provides a not singleton instance of realm db. Instance can and should be closed via
-     * {@link Realm#close()} when not used any more
-     *
-     * @return A instance of default realm database
-     */
-    @Provides
-    Realm provideRealm() {
-        return Realm.getDefaultInstance();
-    }
 
     @Provides
     @Singleton

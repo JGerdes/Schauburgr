@@ -1,17 +1,16 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
 import com.jonasgerdes.schauburgr.App;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
-import com.jonasgerdes.schauburgr.model.UrlProvider;
-
-import java.util.Date;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -21,10 +20,12 @@ import io.realm.Sort;
 public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Inject
-    Realm mRealm;
+    MovieRepository mMovieRepository;
 
     @Inject
     UrlProvider mUrlProvider;
+
+    private CompositeDisposable mDisposables = new CompositeDisposable();
 
     private MovieDetailContract.View mView;
 
@@ -37,24 +38,22 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void detachView() {
-        mRealm.removeAllChangeListeners();
-        mRealm.close();
+        mDisposables.dispose();
     }
 
 
     @Override
     public void onStartWithMovieId(String movieId) {
-        Movie movie = mRealm.where(Movie.class)
-                .equalTo("resourceId", movieId)
-                .findFirst();
-        mView.showMovie(movie);
-        //sometimes there are same movies with different extras (3D, atmos)
-        //find all screenings of movies regardless of extra-splitting
-        RealmResults<Screening> screenings = mRealm.where(Screening.class)
-                .equalTo("movie.title", movie.getTitle())
-                .greaterThan("startDate", new Date())
-                .findAllSorted("startDate", Sort.ASCENDING);
-        mView.showScreenings(screenings);
+        Observable<Movie> movieObservable = mMovieRepository.getMovieById(movieId);
+        mDisposables.add(movieObservable
+                .doOnNext(this::loadScreenings)
+                .subscribe(mView::showMovie));
+    }
+
+    private void loadScreenings(Movie movie) {
+        Observable<RealmResults<Screening>> screenings
+                = mMovieRepository.getAllScreeningsFor(movie);
+        mDisposables.add(screenings.subscribe(mView::showScreenings));
     }
 
     @Override
