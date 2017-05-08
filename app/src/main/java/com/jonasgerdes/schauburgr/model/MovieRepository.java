@@ -53,6 +53,9 @@ public class MovieRepository implements Disposable {
         mState.onNext(NetworkState.LOADING);
         mDisposables.add(mSchauburgDataLoader.fetchGuideData()
                 .flatMapIterable(Guide::getMovies)
+                //ignore operas, since TMDb doesn't list those and may return movies
+                //with similar name(s) which leads to confusion
+                .filter(movie -> !movie.getGenres().contains(Movie.GENRE_MET_OPERA))
                 .concatMap(mTheMovieDatabaseDataLoader::searchAndSaveMovie)
                 .ignoreElements()
                 .subscribe(() -> mState.onNext(NetworkState.DEFAULT), this::propagateErrorState)
