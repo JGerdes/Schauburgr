@@ -39,5 +39,7 @@
     <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
     <string name="about_data_source_screenings">Vorstellungszeiten, Basisinformationen</string>
     <string name="about_data_source_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="network_error_request_limit">Zu schnelle Abfragen, warte kurz!</string>
+    <string name="network_error_no_connection">Keine Internetverbindung :(</string>
 
 </resources>

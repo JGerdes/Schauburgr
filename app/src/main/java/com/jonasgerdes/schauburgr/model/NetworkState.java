@@ -9,6 +9,8 @@ import android.support.annotation.IntDef;
 
 public class NetworkState {
 
+    public static final int NO_MESSAGE = -1;
+
     public static final int STATE_ERROR = -1;
     public static final int STATE_DEFAULT = 0;
     public static final int STATE_LOADING = 1;
@@ -17,17 +19,23 @@ public class NetworkState {
     public static final NetworkState LOADING = new NetworkState(STATE_LOADING);
 
     @IntDef({STATE_ERROR, STATE_LOADING, STATE_DEFAULT})
-    @interface State{}
+    @interface State {
+    }
 
-    private @State int mState;
+    private
+    @State
+    int mState;
     private int mHttpStatusCode;
     private String mMessage;
+    private int mMessageResource = NO_MESSAGE;
 
     public NetworkState(@State int state) {
         mState = state;
     }
 
-    public @State int getState() {
+    public
+    @State
+    int getState() {
         return mState;
     }
 
@@ -46,6 +54,15 @@ public class NetworkState {
 
     public NetworkState setMessage(String message) {
         mMessage = message;
+        return this;
+    }
+
+    public int getMessageResource() {
+        return mMessageResource;
+    }
+
+    public NetworkState setMessage(int messageResource) {
+        mMessageResource = messageResource;
         return this;
     }
 }

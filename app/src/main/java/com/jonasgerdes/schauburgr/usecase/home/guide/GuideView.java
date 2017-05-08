@@ -142,14 +142,14 @@ public class GuideView extends Fragment implements GuideContract.View,
     }
 
     @Override
+    public void showError(int messageResource) {
+        showError(mResources.getString(messageResource));
+    }
+
+    @Override
     public void showError(String message) {
         mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onRefresh();
-                    }
-                });
+                .setAction(R.string.snackbar_action_refresh, view -> onRefresh());
         mSnackbar.show();
     }
 

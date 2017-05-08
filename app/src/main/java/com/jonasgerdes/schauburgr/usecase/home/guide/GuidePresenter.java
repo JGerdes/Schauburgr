@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.model.NetworkState;
@@ -9,10 +7,6 @@ import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
 import org.joda.time.DateTime;
-
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 
@@ -62,7 +56,11 @@ public class GuidePresenter implements GuideContract.Presenter {
                 return;
             case NetworkState.STATE_ERROR:
                 mView.showIsLoading(false);
-                mView.showError(state.getMessage());
+                if (state.getMessageResource() != NetworkState.NO_MESSAGE) {
+                    mView.showError(state.getMessage());
+                } else {
+                    mView.showError(state.getMessage());
+                }
         }
     }
 
@@ -100,17 +98,6 @@ public class GuidePresenter implements GuideContract.Presenter {
         );
         if (forceRefresh) {
             mMovieRepository.loadMovieData();
-        }
-    }
-
-    private void showError(Throwable error) {
-        Log.e("GuidePresenter", "error while fetching data", error);
-        if (error instanceof SocketTimeoutException
-                || error instanceof UnknownHostException
-                || error instanceof SocketException) {
-            mView.showError("Keine Internetverbindung :(");
-        } else {
-            mView.showError(error.getClass().getName());
         }
     }
 

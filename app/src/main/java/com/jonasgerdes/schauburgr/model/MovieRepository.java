@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.model;
 
+import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
@@ -65,7 +66,7 @@ public class MovieRepository implements Disposable {
             state.setHttpStatusCode(httpError.code());
             switch (httpError.code()) {
                 case 429:
-                    state.setMessage("Zu schnelle Abfragen, warte kurz!");
+                    state.setMessage(R.string.network_error_request_limit);
                     break;
                 default:
                     state.setMessage(httpError.getMessage());
@@ -74,7 +75,7 @@ public class MovieRepository implements Disposable {
             if (throwable instanceof SocketTimeoutException
                     || throwable instanceof UnknownHostException
                     || throwable instanceof SocketException) {
-                state.setMessage("Keine Internetverbindung :(");
+                state.setMessage(R.string.network_error_no_connection);
             } else {
                 state.setMessage(throwable.getClass().getCanonicalName());
             }
