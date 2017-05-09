@@ -1,13 +1,20 @@
 package com.jonasgerdes.schauburgr.model.tmdb;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.tmdb.entity.search.SearchResponse;
 import com.jonasgerdes.schauburgr.model.tmdb.entity.search.SearchResult;
+import com.jonasgerdes.schauburgr.model.tmdb.entity.video.Video;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmList;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -29,6 +36,32 @@ public class TheMovieDatabaseDataLoader {
                 .map(results -> movie);
     }
 
+    public Observable<Movie> getVideosAndSave(Movie movie) {
+        String resourceId = movie.getResourceId();
+        return mTheMovieDatabaseApi.getVideos(movie.getTmdbId())
+                .subscribeOn(Schedulers.io())
+                .map(videoResponse -> {
+                    Log.d(TAG, "getVideosAndSave: " + videoResponse.getResults().size());
+                    RealmList<Video> videos = new RealmList<>();
+                    videos.addAll(videoResponse.getResults());
+                    return videos;
+                })
+                //add to movie
+                .map(videos -> {
+                    try (Realm r = Realm.getDefaultInstance()) {
+                        r.executeTransaction((realm) -> {
+                            RealmList<Video> managedVideos = new RealmList<>();
+                            managedVideos.addAll(realm.copyToRealm(videos));
+                            realm.where(Movie.class)
+                                    .equalTo("resourceId", resourceId)
+                                    .findFirst()
+                                    .setVideos(managedVideos);
+                        });
+                    }
+                    return movie;
+                });
+    }
+
     private void setTMDbId(Movie movie, List<SearchResult> results) {
         if (results.size() == 0) {
             return;
@@ -44,4 +77,5 @@ public class TheMovieDatabaseDataLoader {
             });
         }
     }
+
 }

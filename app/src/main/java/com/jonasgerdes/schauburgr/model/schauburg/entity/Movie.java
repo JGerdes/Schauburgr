@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.model.schauburg.entity;
 
+import com.jonasgerdes.schauburgr.model.tmdb.entity.video.Video;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 
 import org.joda.time.DateTime;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.LinkingObjects;
@@ -27,7 +29,7 @@ public class Movie extends RealmObject {
     /**
      * Used when movie hasn't got any TMDb id (or no matching movie was found for title)
      */
-    private static final int NO_ID = -1;
+    public static final int NO_ID = -1;
 
     /**
      * Duration at which movie starts to be of excess length
@@ -121,8 +123,20 @@ public class Movie extends RealmObject {
      */
     private String extras = "";
 
+    /**
+     * Url to a high definition version of movie poster
+     */
     private String hdPosterUrl;
+
+    /**
+     * Url to an image which shows some scene or landscape poster to be used in background
+     */
     private String coverUrl;
+
+    /**
+     * List of related videos (trailer, teaser, etc)
+     */
+    private RealmList<Video> videos = new RealmList<>();
 
     @LinkingObjects("movie")
     private final RealmResults<Screening> screenings = null;
@@ -278,6 +292,15 @@ public class Movie extends RealmObject {
 
     public Movie setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+        return this;
+    }
+
+    public RealmList<Video> getVideos() {
+        return videos;
+    }
+
+    public Movie setVideos(RealmList<Video> videos) {
+        this.videos = videos;
         return this;
     }
 }

@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.model;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
@@ -62,7 +64,19 @@ public class MovieRepository implements Disposable {
         );
     }
 
+    public void loadVideos(Movie movie) {
+        if (movie.getTmdbId() == Movie.NO_ID || movie.getVideos().size() > 0) {
+            return;
+        }
+        mState.onNext(NetworkState.LOADING);
+        mDisposables.add(mTheMovieDatabaseDataLoader.getVideosAndSave(movie)
+                .ignoreElements()
+                .subscribe(() -> mState.onNext(NetworkState.DEFAULT), this::propagateErrorState)
+        );
+    }
+
     private void propagateErrorState(Throwable throwable) {
+        Log.e("MovieRepo", "propagateErrorState: ", throwable);
         NetworkState state = new NetworkState(NetworkState.STATE_ERROR);
         if (throwable instanceof HttpException) {
             HttpException httpError = ((HttpException) throwable);
@@ -86,6 +100,7 @@ public class MovieRepository implements Disposable {
 
         mState.onNext(state);
     }
+
 
     public Observable<RealmResults<ScreeningDay>> getScreeningDays() {
         return RealmObservable.from(mRealm.where(ScreeningDay.class)
