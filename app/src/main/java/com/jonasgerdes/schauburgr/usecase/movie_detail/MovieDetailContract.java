@@ -17,11 +17,14 @@ public interface MovieDetailContract {
         void showMovie(Movie movie);
         void showScreenings(RealmResults<Screening> screenings);
         void openWebpage(String url);
+        void displayTrailerLink();
+        void showTrailer(String url);
 
     }
 
     interface Presenter extends BasePresenter<MovieDetailContract.View> {
         void onStartWithMovieId(String movieId);
         void onScreeningSelected(Screening screening);
+        void onTrailerLinkClicked();
     }
 }

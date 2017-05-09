@@ -34,6 +34,18 @@
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.6"/>
 
+                <ImageView
+                    android:id="@+id/trailer_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorBackgroundDark50"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_play_circle_filled_white_48dp"
+                    android:visibility="invisible"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.4"
+                    tools:visibility="visible"/>
+
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
@@ -240,8 +252,8 @@
                         android:id="@+id/screeningList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="16dp"
+                        android:nestedScrollingEnabled="false"/>
                 </FrameLayout>
 
             </android.support.constraint.ConstraintLayout>

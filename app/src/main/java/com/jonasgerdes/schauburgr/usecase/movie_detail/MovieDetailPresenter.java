@@ -5,6 +5,7 @@ import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.tmdb.entity.video.Video;
 
 import javax.inject.Inject;
 
@@ -19,6 +20,8 @@ import io.realm.RealmResults;
 
 public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
+    private static final String VIDEO_SITE_YOUTUBE = "YouTube";
+    private static final Object BASE_URL_YOUTUBE = "https://www.youtube.com/watch?v=";
     @Inject
     MovieRepository mMovieRepository;
 
@@ -28,6 +31,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private CompositeDisposable mDisposables = new CompositeDisposable();
 
     private MovieDetailContract.View mView;
+    private String mVideoUrl;
 
     @Override
     public void attachView(MovieDetailContract.View view) {
@@ -47,8 +51,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         Observable<Movie> movieObservable = mMovieRepository.getMovieById(movieId);
         mDisposables.add(movieObservable
                 .doOnNext(this::loadScreenings)
-                .doOnNext(mMovieRepository::loadVideos)
                 .subscribe(mView::showMovie));
+
+        //load trailer/teaser
+        mDisposables.add(movieObservable
+                .doOnNext(mMovieRepository::loadVideos)
+                .map(Movie::getVideos)
+                .flatMapIterable(videos -> videos)
+                .filter(video -> video.getSite().equals(VIDEO_SITE_YOUTUBE))
+                .firstElement()
+                .map(Video::getKey)
+                .map(key -> String.format("%s%s", BASE_URL_YOUTUBE, key))
+                .subscribe(url -> {
+                    mVideoUrl = url;
+                    mView.displayTrailerLink();
+                }));
     }
 
     private void loadScreenings(Movie movie) {
@@ -61,5 +78,10 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void onScreeningSelected(Screening screening) {
         String url = mUrlProvider.getReservationPageUrl(screening);
         mView.openWebpage(url);
+    }
+
+    @Override
+    public void onTrailerLinkClicked() {
+        mView.showTrailer(mVideoUrl);
     }
 }

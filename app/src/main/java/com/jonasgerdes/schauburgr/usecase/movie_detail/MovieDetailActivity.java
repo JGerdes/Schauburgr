@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
@@ -106,6 +107,9 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @BindView(R.id.cover)
     ImageView mCoverView;
+
+    @BindView(R.id.trailer_button)
+    ImageView mTrailerButton;
 
     @BindView(R.id.loading_indicator)
     ImageView mLoadingIndicator;
@@ -228,7 +232,7 @@ public class MovieDetailActivity extends AppCompatActivity
                 .into(mPosterView);
 
 
-        if(movie.getCoverUrl() != null) {
+        if (movie.getCoverUrl() != null) {
             Glide.with(this)
                     .load(movie.getCoverUrl())
                     .into(mCoverView);
@@ -245,6 +249,19 @@ public class MovieDetailActivity extends AppCompatActivity
     @Override
     public void openWebpage(String url) {
         mChromeTab.open(this, url);
+    }
+
+    @Override
+    public void displayTrailerLink() {
+        mTrailerButton.setVisibility(View.VISIBLE);
+        mTrailerButton.setOnClickListener(v -> mPresenter.onTrailerLinkClicked());
+    }
+
+    @Override
+    public void showTrailer(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private void initScreeningList() {
