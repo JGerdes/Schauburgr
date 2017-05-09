@@ -121,11 +121,11 @@ public class Movie extends RealmObject {
      */
     private String extras = "";
 
-    private String mHdPosterUrl;
-    private String mCoverUrl;
+    private String hdPosterUrl;
+    private String coverUrl;
 
     @LinkingObjects("movie")
-    private final RealmResults<Screening> mScreenings = null;
+    private final RealmResults<Screening> screenings = null;
 
     public String getResourceId() {
         return resourceId;
@@ -260,24 +260,24 @@ public class Movie extends RealmObject {
     }
 
     public RealmResults<Screening> getScreenings() {
-        return mScreenings;
+        return screenings;
     }
 
     public String getHdPosterUrl() {
-        return mHdPosterUrl;
+        return hdPosterUrl;
     }
 
     public Movie setHdPosterUrl(String hdPosterUrl) {
-        mHdPosterUrl = hdPosterUrl;
+        this.hdPosterUrl = hdPosterUrl;
         return this;
     }
 
     public String getCoverUrl() {
-        return mCoverUrl;
+        return coverUrl;
     }
 
     public Movie setCoverUrl(String coverUrl) {
-        mCoverUrl = coverUrl;
+        this.coverUrl = coverUrl;
         return this;
     }
 }

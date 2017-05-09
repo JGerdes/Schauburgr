@@ -98,7 +98,7 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Action")
                 .greaterThanOrEqualTo("contentRating", 12)
                 .findAllSorted("title", Sort.ASCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getNewMovies() {
@@ -106,7 +106,7 @@ public class MovieRepository implements Disposable {
                 .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(14).toDate())
                 .or().contains("extras", Movie.EXTRA_PREVIEW)
                 .findAllSorted("releaseDate", Sort.DESCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getComedyMovies() {
@@ -117,7 +117,7 @@ public class MovieRepository implements Disposable {
                 .not().contains("genres", "Familie")
                 .not().contains("genres", "Animation")
                 .findAllSorted("title", Sort.ASCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getThrillerMovies() {
@@ -126,7 +126,7 @@ public class MovieRepository implements Disposable {
                 .or()
                 .contains("genres", "Horror")
                 .findAllSorted("title", Sort.ASCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getKidsMovies() {
@@ -136,14 +136,14 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Familie")
                 .lessThanOrEqualTo("contentRating", 6)
                 .findAllSorted("title", Sort.ASCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getMoviesWithExtra(String extra) {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("extras", extra)
                 .findAllSorted("title", Sort.ASCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getExcessLengthMovies() {
@@ -151,7 +151,7 @@ public class MovieRepository implements Disposable {
                 .greaterThanOrEqualTo("duration", Movie.DURATION_EXCESS_LENGTH_STATE_1)
                 .not().contains("genres", "Met Opera")
                 .findAllSorted("duration", Sort.DESCENDING)
-                .where().distinct("title"));
+                .where().isNotEmpty("description").distinct("title"));
     }
 
     public Observable<RealmResults<Movie>> getSpecialMovies() {
