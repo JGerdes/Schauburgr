@@ -104,6 +104,7 @@ public class MovieRepository implements Disposable {
     public Observable<RealmResults<Movie>> getNewMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(14).toDate())
+                .or().contains("extras", Movie.EXTRA_PREVIEW)
                 .findAllSorted("releaseDate", Sort.DESCENDING)
                 .where().distinct("title"));
     }

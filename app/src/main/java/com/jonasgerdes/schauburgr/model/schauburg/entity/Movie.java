@@ -49,6 +49,8 @@ public class Movie extends RealmObject {
     public static final String EXTRA_TIP = "Tip";
 
     public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
+    public static final String EXTRA_LAST_SCREENINGS = "EXTRA_LAST_SCREENINGS";
+    public static final String EXTRA_PREVIEW = "EXTRA_PREVIEW"; //Vorpremiere
     /**
      * Separator for concatenated extras and genres. Three semicolons in a row
      * shouldn't be in any genre or extra name.

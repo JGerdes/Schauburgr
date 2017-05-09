@@ -10,7 +10,7 @@ import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
-import com.jonasgerdes.schauburgr.model.schauburg.guide_converter.SchauburgGuideConverter;
+import com.jonasgerdes.schauburgr.model.schauburg.parsing.SchauburgGuideConverter;
 import com.jonasgerdes.schauburgr.model.tmdb.ApiKeyInterceptor;
 import com.jonasgerdes.schauburgr.model.tmdb.DateDeserializer;
 import com.jonasgerdes.schauburgr.model.tmdb.LanguageInterceptor;

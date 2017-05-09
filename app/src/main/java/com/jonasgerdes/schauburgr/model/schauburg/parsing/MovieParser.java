@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model.schauburg.guide_converter;
+package com.jonasgerdes.schauburgr.model.schauburg.parsing;
 
 import android.text.Html;
 
@@ -71,6 +71,9 @@ public class MovieParser {
             new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
             new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
+            new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere"),
+            new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",
+                    ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
     };
 
     /**

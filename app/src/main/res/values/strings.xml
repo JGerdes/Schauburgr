@@ -1,15 +1,19 @@
 <resources>
+    <!--main views -->
     <string name="app_name">Schauburgr</string>
     <string name="title_guide">Programm</string>
     <string name="title_movies">Filme</string>
     <string name="title_about">Über die App</string>
 
+    <!-- various ui strings -->
     <string name="day_title_today">Heute</string>
     <string name="day_title_tomorrow">Morgen</string>
 
+    <!-- guide view -->
     <string name="guide_state_hint_loading">Lade Programmvorschau</string>
     <string name="guide_state_hint_error_default">Programm konnte nicht geladen werden</string>
 
+    <!-- about view -->
     <string name="about_idea">Idee, Programmierung</string>
     <string name="about_jonas_gerdes">Jonas Gerdes\nwww.jonasgerdes.com</string>
     <string name="about_github">Schauburgr ist OpenSource.\nQuelltext verfügbar unter\nhttps://github.com/JGerdes/Schauburgr</string>
@@ -20,8 +24,23 @@
         \nWeiterführende Daten werden der API von TMDb entnommen.
         \n\nAlle Angaben sind ohne Gewähr; es wird keine Garantie für die Richtig- und Vollständigkeit der dargestellten Informationen gegeben und keine Haftung für eventuell verursachte Schäden übernommen.</string>
     <string name="about_open_source_title">OpenSource-Lizenzen</string>
+    <string name="about_data_source_screenings">Vorstellungszeiten, Basisinformationen</string>
+    <string name="about_data_source_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+
+    <!-- generic ui state messages -->
+    <string name="network_error_request_limit">Zu schnelle Abfragen, warte kurz!</string>
+    <string name="network_error_no_connection">Keine Internetverbindung :(</string>
     <string name="snackbar_action_refresh">Neu laden</string>
     <string name="chrome_tab_reservation_action_goto_movie">zum Film</string>
+
+    <!-- entity related -->
+    <string name="movie_extra_3d">3D</string>
+    <string name="movie_extra_atmos">Atmos</string>
+    <string name="movie_extra_tip">Tipp</string>
+    <string name="movie_extra_ot">OT</string>
+    <string name="movie_extra_reel">Filmrolle</string>
+    <string name="movie_extra_preview">Vorpremiere</string>
+    <string name="movie_extra_last_screening">Letzte Chance</string>
 
     <string name="movie_list_category_top">Top Filme</string>
     <string name="movie_list_category_new">Neuheiten</string>
@@ -37,9 +56,6 @@
     <string name="movie_list_category_atmos_subtitle">Filme in Dolby Atmos</string>
     <string name="movie_list_category_long">Sitzfleisch mitbringen</string>
     <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
-    <string name="about_data_source_screenings">Vorstellungszeiten, Basisinformationen</string>
-    <string name="about_data_source_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
-    <string name="network_error_request_limit">Zu schnelle Abfragen, warte kurz!</string>
-    <string name="network_error_no_connection">Keine Internetverbindung :(</string>
+
 
 </resources>

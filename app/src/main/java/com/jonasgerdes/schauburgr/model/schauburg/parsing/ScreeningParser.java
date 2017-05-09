@@ -1,4 +1,4 @@
-package com.jonasgerdes.schauburgr.model.schauburg.guide_converter;
+package com.jonasgerdes.schauburgr.model.schauburg.parsing;
 
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
