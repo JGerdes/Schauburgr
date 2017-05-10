@@ -17,6 +17,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,7 +60,7 @@ import io.realm.RealmResults;
 
 public class MovieDetailActivity extends AppCompatActivity
         implements MovieDetailContract.View, SwipeBackLayout.SwipeListener,
-        ScreeningSelectedListener {
+        ScreeningSelectedListener, NestedScrollView.OnScrollChangeListener {
 
     /**
      * maximum delay (in ms) to wait for finish loading until activity is opened without transition
@@ -114,6 +115,9 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.loading_indicator)
     ImageView mLoadingIndicator;
 
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView mScrollView;
+
     @Inject
     UrlProvider mUrlProvider;
 
@@ -137,8 +141,11 @@ public class MovieDetailActivity extends AppCompatActivity
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        mScrollView.setOnScrollChangeListener(this);
+
         mSwipeBackLayout.setSwipeListener(this);
 
         fixNestedScrollFlingBehavior();
@@ -154,12 +161,7 @@ public class MovieDetailActivity extends AppCompatActivity
         postponeEnterTransition();
 
         //if loading takes longer then 500ms, screw shared element transition and start anyway
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startPostponedEnterTransition();
-            }
-        }, MAX_DELAY_FOR_TRANSITION);
+        new Handler().postDelayed(() -> startPostponedEnterTransition(), MAX_DELAY_FOR_TRANSITION);
     }
 
     private void fixNestedScrollFlingBehavior() {
@@ -338,5 +340,15 @@ public class MovieDetailActivity extends AppCompatActivity
         ActivityOptions options = ActivityOptions
                 .makeSceneTransitionAnimation(activity, posterThumbnail, transitionName);
         activity.startActivity(detailsIntent, options.toBundle());
+    }
+
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX,
+                               int scrollY, int oldScrollX, int oldScrollY) {
+        if (mTitleView.getTop() + mTitleView.getHeight() / 2 < scrollY) {
+            mCollapsingToolbarLayout.setTitle(mTitleView.getText());
+        } else {
+            mCollapsingToolbarLayout.setTitle(null);
+        }
     }
 }
