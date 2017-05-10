@@ -74,6 +74,9 @@ public class MovieParser {
             new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere"),
             new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",
                     ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
+
+            //various stuff which might is added to title and should be removed
+            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D"),
     };
 
     /**
@@ -155,6 +158,7 @@ public class MovieParser {
 
     /**
      * Remove/Replace Html entities like &amp; etc with respective char
+     *
      * @param string
      * @return
      */
@@ -253,7 +257,11 @@ public class MovieParser {
         for (ExtraMapping extraMapping : EXTRA_MAPPINGS) {
             ExtraParseResult result = parseExtra(rawTitle, extraMapping.hints);
             if (result.found) {
-                extras.add(extraMapping.extra);
+                //only save extra when not already found and not to be ignored
+                if (!extras.contains(extraMapping.extra) &&
+                        !extraMapping.extra.equals(Movie.EXTRA_IGNORE)) {
+                    extras.add(extraMapping.extra);
+                }
                 rawTitle = result.newTitle;
             }
         }
