@@ -60,6 +60,9 @@ public class MovieAttributeView extends LinearLayout {
      * @param attributes attributes titles to show
      */
     public void setAttributes(List<String> attributes) {
+        //remove existing extras
+        removeAllViews();
+        //add new ones
         for (String attributeName : attributes) {
             @StringRes int attribute = ExtraMapper.getExtraString(attributeName);
             if (attribute == ExtraMapper.NONE) {
