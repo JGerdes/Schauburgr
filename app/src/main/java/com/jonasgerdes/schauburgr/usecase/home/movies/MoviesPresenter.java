@@ -82,7 +82,13 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         .setMovies(movies))
         );
 
-
+        categories.add(mMovieRepository.getSpecialMovies()
+                .map(movies -> new MovieCategory()
+                        .setTitle(R.string.movie_list_category_specials)
+                        .setSubTitle(R.string.movie_list_category_specials_subtitle)
+                        .setMovies(movies))
+        );
+        
         categories.add(mMovieRepository.getExcessLengthMovies()
                 .map(movies -> new MovieCategory()
                         .setTitle(R.string.movie_list_category_long)
@@ -90,12 +96,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         .setMovies(movies))
         );
 
-        categories.add(mMovieRepository.getSpecialMovies()
-                .map(movies -> new MovieCategory()
-                        .setTitle(R.string.movie_list_category_specials)
-                        .setSubTitle(R.string.movie_list_category_specials_subtitle)
-                        .setMovies(movies))
-        );
 
         categories.add(mMovieRepository.getMoviesWithExtra(Movie.EXTRA_ATMOS)
                 .map(movies -> new MovieCategory()
