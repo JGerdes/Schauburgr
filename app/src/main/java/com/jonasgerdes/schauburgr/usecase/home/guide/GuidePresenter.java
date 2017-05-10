@@ -57,7 +57,7 @@ public class GuidePresenter implements GuideContract.Presenter {
             case NetworkState.STATE_ERROR:
                 mView.showIsLoading(false);
                 if (state.getMessageResource() != NetworkState.NO_MESSAGE) {
-                    mView.showError(state.getMessage());
+                    mView.showError(state.getMessageResource());
                 } else {
                     mView.showError(state.getMessage());
                 }
