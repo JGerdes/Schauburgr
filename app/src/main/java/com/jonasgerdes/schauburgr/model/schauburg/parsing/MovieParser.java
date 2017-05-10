@@ -125,7 +125,7 @@ public class MovieParser {
             String rawTitle = matcher.group(2);
             rawTitle = parseExtras(movie, rawTitle);
             rawTitle = rawTitle.trim(); //remove possible whitespace around title
-            rawTitle = Html.fromHtml(rawTitle).toString(); //fix &amp; etc
+            rawTitle = removeHtmlEntities(rawTitle);
             movie.setTitle(rawTitle);
 
             //advanced parsing of description
@@ -151,6 +151,15 @@ public class MovieParser {
         }
 
         return movie;
+    }
+
+    /**
+     * Remove/Replace Html entities like &amp; etc with respective char
+     * @param string
+     * @return
+     */
+    private String removeHtmlEntities(String string) {
+        return Html.fromHtml(string).toString(); //fix &amp; etc
     }
 
     /**
@@ -188,12 +197,13 @@ public class MovieParser {
                 item = item.trim();
                 //only add item not empty
                 if (!item.isEmpty()) {
+                    item = removeHtmlEntities(item);
                     parsed.add(item.trim());
                 }
             }
             description = description.replace(matcher.group(0), "");
         }
-        //remove genre from description
+        //remove found item(s) from description
         movie.setDescription(description);
 
         return parsed;
