@@ -80,7 +80,9 @@ public class MovieCategoryView extends FrameLayout {
 
         if (category.getBackground() != -1) {
             mRoot.setBackgroundResource(category.getBackground());
-            mMovieList.addItemDecoration(new OffsetDecoration(0, 480));
+            int offsetX = getContext().getResources()
+                    .getDimensionPixelOffset(R.dimen.category_background_offset_x);
+            mMovieList.addItemDecoration(new OffsetDecoration(0, offsetX));
         }
     }
 
