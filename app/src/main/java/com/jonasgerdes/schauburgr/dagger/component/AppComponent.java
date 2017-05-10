@@ -8,8 +8,7 @@ import com.jonasgerdes.schauburgr.usecase.home.about.AboutPresenter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuidePresenter;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuideView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesPresenter;
-import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.CompactMovieHolder;
-import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.FullMovieHolder;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailPresenter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningHolder;
@@ -32,8 +31,6 @@ public interface AppComponent {
 
     void inject(MoviesPresenter presenter);
 
-    void inject(FullMovieHolder fullMovieHolder);
-
     void inject(AboutPresenter aboutPresenter);
 
     void inject(MovieDetailActivity movieDetailActivity);
@@ -44,7 +41,7 @@ public interface AppComponent {
 
     void inject(GuideView guideView);
 
-    void inject(CompactMovieHolder compactMovieHolder);
+    void inject(MovieHolder movieHolder);
 
     void inject(SchauburgDataLoader schauburgDataLoader);
 

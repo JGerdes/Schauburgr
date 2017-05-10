@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.MovieCategory;
-import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.CompactMovieHolder;
+import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieHolder;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieCategoryView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.movie_list.MovieListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.MovieDetailActivity;
@@ -110,7 +110,7 @@ public class MoviesView extends Fragment implements MoviesContract.View,
     }
 
     @Override
-    public void onMovieClicked(Movie movie, CompactMovieHolder holder) {
+    public void onMovieClicked(Movie movie, MovieHolder holder) {
         //prevent opening details twice
         if (!mIsOpeningDetails) {
             mIsOpeningDetails = true;

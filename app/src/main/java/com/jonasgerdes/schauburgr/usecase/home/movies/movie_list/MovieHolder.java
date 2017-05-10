@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by jonas on 05.03.2017.
  */
 
-public class CompactMovieHolder extends RecyclerView.ViewHolder {
+public class MovieHolder extends RecyclerView.ViewHolder {
 
     @Inject
     UrlProvider mUrlProvider;
@@ -37,7 +37,7 @@ public class CompactMovieHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.loading_indicator)
     ImageView mLoadingIndicator;
 
-    public CompactMovieHolder(View itemView) {
+    public MovieHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         App.getAppComponent().inject(this);

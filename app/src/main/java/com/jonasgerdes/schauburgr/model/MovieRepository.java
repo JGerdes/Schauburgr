@@ -149,6 +149,8 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Animation")
                 .or()
                 .contains("genres", "Familie")
+                .or()
+                .contains("genres", "Family")
                 .lessThanOrEqualTo("contentRating", 6)
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
