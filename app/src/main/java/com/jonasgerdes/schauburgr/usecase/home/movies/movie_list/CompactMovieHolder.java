@@ -8,13 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.util.GlideListener;
 
 import javax.inject.Inject;
 
@@ -55,25 +53,12 @@ public class CompactMovieHolder extends RecyclerView.ViewHolder {
         String posterImageUrl = mUrlProvider.getPosterImageUrl(movie);
         Glide.with(context)
                 .load(posterImageUrl)
-                .error(R.drawable.no_network_poster)
+                .asBitmap()
                 .centerCrop()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model,
-                                               Target<GlideDrawable> target,
-                                               boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource,
-                                                   String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache,
-                                                   boolean isFirstResource) {
-                        mLoadingIndicator.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
+                .listener(new GlideListener(
+                        bitmap -> mLoadingIndicator.setVisibility(View.GONE),
+                        exception -> mLoadingIndicator
+                                .setImageResource(R.drawable.ic_signal_wifi_off_white_24dp)))
                 .into(mPoster);
     }
 

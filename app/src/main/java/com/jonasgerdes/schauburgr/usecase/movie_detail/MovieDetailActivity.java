@@ -6,7 +6,6 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +41,7 @@ import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
-import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
+import com.jonasgerdes.schauburgr.util.GlideListener;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
@@ -220,17 +219,17 @@ public class MovieDetailActivity extends AppCompatActivity
         Glide.with(this)
                 .load(mUrlProvider.getPosterImageUrl(movie))
                 .asBitmap()
-                .error(R.drawable.no_network_poster)
-                .listener(new GlideBitmapReadyListener() {
-                    @Override
-                    public void onBitmapReady(Bitmap bitmap) {
-                        Palette palette = Palette.from(bitmap).generate();
-                        applyColors(palette);
-                        mLoadingIndicator.setVisibility(View.GONE);
-                        //start transition
-                        startPostponedEnterTransition();
-                    }
-                })
+                .listener(new GlideListener(bitmap -> {
+                    Palette palette = Palette.from(bitmap).generate();
+                    applyColors(palette);
+                    mLoadingIndicator.setVisibility(View.GONE);
+                    //start transition
+                    startPostponedEnterTransition();
+                }, exception -> {
+                    mLoadingIndicator.setImageResource(R.drawable.ic_signal_wifi_off_white_24dp);
+                    //start transition
+                    startPostponedEnterTransition();
+                }))
                 .into(mPosterView);
 
 
