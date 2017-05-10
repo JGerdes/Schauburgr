@@ -45,7 +45,7 @@ public class MovieParser {
     //also sometimes it ends with "und mehr" or "mehr"
     private static final String REGEX_DESCRIPTION_CAST
             = "(?>Cast|Mit):? (.*?)(?>(?>und)? mehr ?)?<br>";
-    private static final String REGEX_DESCRIPTION_DURATION = "Laufzeit:(.*?)<br>";
+    private static final String REGEX_DESCRIPTION_DURATION = "(?>Laufzeit|Länge):(.*?)<br>";
     private static final String REGEX_DESCRIPTION_CONTENT_RATING = "FSK:(.*?)<br>";
     private static final String REGEX_DESCRIPTION_LOCATION = "Produktionsland:? (.*?)<br>";
 
