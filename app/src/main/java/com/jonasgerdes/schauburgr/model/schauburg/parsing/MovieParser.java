@@ -192,7 +192,7 @@ public class MovieParser {
         while (matcher.find()) {
             String found = matcher.group(1);
             //split found parts string and remove whitespace
-            String[] splitted = found.split(",");
+            String[] splitted = found.split("(,|/)");
             for (String item : splitted) {
                 item = item.trim();
                 //only add item not empty
