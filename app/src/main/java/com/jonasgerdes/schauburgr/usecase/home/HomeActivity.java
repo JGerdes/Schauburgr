@@ -2,30 +2,28 @@ package com.jonasgerdes.schauburgr.usecase.home;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
+import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.usecase.home.about.AboutView;
 import com.jonasgerdes.schauburgr.usecase.home.guide.GuideView;
 import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesView;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
+    @Inject
+    MovieRepository mMovieRepository;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            return showView(item.getItemId());
-        }
-
-    };
+            = item -> showView(item.getItemId());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +31,14 @@ public class HomeActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        App.getAppComponent().inject(this);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        showView(R.id.navigation_guide);
+
+        //don't show navigation when instance is restored
+        if (savedInstanceState == null) {
+            showView(R.id.navigation_guide);
+        }
     }
 
     private boolean showView(@IdRes int id) {
@@ -68,5 +71,11 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMovieRepository.dispose();
+        super.onDestroy();
     }
 }

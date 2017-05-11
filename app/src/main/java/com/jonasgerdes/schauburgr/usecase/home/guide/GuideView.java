@@ -1,5 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,10 +15,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
+import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.ScreeningSelectedListener;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.view.StateToggleLayout;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +35,13 @@ import io.realm.RealmResults;
  */
 
 public class GuideView extends Fragment implements GuideContract.View,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, ScreeningSelectedListener {
+
+    /**
+     * Key for arguments providing information whether first forces refresh was done
+     */
+    private static final String ARGUMENT_FIRST_TIME_LOADED = "ARGUMENT_FIRST_TIME_LOADED";
+
     private GuideContract.Presenter mPresenter;
 
     @BindView(R.id.coordinator)
@@ -42,6 +55,12 @@ public class GuideView extends Fragment implements GuideContract.View,
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+
+    @Inject
+    Resources mResources;
+
+    @Inject
+    ChromeCustomTabWrapper mChromeTab;
 
     private GuideDaysAdapter mDayListAdapter;
     private Animation mUpdateAnimation;
@@ -66,8 +85,10 @@ public class GuideView extends Fragment implements GuideContract.View,
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.title_guide);
         ButterKnife.bind(this, view);
+        App.getAppComponent().inject(this);
 
         mDayListAdapter = new GuideDaysAdapter();
+        mDayListAdapter.setListener(this);
         mDayList.setAdapter(mDayListAdapter);
         mDayList.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
@@ -80,6 +101,8 @@ public class GuideView extends Fragment implements GuideContract.View,
         mUpdateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
 
         new GuidePresenter().attachView(this);
+
+        mChromeTab.warmup();
     }
 
     @Override
@@ -93,6 +116,8 @@ public class GuideView extends Fragment implements GuideContract.View,
     @Override
     public void setPresenter(GuideContract.Presenter presenter) {
         mPresenter = presenter;
+        boolean forceRefresh = !getArguments().getBoolean(ARGUMENT_FIRST_TIME_LOADED, false);
+        presenter.loadGuide(forceRefresh);
     }
 
     @Override
@@ -103,25 +128,34 @@ public class GuideView extends Fragment implements GuideContract.View,
         } else {
             mStateLayout.setState(StateToggleLayout.STATE_CONTENT);
         }
-        mRefreshLayout.setRefreshing(false);
         hideError();
         if (animate) {
             mDayList.startAnimation(mUpdateAnimation);
         }
+        //prevent another forced refresh
+        getArguments().putBoolean(ARGUMENT_FIRST_TIME_LOADED, true);
+    }
+
+    @Override
+    public void showIsLoading(boolean show) {
+        mRefreshLayout.setRefreshing(show);
+    }
+
+    @Override
+    public void showError(int messageResource) {
+        showError(mResources.getString(messageResource));
     }
 
     @Override
     public void showError(String message) {
-        mRefreshLayout.setRefreshing(false);
         mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snackbar_action_refresh, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mRefreshLayout.setRefreshing(true);
-                        onRefresh();
-                    }
-                });
+                .setAction(R.string.snackbar_action_refresh, view -> onRefresh());
         mSnackbar.show();
+    }
+
+    @Override
+    public void openWebpage(String url) {
+        mChromeTab.open(getContext(), url);
     }
 
     @Override
@@ -130,7 +164,13 @@ public class GuideView extends Fragment implements GuideContract.View,
         mPresenter.onRefreshTriggered();
     }
 
-    private void hideError() {
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        mPresenter.onScreeningSelected(screening);
+    }
+
+    @Override
+    public void hideError() {
         if (mSnackbar != null) {
             mSnackbar.dismiss();
         }

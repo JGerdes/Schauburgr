@@ -1,26 +1,17 @@
 package com.jonasgerdes.schauburgr.usecase.home.guide;
 
 import com.jonasgerdes.schauburgr.App;
-import com.jonasgerdes.schauburgr.model.Guide;
-import com.jonasgerdes.schauburgr.model.ScreeningDay;
-import com.jonasgerdes.schauburgr.network.SchauburgApi;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.NetworkState;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 
-import org.joda.time.LocalDate;
-
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.List;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by jonas on 04.03.2017.
@@ -29,89 +20,85 @@ import retrofit2.Response;
 public class GuidePresenter implements GuideContract.Presenter {
 
     @Inject
-    SchauburgApi mApi;
+    MovieRepository mMovieRepository;
 
     @Inject
-    Realm mRealm;
+    UrlProvider mUrlProvider;
+
 
     private GuideContract.View mView;
-    private Call<Guide> mPendingCall;
-    private RealmResults<ScreeningDay> mScreeningDays;
+    private CompositeDisposable mDisposables;
     private boolean mDoAnimateNewData = false;
-
-    private RealmChangeListener<RealmResults<ScreeningDay>>
-            mChangeListener = new RealmChangeListener<RealmResults<ScreeningDay>>() {
-        @Override
-        public void onChange(RealmResults<ScreeningDay> screeningDays) {
-            mView.showScreeningDays(screeningDays, mDoAnimateNewData);
-            mDoAnimateNewData = false;
-        }
-    };
 
     @Override
     public void attachView(GuideContract.View view) {
         App.getAppComponent().inject(this);
+        mDisposables = new CompositeDisposable();
         mView = view;
+
         mView.setPresenter(this);
-        loadGuide();
+
+        mDisposables.add(mMovieRepository.getNetworkState()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleNetworkState)
+        );
+    }
+
+    private void handleNetworkState(NetworkState state) {
+        switch (state.getState()) {
+            case NetworkState.STATE_DEFAULT:
+                mView.showIsLoading(false);
+                mView.hideError();
+                return;
+            case NetworkState.STATE_LOADING:
+                mView.showIsLoading(true);
+                mView.hideError();
+                return;
+            case NetworkState.STATE_ERROR:
+                mView.showIsLoading(false);
+                if (state.getMessageResource() != NetworkState.NO_MESSAGE) {
+                    mView.showError(state.getMessageResource());
+                } else {
+                    mView.showError(state.getMessage());
+                }
+        }
     }
 
     @Override
     public void detachView() {
-        if (mPendingCall != null) {
-            mPendingCall.cancel();
-        }
-        mScreeningDays.removeAllChangeListeners();
-        mRealm.close();
+        mDisposables.dispose();
     }
 
     @Override
     public void onRefreshTriggered() {
         //show user new data with animation
         mDoAnimateNewData = true;
-        fetchGuideData();
+        mMovieRepository.loadMovieData();
     }
 
-    private void loadGuide() {
-        mScreeningDays = mRealm.where(ScreeningDay.class)
-                .greaterThanOrEqualTo("date", new LocalDate().toDate())
-                .findAllSorted("date", Sort.ASCENDING);
-        mChangeListener.onChange(mScreeningDays);
-        mScreeningDays.addChangeListener(mChangeListener);
-
-        if (Realm.getDefaultInstance().where(ScreeningDay.class).count() == 0) {
-            //show animation on first load
-            mDoAnimateNewData = true;
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        //only open reservation page if screening hasn't started yet
+        if (screening.getStartDate().isAfter(new DateTime())) {
+            String url = mUrlProvider.getReservationPageUrl(screening);
+            mView.openWebpage(url);
         }
-        fetchGuideData();
     }
 
-    private void fetchGuideData() {
-        mPendingCall = mApi.getFullGuide();
-        mPendingCall.enqueue(new Callback<Guide>() {
-            @Override
-            public void onResponse(Call<Guide> call, Response<Guide> response) {
-                final List<ScreeningDay> guide = response.body().getScreeningsGroupedByStartTime();
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.deleteAll();
-                        realm.copyToRealm(guide);
+    public void loadGuide(boolean forceRefresh) {
+        mDisposables.add(mMovieRepository.getScreeningDays()
+                .subscribe(screeningDays -> {
+                    //show animation on first load
+                    if (screeningDays.size() == 0) {
+                        mDoAnimateNewData = true;
                     }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<Guide> call, Throwable t) {
-                if (t instanceof SocketTimeoutException
-                        || t instanceof UnknownHostException
-                        || t instanceof SocketException) {
-                    mView.showError("Keine Internetverbindung :(");
-                } else {
-                    mView.showError(t.getClass().getName());
-                }
-                mPendingCall = null;
-            }
-        });
+                    mView.showScreeningDays(screeningDays, mDoAnimateNewData);
+                    mDoAnimateNewData = false;
+                })
+        );
+        if (forceRefresh) {
+            mMovieRepository.loadMovieData();
+        }
     }
+
 }

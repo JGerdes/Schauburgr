@@ -3,6 +3,7 @@ package com.jonasgerdes.schauburgr.dagger.module;
 import android.content.res.Resources;
 
 import com.jonasgerdes.schauburgr.App;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
 import javax.inject.Singleton;
 
@@ -18,10 +19,12 @@ import dagger.Provides;
 
 @Module
 public class AppModule {
-    App mApplication;
+    private App mApplication;
+    private ChromeCustomTabWrapper mChromeTab;
 
-    public AppModule(App mApplication) {
-        this.mApplication = mApplication;
+    public AppModule(App application, ChromeCustomTabWrapper chromeTab) {
+        mApplication = application;
+        mChromeTab = chromeTab;
     }
 
     @Provides
@@ -32,7 +35,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    Resources provideRessources() {
+    Resources provideResources() {
         return mApplication.getResources();
+    }
+
+    @Provides
+    @Singleton
+    ChromeCustomTabWrapper provideChromeCustomTab() {
+        return mChromeTab;
     }
 }

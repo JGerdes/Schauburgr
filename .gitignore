@@ -28,6 +28,7 @@ local.properties
 # the project can be imported from settings.gradle
 *.iml
 .idea/*
+.idea/
 # Forcibly including certain files we want propagated.
 !\.idea/codeStyleSettings.xml
 
@@ -45,3 +46,5 @@ _sandbox
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
+
+captures/

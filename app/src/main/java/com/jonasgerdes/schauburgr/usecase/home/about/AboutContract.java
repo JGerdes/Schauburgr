@@ -1,6 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.home.about;
 
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
 

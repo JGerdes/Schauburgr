@@ -1,14 +1,16 @@
 package com.jonasgerdes.schauburgr.usecase.movie_detail;
 
 import com.jonasgerdes.schauburgr.App;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
-
-import org.joda.time.LocalDate;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
+import com.jonasgerdes.schauburgr.model.tmdb.entity.video.Video;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.RealmResults;
 
 /**
@@ -18,10 +20,18 @@ import io.realm.RealmResults;
 
 public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
+    private static final String VIDEO_SITE_YOUTUBE = "YouTube";
+    private static final Object BASE_URL_YOUTUBE = "https://www.youtube.com/watch?v=";
     @Inject
-    Realm mRealm;
+    MovieRepository mMovieRepository;
+
+    @Inject
+    UrlProvider mUrlProvider;
+
+    private CompositeDisposable mDisposables = new CompositeDisposable();
 
     private MovieDetailContract.View mView;
+    private String mVideoUrl;
 
     @Override
     public void attachView(MovieDetailContract.View view) {
@@ -32,30 +42,46 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void detachView() {
-        mRealm.removeAllChangeListeners();
-        mRealm.close();
+        mDisposables.dispose();
     }
 
 
     @Override
     public void onStartWithMovieId(String movieId) {
-        loadMovie(movieId);
-        loadScreeningsFor(movieId);
+        Observable<Movie> movieObservable = mMovieRepository.getMovieById(movieId);
+        mDisposables.add(movieObservable
+                .doOnNext(this::loadScreenings)
+                .subscribe(mView::showMovie));
+
+        //load trailer/teaser
+        mDisposables.add(movieObservable
+                .doOnNext(mMovieRepository::loadVideos)
+                .map(Movie::getVideos)
+                .flatMapIterable(videos -> videos)
+                .filter(video -> video.getSite().equals(VIDEO_SITE_YOUTUBE))
+                .firstElement()
+                .map(Video::getKey)
+                .map(key -> String.format("%s%s", BASE_URL_YOUTUBE, key))
+                .subscribe(url -> {
+                    mVideoUrl = url;
+                    mView.displayTrailerLink();
+                }));
     }
 
-
-    private void loadMovie(String movieResourceId) {
-        Movie movie = mRealm.where(Movie.class)
-                .equalTo("resourceId", movieResourceId)
-                .findFirst();
-        mView.showMovie(movie);
+    private void loadScreenings(Movie movie) {
+        Observable<RealmResults<Screening>> screenings
+                = mMovieRepository.getAllScreeningsFor(movie);
+        mDisposables.add(screenings.subscribe(mView::showScreenings));
     }
 
-    private void loadScreeningsFor(String movieResourceId) {
-        RealmResults<Screening> screenings = mRealm.where(Screening.class)
-                .equalTo("movie.resourceId", movieResourceId)
-                .greaterThanOrEqualTo("startDate", new LocalDate().toDate())
-                .findAll();
-        mView.showScreenings(screenings);
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        String url = mUrlProvider.getReservationPageUrl(screening);
+        mView.openWebpage(url);
+    }
+
+    @Override
+    public void onTrailerLinkClicked() {
+        mView.showTrailer(mVideoUrl);
     }
 }

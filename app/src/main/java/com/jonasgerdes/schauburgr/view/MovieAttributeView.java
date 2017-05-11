@@ -2,6 +2,7 @@ package com.jonasgerdes.schauburgr.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.schauburg.ExtraMapper;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
 import java.util.List;
@@ -54,10 +56,18 @@ public class MovieAttributeView extends LinearLayout {
     /**
      * Set attributes to show. Creates a {@link TextView} for each attribute, applies style
      * and add it as child.
+     *
      * @param attributes attributes titles to show
      */
     public void setAttributes(List<String> attributes) {
-        for (String attribute : attributes) {
+        //remove existing extras
+        removeAllViews();
+        //add new ones
+        for (String attributeName : attributes) {
+            @StringRes int attribute = ExtraMapper.getExtraString(attributeName);
+            if (attribute == ExtraMapper.NONE) {
+                return;
+            }
             TextView attributeView = new TextView(getContext(), null, 0, R.style.movie_attribute);
             LinearLayoutCompat.LayoutParams layout = new LinearLayoutCompat.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,

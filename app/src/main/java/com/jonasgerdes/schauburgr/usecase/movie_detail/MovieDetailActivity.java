@@ -3,15 +3,20 @@ package com.jonasgerdes.schauburgr.usecase.movie_detail;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,11 +35,15 @@ import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.Movie;
-import com.jonasgerdes.schauburgr.model.Screening;
-import com.jonasgerdes.schauburgr.network.image.ImageUrlCreator;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
-import com.jonasgerdes.schauburgr.util.GlideBitmapReadyListener;
+import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
+import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
+import com.jonasgerdes.schauburgr.util.ColorUtil;
+import com.jonasgerdes.schauburgr.util.GlideListener;
+import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
 
@@ -50,7 +59,8 @@ import io.realm.RealmResults;
  */
 
 public class MovieDetailActivity extends AppCompatActivity
-        implements MovieDetailContract.View, SwipeBackLayout.SwipeListener {
+        implements MovieDetailContract.View, SwipeBackLayout.SwipeListener,
+        ScreeningSelectedListener, NestedScrollView.OnScrollChangeListener {
 
     /**
      * maximum delay (in ms) to wait for finish loading until activity is opened without transition
@@ -63,14 +73,29 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.poster)
-    ImageView mPosterView;
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    @BindView(R.id.title)
+    TextView mTitleView;
+
+    @BindView(R.id.genre)
+    TextView mGenreView;
+
+    @BindView(R.id.duration)
+    TextView mDurationView;
+
+    @BindView(R.id.contentRating)
+    TextView mContentRating;
+
+    @BindView(R.id.director)
+    TextView mDirector;
+
+    @BindView(R.id.cast)
+    TextView mCast;
 
     @BindView(R.id.description)
     TextView mDescriptionView;
-
-    @BindView(R.id.collapsing_toolbar_layout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     @BindView(R.id.screeningList)
     RecyclerView mScreeningList;
@@ -78,8 +103,26 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.next_screenings_title)
     TextView mNextScreeningsTitle;
 
+    @BindView(R.id.poster)
+    ImageView mPosterView;
+
+    @BindView(R.id.cover)
+    ImageView mCoverView;
+
+    @BindView(R.id.trailer_button)
+    ImageView mTrailerButton;
+
+    @BindView(R.id.loading_indicator)
+    ImageView mLoadingIndicator;
+
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView mScrollView;
+
     @Inject
-    ImageUrlCreator mImageUrlCreator;
+    UrlProvider mUrlProvider;
+
+    @Inject
+    ChromeCustomTabWrapper mChromeTab;
 
     @InjectExtra
     String movieId;
@@ -92,13 +135,17 @@ public class MovieDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        setTitle("");
 
         App.getAppComponent().inject(this);
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        mScrollView.setOnScrollChangeListener(this);
+
         mSwipeBackLayout.setSwipeListener(this);
 
         fixNestedScrollFlingBehavior();
@@ -114,12 +161,7 @@ public class MovieDetailActivity extends AppCompatActivity
         postponeEnterTransition();
 
         //if loading takes longer then 500ms, screw shared element transition and start anyway
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startPostponedEnterTransition();
-            }
-        }, MAX_DELAY_FOR_TRANSITION);
+        new Handler().postDelayed(() -> startPostponedEnterTransition(), MAX_DELAY_FOR_TRANSITION);
     }
 
     private void fixNestedScrollFlingBehavior() {
@@ -153,23 +195,50 @@ public class MovieDetailActivity extends AppCompatActivity
 
     @Override
     public void showMovie(Movie movie) {
-        setTitle(movie.getTitle());
+        mTitleView.setText(movie.getTitle());
+        mGenreView.setText(StringUtil.concat(movie.getGenres(), ", "));
+        mDurationView.setText(movie.getDuration() + " Min");
+        @ColorInt int color = getContentRatingColor(this, movie.getContentRating());
+        mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
+        mContentRating.setText("ab " + movie.getContentRating());
+        if (movie.getDirectors().isEmpty()) {
+            mDirector.setVisibility(View.GONE);
+        } else {
+            mDirector.setText(StringUtil.concat(movie.getDirectors(), ", "));
+        }
+
+        if (movie.getCast().isEmpty()) {
+            mCast.setVisibility(View.GONE);
+        } else {
+            mCast.setText(StringUtil.concat(movie.getCast(), ", "));
+        }
+
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
+        ((AnimatedVectorDrawable) mLoadingIndicator.getDrawable()).start();
+
         Glide.with(this)
-                .load(mImageUrlCreator.getPosterImageUrl(movie))
+                .load(mUrlProvider.getPosterImageUrl(movie))
                 .asBitmap()
-                .error(R.drawable.no_network_poster)
-                .listener(new GlideBitmapReadyListener() {
-                    @Override
-                    public void onBitmapReady(Bitmap bitmap) {
-                        Palette palette = Palette.from(bitmap).generate();
-                        applyColors(palette);
-                        //start transition
-                        startPostponedEnterTransition();
-                    }
-                })
+                .listener(new GlideListener(bitmap -> {
+                    Palette palette = Palette.from(bitmap).generate();
+                    applyColors(palette);
+                    mLoadingIndicator.setVisibility(View.GONE);
+                    //start transition
+                    startPostponedEnterTransition();
+                }, exception -> {
+                    mLoadingIndicator.setImageResource(R.drawable.ic_signal_wifi_off_white_24dp);
+                    //start transition
+                    startPostponedEnterTransition();
+                }))
                 .into(mPosterView);
+
+
+        if (movie.getCoverUrl() != null) {
+            Glide.with(this)
+                    .load(movie.getCoverUrl())
+                    .into(mCoverView);
+        }
     }
 
     @Override
@@ -179,11 +248,30 @@ public class MovieDetailActivity extends AppCompatActivity
         mNextScreeningsTitle.setVisibility(screenings.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
+    @Override
+    public void openWebpage(String url) {
+        mChromeTab.open(this, url);
+    }
+
+    @Override
+    public void displayTrailerLink() {
+        mTrailerButton.setVisibility(View.VISIBLE);
+        mTrailerButton.setOnClickListener(v -> mPresenter.onTrailerLinkClicked());
+    }
+
+    @Override
+    public void showTrailer(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
     private void initScreeningList() {
         mScreeningList.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         );
         mScreeningsAdapter = new ScreeningListAdapter();
+        mScreeningsAdapter.setScreeningSelectedListener(this);
         mScreeningList.setAdapter(mScreeningsAdapter);
     }
 
@@ -196,11 +284,52 @@ public class MovieDetailActivity extends AppCompatActivity
         mCollapsingToolbarLayout.setBackgroundColor(background);
         mCollapsingToolbarLayout.setContentScrimColor(background);
 
-        getWindow().setStatusBarColor(
-                palette.getDarkVibrantColor(
-                        palette.getDominantColor(defaultColor)
-                )
+        int darkColor = palette.getDarkVibrantColor(
+                palette.getDominantColor(defaultColor)
         );
+        darkColor = ColorUtil.maxBrightness(darkColor, 0.6f);
+        getWindow().setStatusBarColor(darkColor);
+        getWindow().setNavigationBarColor(darkColor);
+    }
+
+
+    @Override
+    public void onFullSwipeBack() {
+        finishAfterTransition();
+    }
+
+    @Override
+    public void onSwipe(float progress) {
+        //ignore
+    }
+
+    @Override
+    public void onScreeningSelected(Screening screening) {
+        mPresenter.onScreeningSelected(screening);
+    }
+
+    private
+    @ColorInt
+    int getContentRatingColor(Context context, int contentRating) {
+        @ColorRes int colorRes;
+        switch (contentRating) {
+            case 6:
+                colorRes = R.color.colorContentRating6;
+                break;
+            case 12:
+                colorRes = R.color.colorContentRating12;
+                break;
+            case 16:
+                colorRes = R.color.colorContentRating16;
+                break;
+            case 18:
+                colorRes = R.color.colorContentRating18;
+                break;
+            default:
+                colorRes = R.color.colorContentRating0;
+                break;
+        }
+        return ContextCompat.getColor(context, colorRes);
     }
 
     public static void start(Activity activity, Movie movie, ImageView posterThumbnail) {
@@ -216,12 +345,12 @@ public class MovieDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFullSwipeBack() {
-        finishAfterTransition();
-    }
-
-    @Override
-    public void onSwipe(float progress) {
-        //ignore
+    public void onScrollChange(NestedScrollView v, int scrollX,
+                               int scrollY, int oldScrollX, int oldScrollY) {
+        if (mTitleView.getTop() + mTitleView.getHeight() / 2 < scrollY) {
+            mCollapsingToolbarLayout.setTitle(mTitleView.getText());
+        } else {
+            mCollapsingToolbarLayout.setTitle(null);
+        }
     }
 }

@@ -1,4 +1,5 @@
 <resources>
     <dimen name="swipe_refresh_trigger_distance">128dp</dimen>
     <dimen name="movie_detail_item_screening_date_margin">8dp</dimen>
+    <dimen name="category_background_offset_x">128dp</dimen>
 </resources>

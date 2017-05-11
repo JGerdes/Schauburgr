@@ -2,7 +2,7 @@ package com.jonasgerdes.schauburgr.usecase.home.about;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 
 import javax.inject.Inject;
 
@@ -68,7 +68,13 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_realm_java_body),
                 new OpenSourceLicense(
                         R.string.license_retrofit_title,
-                        R.string.license_retrofit_body)
+                        R.string.license_retrofit_body),
+                new OpenSourceLicense(
+                        R.string.license_rxandroid_title,
+                        R.string.license_rxandroid_body),
+                new OpenSourceLicense(
+                        R.string.license_rxjava_title,
+                        R.string.license_rxjava_body)
                 );
     }
 }

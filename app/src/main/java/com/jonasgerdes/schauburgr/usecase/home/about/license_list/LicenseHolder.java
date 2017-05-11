@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

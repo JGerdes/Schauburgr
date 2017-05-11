@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 
 import java.util.ArrayList;
 import java.util.List;

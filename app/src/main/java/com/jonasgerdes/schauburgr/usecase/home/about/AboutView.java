@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 import com.jonasgerdes.schauburgr.usecase.home.about.license_list.LicenseListAdapter;
 
 import java.util.Arrays;
