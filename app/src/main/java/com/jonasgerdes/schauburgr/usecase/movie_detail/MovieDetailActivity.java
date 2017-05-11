@@ -41,6 +41,7 @@ import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningListAdapter;
 import com.jonasgerdes.schauburgr.usecase.movie_detail.screening_list.ScreeningSelectedListener;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
+import com.jonasgerdes.schauburgr.util.ColorUtil;
 import com.jonasgerdes.schauburgr.util.GlideListener;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
@@ -283,12 +284,14 @@ public class MovieDetailActivity extends AppCompatActivity
         mCollapsingToolbarLayout.setBackgroundColor(background);
         mCollapsingToolbarLayout.setContentScrimColor(background);
 
-        getWindow().setStatusBarColor(
-                palette.getDarkVibrantColor(
-                        palette.getDominantColor(defaultColor)
-                )
+        int darkColor = palette.getDarkVibrantColor(
+                palette.getDominantColor(defaultColor)
         );
+        darkColor = ColorUtil.maxBrightness(darkColor, 0.6f);
+        getWindow().setStatusBarColor(darkColor);
+        getWindow().setNavigationBarColor(darkColor);
     }
+
 
     @Override
     public void onFullSwipeBack() {
