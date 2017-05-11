@@ -6,6 +6,7 @@ import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -229,17 +230,23 @@ public class MovieParser {
      */
     private void parseAndAddGenresFromTitle(Movie movie) {
         //special "genre" for live operas
-        String operaIndicator = "Met Opera Live:";
+        List<String> operaIndicators = Arrays.asList("Met Opera Live:", "MET Opera:");
         List<String> genres = new ArrayList<>();
         genres.addAll(movie.getGenres());
-        if (movie.getTitle().startsWith(operaIndicator)) {
-            genres.add(Movie.GENRE_MET_OPERA);
+        for (String operaIndicator : operaIndicators) {
+            if (movie.getTitle().toLowerCase().startsWith(operaIndicator.toLowerCase())) {
 
-            //Tidy up title
-            String title = movie.getTitle();
-            title = title.substring(operaIndicator.length(), title.length());
-            title = title.trim();
-            movie.setTitle(title);
+                //only add genre once, but remove all indicators from title
+                if (!genres.contains(Movie.GENRE_MET_OPERA)) {
+                    genres.add(Movie.GENRE_MET_OPERA);
+                }
+
+                //tidy up title
+                String title = movie.getTitle();
+                title = title.substring(operaIndicator.length(), title.length());
+                title = title.trim();
+                movie.setTitle(title);
+            }
         }
         movie.setGenres(genres);
     }
