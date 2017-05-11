@@ -95,7 +95,6 @@ public class DataModule {
 
 
     @Provides
-    @Singleton
     MovieRepository provideMovieRepository(SchauburgApi schauburgApi, TheMovieDatabaseApi tMDbApi) {
         return new MovieRepository(
                 new SchauburgDataLoader(schauburgApi),

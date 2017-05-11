@@ -34,7 +34,11 @@ public class HomeActivity extends AppCompatActivity {
         App.getAppComponent().inject(this);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        showView(R.id.navigation_guide);
+
+        //don't show navigation when instance is restored
+        if (savedInstanceState == null) {
+            showView(R.id.navigation_guide);
+        }
     }
 
     private boolean showView(@IdRes int id) {

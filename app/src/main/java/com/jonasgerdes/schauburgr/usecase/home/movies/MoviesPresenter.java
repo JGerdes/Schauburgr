@@ -88,7 +88,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         .setSubTitle(R.string.movie_list_category_specials_subtitle)
                         .setMovies(movies))
         );
-        
+
         categories.add(mMovieRepository.getExcessLengthMovies()
                 .map(movies -> new MovieCategory()
                         .setTitle(R.string.movie_list_category_long)
