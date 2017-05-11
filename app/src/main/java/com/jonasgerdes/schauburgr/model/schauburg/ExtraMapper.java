@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Mapping between extra constants from {@link Movie} which are saved in the database
+ * to displayable string resources.
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 09.05.2017
  */
@@ -29,9 +32,13 @@ public class ExtraMapper {
         sExtraMap.put(Movie.EXTRA_LAST_SCREENINGS, R.string.movie_extra_last_screening);
     }
 
-    public static
-    @StringRes
-    int getExtraString(String extra) {
+    /**
+     * Get string resource which can be displayed in UI for given extra constant
+     *
+     * @param extra Extra to get string resource for
+     * @return string resource for given extra or {@link #NONE} if none exists
+     */
+    public static @StringRes int getExtraString(String extra) {
         if (sExtraMap.containsKey(extra)) {
             return sExtraMap.get(extra);
         }

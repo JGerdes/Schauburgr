@@ -46,14 +46,14 @@ public class Movie extends RealmObject {
      * Common extras that are currently parsed and saved
      */
     public static final String EXTRA_3D = "3D";
-    public static final String EXTRA_ATMOS = "Atmos";
+    public static final String EXTRA_ATMOS = "ATMOS";
     public static final String EXTRA_OT = "OT"; //Original-Ton
-    public static final String EXTRA_TIP = "Tip";
+    public static final String EXTRA_TIP = "TIP";
 
-    public static final String EXTRA_REEL = "Reel"; //"Filmrolle"-Aktion
-    public static final String EXTRA_LAST_SCREENINGS = "EXTRA_LAST_SCREENINGS";
-    public static final String EXTRA_PREVIEW = "EXTRA_PREVIEW"; //Vorpremiere
-    public static final String EXTRA_IGNORE = "EXTRA_IGNORE"; //extra to not be saved
+    public static final String EXTRA_REEL = "REEL"; //"Filmrolle"-Aktion
+    public static final String EXTRA_LAST_SCREENINGS = "LAST_SCREENINGS";
+    public static final String EXTRA_PREVIEW = "PREVIEW"; //Vorpremiere
+    public static final String EXTRA_IGNORE = "IGNORE"; //extra to not be saved
     /**
      * Separator for concatenated extras and genres. Three semicolons in a row
      * shouldn't be in any genre or extra name.
@@ -139,6 +139,9 @@ public class Movie extends RealmObject {
      */
     private RealmList<Video> videos = new RealmList<>();
 
+    /**
+     * Screenings of this movie
+     */
     @LinkingObjects("movie")
     private final RealmResults<Screening> screenings = null;
 

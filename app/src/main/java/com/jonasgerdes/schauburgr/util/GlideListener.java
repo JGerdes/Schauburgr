@@ -6,7 +6,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 /**
- * Enables using Glide callbacks with lambda expressions
+ * Enables using Glide callbacks ({@link com.bumptech.glide.BitmapRequestBuilder#listener(RequestListener)})
+ * with lambda expressions
  *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 29.03.2017

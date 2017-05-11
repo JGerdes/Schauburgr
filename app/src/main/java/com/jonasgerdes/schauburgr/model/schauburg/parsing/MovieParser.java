@@ -181,10 +181,13 @@ public class MovieParser {
     }
 
     /**
-     * Extract genres from given {@link Movie} by parsing its description text. Adds found genres
-     * to movie.
+     * Extract data from given {@link Movie} by parsing its description text with help of provided
+     * regex pattern. Automatically splits multiple values (concatenated by either , or /).
+     * Removes everything matching the regex pattern from description.
      *
      * @param movie Movie to parse genres from and save them into
+     * @param pattern Compiled regex pattern to find data with
+     * @return List of found data items
      */
     private List<String> parseFromDescription(Movie movie, Pattern pattern) {
         List<String> parsed = new ArrayList<>();

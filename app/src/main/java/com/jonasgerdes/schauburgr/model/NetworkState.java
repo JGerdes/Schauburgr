@@ -3,6 +3,9 @@ package com.jonasgerdes.schauburgr.model;
 import android.support.annotation.IntDef;
 
 /**
+ * Representation of a state of a network request. Contains additional data for some states like
+ * error messages when in state {@link #STATE_ERROR}
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 28.04.2017
  */

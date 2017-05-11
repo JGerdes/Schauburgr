@@ -7,7 +7,7 @@ import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 
 /**
- * Implementation of a UrlProvider which provides urls to webpages and resources like images on the
+ * UrlProvider which provides urls to webpages and resources like images on the
  * server of the schauburg website.
  *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
@@ -40,7 +40,7 @@ public class SchauburgUrlProvider implements UrlProvider {
      */
     @Override
     public String getPosterImageUrl(Movie movie) {
-        //return hd url of is
+        //return hd url if existing
         if (movie.getHdPosterUrl() != null) {
             return movie.getHdPosterUrl();
         }

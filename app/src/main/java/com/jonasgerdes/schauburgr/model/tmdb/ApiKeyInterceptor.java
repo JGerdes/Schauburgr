@@ -8,13 +8,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
+ * Interceptor adding an query parameter for an api key
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 22.04.2017
  */
 
 public class ApiKeyInterceptor implements Interceptor {
+    private static final String PARAMETER_API_KEY = "api_key";
     private String mApiKey;
 
+    /**
+     *
+     * @param apiKey Api key for TMDb
+     */
     public ApiKeyInterceptor(String apiKey) {
         mApiKey = apiKey;
     }
@@ -25,7 +32,7 @@ public class ApiKeyInterceptor implements Interceptor {
         HttpUrl url = request.url();
 
         HttpUrl newUrl = url.newBuilder()
-                .addQueryParameter("api_key", mApiKey)
+                .addQueryParameter(PARAMETER_API_KEY, mApiKey)
                 .build();
 
         Request newRequest = request.newBuilder()

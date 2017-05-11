@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
+ * Custom JsonDeserializer for yyyy-MM-dd date formats
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 24.04.2017
  */

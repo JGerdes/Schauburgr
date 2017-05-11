@@ -17,6 +17,8 @@ import io.realm.RealmList;
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
+ * DataLoader utilizing {@link TheMovieDatabaseApi} to fetch movie data from TMDb server
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 28.04.2017
  */

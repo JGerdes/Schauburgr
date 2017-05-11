@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jonas on 07.03.2017.
+ * Static collection of various useful string operations
+ *
+ * @author Jonas Gerdes <dev@jonasgerdes.com>
+ * @since 07.03.2017
  */
 
 public class StringUtil {
@@ -27,6 +30,13 @@ public class StringUtil {
         return concated;
     }
 
+    /**
+     * Removes part of a string
+     * @param full String to remove from
+     * @param start Start index to start removal
+     * @param length Length of part to be removed
+     * @return new string without removed part
+     */
     public static String remove(String full, int start, int length) {
         return full.substring(0, start) + full.substring(start + length, full.length());
     }

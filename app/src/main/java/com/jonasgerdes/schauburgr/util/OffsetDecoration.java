@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
+ * Decorator for {@link RecyclerView} to offset first item vertically and/or horizontally
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 22.04.2017
  */

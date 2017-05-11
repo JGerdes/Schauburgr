@@ -1,7 +1,5 @@
 package com.jonasgerdes.schauburgr.model;
 
-import android.util.Log;
-
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
@@ -27,6 +25,8 @@ import io.realm.Sort;
 import retrofit2.HttpException;
 
 /**
+ * Repository for easy access to local cache of movies and fetching data from server
+ *
  * @author Jonas Gerdes <dev@jonasgerdes.com>
  * @since 26.04.2017
  */
@@ -47,10 +47,20 @@ public class MovieRepository implements Disposable {
         mRealm = Realm.getDefaultInstance();
     }
 
+    /**
+     * Gets observable network state. State changes when some network request are triggered
+     *
+     * @return Observable NetworkState
+     */
     public Observable<NetworkState> getNetworkState() {
         return mState.hide();
     }
 
+    /**
+     * Loads movie and screening data from schauburg and try to get matching movie data via
+     * TMDb. Invalidates local cache as soon as data from schauburg is available and saves all data
+     * in local cache. Triggers {@link NetworkState} got via {@link #getNetworkState()} accordingly.
+     */
     public void loadMovieData() {
         mState.onNext(NetworkState.LOADING);
         mDisposables.add(mSchauburgDataLoader.fetchGuideData()
@@ -64,6 +74,11 @@ public class MovieRepository implements Disposable {
         );
     }
 
+    /**
+     * Loads data of relevant videos (like trailers, teasers) for given movie
+     *
+     * @param movie Movie to load video data for
+     */
     public void loadVideos(Movie movie) {
         if (movie.getTmdbId() == Movie.NO_ID || movie.getVideos().size() > 0) {
             return;
@@ -75,8 +90,13 @@ public class MovieRepository implements Disposable {
         );
     }
 
+    /**
+     * Propagates error state via {@link #mState} by breaking down given throwable to get an
+     * matching error message
+     *
+     * @param throwable Thrown error
+     */
     private void propagateErrorState(Throwable throwable) {
-        Log.e("MovieRepo", "propagateErrorState: ", throwable);
         NetworkState state = new NetworkState(NetworkState.STATE_ERROR);
         if (throwable instanceof HttpException) {
             HttpException httpError = ((HttpException) throwable);
@@ -102,20 +122,23 @@ public class MovieRepository implements Disposable {
     }
 
 
+    /**
+     * Gets all locally cached screenings grouped by time and date in {@link ScreeningDay}s
+     *
+     * @return Cached {@link ScreeningDay}s
+     */
     public Observable<RealmResults<ScreeningDay>> getScreeningDays() {
         return RealmObservable.from(mRealm.where(ScreeningDay.class)
                 .greaterThanOrEqualTo("date", new LocalDate().toDate())
                 .findAllSorted("date", Sort.ASCENDING));
     }
 
-    public Observable<RealmResults<Movie>> getActionMovies() {
-        return RealmObservable.from(mRealm.where(Movie.class)
-                .contains("genres", "Action")
-                .greaterThanOrEqualTo("contentRating", 12)
-                .findAllSorted("title", Sort.ASCENDING)
-                .where().isNotEmpty("description").distinct("title"));
-    }
-
+    /**
+     * Gets all movies which were relapsed during last 14 days or a shows as preview
+     * Ordered by release date
+     *
+     * @return Observable RealmResults of recent released movies
+     */
     public Observable<RealmResults<Movie>> getNewMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .greaterThanOrEqualTo("releaseDate", new LocalDate().minusDays(14).toDate())
@@ -124,6 +147,26 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+    /**
+     * Gets all movies having comedy as genre and a contentRating of 12+.
+     * Ordered by title
+     *
+     * @return Observable RealmResults of action movies
+     */
+    public Observable<RealmResults<Movie>> getActionMovies() {
+        return RealmObservable.from(mRealm.where(Movie.class)
+                .contains("genres", "Action")
+                .greaterThanOrEqualTo("contentRating", 12)
+                .findAllSorted("title", Sort.ASCENDING)
+                .where().isNotEmpty("description").distinct("title"));
+    }
+
+    /**
+     * Gets all movies having comedy as genre and aren't movies for kids
+     * Ordered by title
+     *
+     * @return Observable RealmResults of comedy movies
+     */
     public Observable<RealmResults<Movie>> getComedyMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Komödie")
@@ -135,6 +178,13 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+
+    /**
+     * Gets all movies having thriller or horror as genre
+     * Ordered by title
+     *
+     * @return Observable RealmResults of action movies
+     */
     public Observable<RealmResults<Movie>> getThrillerMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Thriller")
@@ -144,6 +194,13 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+    /**
+     * Gets all movies fitting for kids (having animation or family as genre
+     * and  a contentRating of 0 or 6)
+     * Ordered by title
+     *
+     * @return Observable RealmResults of movies for kids
+     */
     public Observable<RealmResults<Movie>> getKidsMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Animation")
@@ -156,6 +213,12 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+    /**
+     * Gets all movies having given extra
+     * Ordered by title
+     *
+     * @return Observable RealmResults of matching movies
+     */
     public Observable<RealmResults<Movie>> getMoviesWithExtra(String extra) {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("extras", extra)
@@ -163,6 +226,12 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+    /**
+     * Gets all movies having a duration of {@link Movie#DURATION_EXCESS_LENGTH_STATE_1} or longer
+     * Ordered by duration
+     *
+     * @return Observable RealmResults of movies with excess length
+     */
     public Observable<RealmResults<Movie>> getExcessLengthMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .greaterThanOrEqualTo("duration", Movie.DURATION_EXCESS_LENGTH_STATE_1)
@@ -171,6 +240,13 @@ public class MovieRepository implements Disposable {
                 .where().isNotEmpty("description").distinct("title"));
     }
 
+    /**
+     * Gets all "special" movies like Met Opera streamings, movies of "Filmrolle", movies screened
+     * with original audio ("O-Ton") or generally got a "Film-Tipp" recommendation.
+     * Ordered by title
+     *
+     * @return Observable RealmResults of "special" movies
+     */
     public Observable<RealmResults<Movie>> getSpecialMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Met Opera")
@@ -183,6 +259,12 @@ public class MovieRepository implements Disposable {
                 .findAllSorted("releaseDate", Sort.DESCENDING));
     }
 
+    /**
+     * Gets a movie with given id ({@link Movie#resourceId})
+     *
+     * @param movieId id of movie
+     * @return Movie with given id
+     */
     public Observable<Movie> getMovieById(String movieId) {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .equalTo("resourceId", movieId)
@@ -203,12 +285,20 @@ public class MovieRepository implements Disposable {
                 .findAllSorted("startDate", Sort.ASCENDING));
     }
 
+    /**
+     * Disposes repository by removing all internal listeners and subcribers and closing the db.
+     */
     @Override
     public void dispose() {
         mDisposables.dispose();
         mRealm.close();
     }
 
+    /**
+     * Checks whether repository is already disposed
+     *
+     * @return true if repository was already disposed, false otherwise
+     */
     @Override
     public boolean isDisposed() {
         return mDisposables.isDisposed();

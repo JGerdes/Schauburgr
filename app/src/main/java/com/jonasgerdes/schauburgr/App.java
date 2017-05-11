@@ -17,7 +17,10 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.rx.RealmObservableFactory;
 
-
+/**
+ * Root app handling global initialisation processes like init RealmDb, build Dagger components
+ * and init chrome custom tabs
+ */
 public class App extends Application {
 
     private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/";
@@ -53,7 +56,8 @@ public class App extends Application {
         CustomTabsClient.bindCustomTabsService(this, "com.android.chrome",
                 new CustomTabsServiceConnection() {
                     @Override
-                    public void onServiceDisconnected(ComponentName name) {}
+                    public void onServiceDisconnected(ComponentName name) {
+                    }
 
                     @Override
                     public void onCustomTabsServiceConnected(ComponentName name,
