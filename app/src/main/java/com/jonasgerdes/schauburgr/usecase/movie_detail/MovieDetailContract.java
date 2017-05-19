@@ -18,6 +18,7 @@ public interface MovieDetailContract {
         void showScreenings(RealmResults<Screening> screenings);
         void openWebpage(String url);
         void displayTrailerLink();
+        void enableCoverScrim(boolean enabled);
         void showTrailer(String url);
 
     }
