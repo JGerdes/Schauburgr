@@ -68,7 +68,8 @@ public class MovieParser {
      */
     private static final ExtraMapping[] EXTRA_MAPPINGS = new ExtraMapping[]{
             new ExtraMapping(Movie.EXTRA_3D, "(3D)", "in 3D", "- 3D", "3D"),
-            new ExtraMapping(Movie.EXTRA_ATMOS, "in Dolby Atmos", "- Dolby Atmos", "Dolby Atmos"),
+            new ExtraMapping(Movie.EXTRA_ATMOS, ": in Dolby Atmos", "in Dolby Atmos",
+                    "- Dolby Atmos", "Dolby Atmos"),
             new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
             new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
