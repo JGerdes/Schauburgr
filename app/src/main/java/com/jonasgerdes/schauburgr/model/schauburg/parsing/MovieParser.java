@@ -74,7 +74,7 @@ public class MovieParser {
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
             new ExtraMapping(Movie.EXTRA_LADIES_NIGHT, "Ladies Night:", "Ladies Night -"),
             new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere",
-                    "Vorp:", "Vorpremiere:"),
+                    "Vorpremiere:", "Vorp:", "Vorp.:", "- Vorp", ":Vorp", "Vorp."),
             new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",
                     ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
 
