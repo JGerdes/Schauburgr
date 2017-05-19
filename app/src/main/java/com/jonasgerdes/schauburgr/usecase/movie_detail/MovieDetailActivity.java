@@ -6,6 +6,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -257,6 +258,15 @@ public class MovieDetailActivity extends AppCompatActivity
     public void displayTrailerLink() {
         mTrailerButton.setVisibility(View.VISIBLE);
         mTrailerButton.setOnClickListener(v -> mPresenter.onTrailerLinkClicked());
+    }
+
+    @Override
+    public void enableCoverScrim(boolean enabled) {
+        if (enabled) {
+            mTrailerButton.setBackgroundResource(R.color.colorBackgroundDark50);
+        } else {
+            mTrailerButton.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override

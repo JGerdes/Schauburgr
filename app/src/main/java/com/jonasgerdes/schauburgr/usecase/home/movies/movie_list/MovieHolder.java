@@ -47,6 +47,7 @@ public class MovieHolder extends RecyclerView.ViewHolder {
         Context context = itemView.getContext();
         mTitle.setText(movie.getTitle());
 
+        mLoadingIndicator.setImageResource(R.drawable.anim_loading_rotation_white_24dp);
         mLoadingIndicator.setVisibility(View.VISIBLE);
         ((AnimatedVectorDrawable) mLoadingIndicator.getDrawable()).start();
 

@@ -45,10 +45,10 @@ public class MovieParser {
     //cast is often start with "Cast:", but sometimes just with "Mit ".
     //also sometimes it ends with "und mehr" or "mehr"
     private static final String REGEX_DESCRIPTION_CAST
-            = "(?>Cast|Mit):? (.*?)(?>(?>und)? mehr ?)?<br>";
-    private static final String REGEX_DESCRIPTION_DURATION = "(?>Laufzeit|Länge):(.*?)<br>";
-    private static final String REGEX_DESCRIPTION_CONTENT_RATING = "FSK:(.*?)<br>";
-    private static final String REGEX_DESCRIPTION_LOCATION = "Produktionsland:? (.*?)<br>";
+            = "(?>^|<br>)(?>Cast|Mit):? (.*?)(?>(?>und)? mehr ?)?<br>";
+    private static final String REGEX_DESCRIPTION_DURATION = "(?>Laufzeit|Länge):(.*?)(>?<br>|$)";
+    private static final String REGEX_DESCRIPTION_CONTENT_RATING = "FSK:(.*?)(>?<br>|$)";
+    private static final String REGEX_DESCRIPTION_LOCATION = "Produktionsland:? (.*?)(>?<br>|$)";
 
     private static final String REGEX_MOVIE = ""
             + REGEX_PREFIX
@@ -68,16 +68,19 @@ public class MovieParser {
      */
     private static final ExtraMapping[] EXTRA_MAPPINGS = new ExtraMapping[]{
             new ExtraMapping(Movie.EXTRA_3D, "(3D)", "in 3D", "- 3D", "3D"),
-            new ExtraMapping(Movie.EXTRA_ATMOS, "in Dolby Atmos", "- Dolby Atmos", "Dolby Atmos"),
+            new ExtraMapping(Movie.EXTRA_ATMOS, ": in Dolby Atmos", "in Dolby Atmos",
+                    "- Dolby Atmos", "Dolby Atmos"),
             new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
             new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
-            new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere"),
+            new ExtraMapping(Movie.EXTRA_LADIES_NIGHT, "Ladies Night:", "Ladies Night -"),
+            new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere",
+                    "Vorpremiere:", "Vorp:", "Vorp.:", "- Vorp", ":Vorp", "Vorp."),
             new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",
                     ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
 
             //various stuff which might is added to title and should be removed
-            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D"),
+            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D", "- Das Kino Event!"),
     };
 
     /**

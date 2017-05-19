@@ -51,7 +51,10 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         Observable<Movie> movieObservable = mMovieRepository.getMovieById(movieId);
         mDisposables.add(movieObservable
                 .doOnNext(this::loadScreenings)
-                .subscribe(mView::showMovie));
+                .subscribe(movie -> {
+                    mView.showMovie(movie);
+                    mView.enableCoverScrim(movie.getCoverUrl() != null);
+                }));
 
         //load trailer/teaser
         mDisposables.add(movieObservable

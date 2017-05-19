@@ -71,8 +71,14 @@ public class TheMovieDatabaseDataLoader {
         SearchResult result = results.get(0);
         movie.setTmdbId(result.getId());
         movie.setReleaseDate(result.getReleaseDate());
-        movie.setHdPosterUrl("https://image.tmdb.org/t/p/w500" + result.getPosterPath());
-        movie.setCoverUrl("https://image.tmdb.org/t/p/w780" + result.getBackdropPath());
+        //don't save garbage
+        if (result.getPosterPath() != null) {
+            movie.setHdPosterUrl("https://image.tmdb.org/t/p/w500" + result.getPosterPath());
+        }
+        if (result.getBackdropPath() != null) {
+            movie.setCoverUrl("https://image.tmdb.org/t/p/w780" + result.getBackdropPath());
+        }
+        
         try (Realm r = Realm.getDefaultInstance()) {
             r.executeTransaction((realm) -> {
                 realm.copyToRealmOrUpdate(movie);

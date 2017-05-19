@@ -28,6 +28,7 @@ public class ExtraMapper {
         sExtraMap.put(Movie.EXTRA_TIP, R.string.movie_extra_tip);
         sExtraMap.put(Movie.EXTRA_OT, R.string.movie_extra_ot);
         sExtraMap.put(Movie.EXTRA_REEL, R.string.movie_extra_reel);
+        sExtraMap.put(Movie.EXTRA_LADIES_NIGHT, R.string.movie_extra_ladies_night);
         sExtraMap.put(Movie.EXTRA_PREVIEW, R.string.movie_extra_preview);
         sExtraMap.put(Movie.EXTRA_LAST_SCREENINGS, R.string.movie_extra_last_screening);
     }
