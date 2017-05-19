@@ -72,6 +72,7 @@ public class MovieParser {
             new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
             new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
+            new ExtraMapping(Movie.EXTRA_LADIES_NIGHT, "Ladies Night:", "Ladies Night -"),
             new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere",
                     "Vorp:", "Vorpremiere:"),
             new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",

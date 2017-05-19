@@ -51,6 +51,7 @@ public class Movie extends RealmObject {
     public static final String EXTRA_TIP = "TIP";
 
     public static final String EXTRA_REEL = "REEL"; //"Filmrolle"-Aktion
+    public static final String EXTRA_LADIES_NIGHT = "LADIES_NIGHT"; //Ladies-Night-Aktion
     public static final String EXTRA_LAST_SCREENINGS = "LAST_SCREENINGS";
     public static final String EXTRA_PREVIEW = "PREVIEW"; //Vorpremiere
     public static final String EXTRA_IGNORE = "IGNORE"; //extra to not be saved
