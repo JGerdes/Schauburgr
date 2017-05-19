@@ -79,7 +79,7 @@ public class MovieParser {
                     ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
 
             //various stuff which might is added to title and should be removed
-            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D"),
+            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D", "- Das Kino Event!"),
     };
 
     /**
