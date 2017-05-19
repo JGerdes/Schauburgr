@@ -12,8 +12,8 @@ android {
         applicationId "com.jonasgerdes.schauburgr"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.3.0 Beta"
+        versionCode 4
+        versionName "0.3.1 Beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
