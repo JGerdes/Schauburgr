@@ -42,6 +42,24 @@
             app:layout_constraintVertical_bias="0.0"/>
 
         <TextView
+            android:id="@+id/extra_ribbon"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:rotation="45"
+            android:textSize="10dp"
+            android:translationX="40dp"
+            android:translationY="16dp"
+            app:layout_constraintRight_toRightOf="@+id/poster"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/movie_extra_preview"/>
+
+        <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
