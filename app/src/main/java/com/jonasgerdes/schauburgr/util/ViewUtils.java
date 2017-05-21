@@ -2,8 +2,11 @@ package com.jonasgerdes.schauburgr.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Static collection of various useful {@link View} related operations
@@ -52,5 +55,21 @@ public class ViewUtils {
             return;
         }
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Sets given resource of AnimatedVectorDrawable to given ImageView and starts the animation.
+     * Uses AnimatedVectorDrawableCompat to work with Lollipop
+     * @param view ImageView to show animation in
+     * @param animatedDrawable AnimatedVectorDrawable to show
+     */
+    public static void loadAnimationAndStart(ImageView view, @DrawableRes int animatedDrawable) {
+        AnimatedVectorDrawableCompat animatedVector
+                = AnimatedVectorDrawableCompat.create(
+                view.getContext(),
+                animatedDrawable
+        );
+        view.setImageDrawable(animatedVector);
+        animatedVector.start();
     }
 }

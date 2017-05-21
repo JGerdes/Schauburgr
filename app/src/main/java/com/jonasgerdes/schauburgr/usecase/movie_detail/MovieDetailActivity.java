@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +45,7 @@ import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.util.ColorUtil;
 import com.jonasgerdes.schauburgr.util.GlideListener;
 import com.jonasgerdes.schauburgr.util.StringUtil;
+import com.jonasgerdes.schauburgr.util.ViewUtils;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
 
@@ -217,7 +217,9 @@ public class MovieDetailActivity extends AppCompatActivity
 
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
-        ((AnimatedVectorDrawable) mLoadingIndicator.getDrawable()).start();
+        ViewUtils.loadAnimationAndStart(mLoadingIndicator,
+                R.drawable.anim_loading_rotation_white_24dp);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
 
         Glide.with(this)
                 .load(mUrlProvider.getPosterImageUrl(movie))
