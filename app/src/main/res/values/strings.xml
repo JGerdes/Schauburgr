@@ -66,9 +66,9 @@
 
     <!-- generic formats and separators -->
     <string name="screenings_format_time">HH:mm</string>
-    <string name="separator_genre">, </string>
-    <string name="separator_directors">, </string>
-    <string name="separator_cast">, </string>
+    <string name="separator_genre">,\u0020</string>
+    <string name="separator_directors">,\u0020</string>
+    <string name="separator_cast">,\u0020</string>
     <string name="screening_format_date">EE, dd.MM</string>
 
 
