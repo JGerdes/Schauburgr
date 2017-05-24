@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 public class ScreeningHolder extends RecyclerView.ViewHolder {
 
     @Inject
-    Resources mRessources;
+    Resources mResources;
 
     @BindView(R.id.labelHall)
     TextView mHall;
@@ -41,16 +41,19 @@ public class ScreeningHolder extends RecyclerView.ViewHolder {
     TextView mStartTime;
 
 
-    private static final DateTimeFormatter FORMAT_DATE
-            = DateTimeFormat.forPattern("EE, dd.MM");
-
-    private static final DateTimeFormatter FORMAT_TIME
-            = DateTimeFormat.forPattern("HH:mm");
+    private final DateTimeFormatter FORMAT_DATE;
+    private final DateTimeFormatter FORMAT_TIME;
 
     public ScreeningHolder(View itemView) {
         super(itemView);
         App.getAppComponent().inject(this);
         ButterKnife.bind(this, itemView);
+        FORMAT_DATE = DateTimeFormat.forPattern(
+                mResources.getString(R.string.screening_format_date)
+        );
+        FORMAT_TIME = DateTimeFormat.forPattern(
+                mResources.getString(R.string.screenings_format_time)
+        );
     }
 
     public void onBind(Screening screening, boolean isFirstForDate) {
@@ -61,11 +64,11 @@ public class ScreeningHolder extends RecyclerView.ViewHolder {
         //show date only if first for the date it's shown on
         //also add some extra margin on first
         if (isFirstForDate) {
-            setTopMargin(mRessources.getDimensionPixelOffset(
+            setTopMargin(mResources.getDimensionPixelOffset(
                     R.dimen.movie_detail_item_screening_date_margin
             ));
             String dateString = DateFormatUtil.createRelativeDayTitle(
-                    mRessources,
+                    mResources,
                     screening.getStartDate().toLocalDate(),
                     FORMAT_DATE
             );

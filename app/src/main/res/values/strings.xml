@@ -43,6 +43,7 @@
     <string name="movie_extra_preview">Vorpremiere</string>
     <string name="movie_extra_last_screening">Letzte Gelegenheit</string>
 
+    <!-- movies list view -->
     <string name="movie_list_category_top">Top Filme</string>
     <string name="movie_list_category_new">Neuheiten</string>
     <string name="movie_list_category_kids">Für Kinder</string>
@@ -57,6 +58,14 @@
     <string name="movie_list_category_atmos_subtitle">Filme in Dolby Atmos</string>
     <string name="movie_list_category_long">Sitzfleisch mitbringen</string>
     <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
+
+    <string name="movie_duration_minutes">%1$d Min</string>
+    <string name="screenings_format_time">HH:mm</string>
+    <string name="seperator_genre">, </string>
+    <string name="seperator_directors">, </string>
+    <string name="seperator_cast">, </string>
+    <string name="movie_content_rating">ab %1$d</string>
+    <string name="screening_format_date">EE, dd.MM</string>
 
 
 </resources>
