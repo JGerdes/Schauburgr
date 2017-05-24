@@ -29,7 +29,7 @@
 
     <!-- generic ui state messages -->
     <string name="network_error_request_limit">Zu schnelle Abfragen, warte kurz!</string>
-    <string name="network_error_no_connection">Keine Internetverbindung 😟</string>
+    <string name="network_error_no_connection">Keine Internetverbindung </string>
     <string name="snackbar_action_refresh">Neu laden</string>
     <string name="chrome_tab_reservation_action_goto_movie">zum Film</string>
 
