@@ -198,24 +198,24 @@ public class MovieDetailActivity extends AppCompatActivity
     public void showMovie(Movie movie) {
         mTitleView.setText(movie.getTitle());
         mGenreView.setText(
-                StringUtil.concat(movie.getGenres(), getString(R.string.seperator_genre))
+                StringUtil.concat(movie.getGenres(), getString(R.string.separator_genre))
         );
-        mDurationView.setText(getString(R.string.movie_duration_minutes, movie.getDuration()));
+        mDurationView.setText(getString(R.string.movie_detail_duration_minutes, movie.getDuration()));
         @ColorInt int color = getContentRatingColor(this, movie.getContentRating());
         mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
-        mContentRating.setText(getString(R.string.movie_content_rating, movie.getContentRating()));
+        mContentRating.setText(getString(R.string.movie_detail_content_rating, movie.getContentRating()));
         if (movie.getDirectors().isEmpty()) {
             mDirector.setVisibility(View.GONE);
         } else {
             mDirector.setText(StringUtil.concat(movie.getDirectors(),
-                    getString(R.string.seperator_directors))
+                    getString(R.string.separator_directors))
             );
         }
 
         if (movie.getCast().isEmpty()) {
             mCast.setVisibility(View.GONE);
         } else {
-            mCast.setText(StringUtil.concat(movie.getCast(), getString(R.string.seperator_cast)));
+            mCast.setText(StringUtil.concat(movie.getCast(), getString(R.string.separator_cast)));
         }
 
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));

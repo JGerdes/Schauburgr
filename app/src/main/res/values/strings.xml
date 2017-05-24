@@ -59,12 +59,16 @@
     <string name="movie_list_category_long">Sitzfleisch mitbringen</string>
     <string name="movie_list_category_long_subtitle">Filme mit Überlänge</string>
 
-    <string name="movie_duration_minutes">%1$d Min</string>
+    <!-- movie details -->
+    <string name="movie_detail_next_screenings">Nächste Vorstellungen</string>
+    <string name="movie_detail_duration_minutes">%1$d Min</string>
+    <string name="movie_detail_content_rating">ab %1$d</string>
+
+    <!-- generic formats and separators -->
     <string name="screenings_format_time">HH:mm</string>
-    <string name="seperator_genre">, </string>
-    <string name="seperator_directors">, </string>
-    <string name="seperator_cast">, </string>
-    <string name="movie_content_rating">ab %1$d</string>
+    <string name="separator_genre">, </string>
+    <string name="separator_directors">, </string>
+    <string name="separator_cast">, </string>
     <string name="screening_format_date">EE, dd.MM</string>
 
 
