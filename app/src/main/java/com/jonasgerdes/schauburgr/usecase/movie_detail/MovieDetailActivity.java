@@ -27,7 +27,6 @@ import android.transition.Slide;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -241,11 +240,6 @@ public class MovieDetailActivity extends AppCompatActivity
         if (movie.getCoverUrl() != null) {
             Glide.with(this)
                     .load(movie.getCoverUrl())
-                    .asBitmap()
-                    .listener(new GlideListener(bitmap -> {
-                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    }))
                     .into(mCoverView);
         }
     }
