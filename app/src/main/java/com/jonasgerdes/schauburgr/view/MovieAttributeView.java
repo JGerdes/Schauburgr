@@ -3,8 +3,8 @@ package com.jonasgerdes.schauburgr.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,7 +69,7 @@ public class MovieAttributeView extends LinearLayout {
                 return;
             }
             TextView attributeView = new TextView(getContext(), null, 0, R.style.movie_attribute);
-            LinearLayoutCompat.LayoutParams layout = new LinearLayoutCompat.LayoutParams(
+            LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
@@ -77,6 +77,7 @@ public class MovieAttributeView extends LinearLayout {
             layout.setMargins(horizontalMarginDp, 0, horizontalMarginDp, 0);
             attributeView.setLayoutParams(layout);
             attributeView.setText(attribute);
+            Log.d("MovieAttrView", "setAttributes: " + horizontalMarginDp);
             addView(attributeView);
         }
     }
