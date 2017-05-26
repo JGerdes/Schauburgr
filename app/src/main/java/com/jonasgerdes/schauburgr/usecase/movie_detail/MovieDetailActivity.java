@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +44,7 @@ import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 import com.jonasgerdes.schauburgr.util.ColorUtil;
 import com.jonasgerdes.schauburgr.util.GlideListener;
 import com.jonasgerdes.schauburgr.util.StringUtil;
+import com.jonasgerdes.schauburgr.util.ViewUtils;
 import com.jonasgerdes.schauburgr.view.SwipeBackLayout;
 import com.jonasgerdes.schauburgr.view.behavior.NestedScrollViewBehavior;
 
@@ -162,7 +162,7 @@ public class MovieDetailActivity extends AppCompatActivity
         postponeEnterTransition();
 
         //if loading takes longer then 500ms, screw shared element transition and start anyway
-        new Handler().postDelayed(() -> startPostponedEnterTransition(), MAX_DELAY_FOR_TRANSITION);
+        new Handler().postDelayed(this::startPostponedEnterTransition, MAX_DELAY_FOR_TRANSITION);
     }
 
     private void fixNestedScrollFlingBehavior() {
@@ -197,26 +197,32 @@ public class MovieDetailActivity extends AppCompatActivity
     @Override
     public void showMovie(Movie movie) {
         mTitleView.setText(movie.getTitle());
-        mGenreView.setText(StringUtil.concat(movie.getGenres(), ", "));
-        mDurationView.setText(movie.getDuration() + " Min");
+        mGenreView.setText(
+                StringUtil.concat(movie.getGenres(), getString(R.string.separator_genre))
+        );
+        mDurationView.setText(getString(R.string.movie_detail_duration_minutes, movie.getDuration()));
         @ColorInt int color = getContentRatingColor(this, movie.getContentRating());
         mContentRating.setBackgroundTintList(ColorStateList.valueOf(color));
-        mContentRating.setText("ab " + movie.getContentRating());
+        mContentRating.setText(getString(R.string.movie_detail_content_rating, movie.getContentRating()));
         if (movie.getDirectors().isEmpty()) {
             mDirector.setVisibility(View.GONE);
         } else {
-            mDirector.setText(StringUtil.concat(movie.getDirectors(), ", "));
+            mDirector.setText(StringUtil.concat(movie.getDirectors(),
+                    getString(R.string.separator_directors))
+            );
         }
 
         if (movie.getCast().isEmpty()) {
             mCast.setVisibility(View.GONE);
         } else {
-            mCast.setText(StringUtil.concat(movie.getCast(), ", "));
+            mCast.setText(StringUtil.concat(movie.getCast(), getString(R.string.separator_cast)));
         }
 
         mDescriptionView.setText(Html.fromHtml(movie.getDescription()));
 
-        ((AnimatedVectorDrawable) mLoadingIndicator.getDrawable()).start();
+        ViewUtils.loadAnimationAndStart(mLoadingIndicator,
+                R.drawable.anim_loading_rotation_white_24dp);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
 
         Glide.with(this)
                 .load(mUrlProvider.getPosterImageUrl(movie))

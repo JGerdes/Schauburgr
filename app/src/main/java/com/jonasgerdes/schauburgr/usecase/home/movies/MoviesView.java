@@ -106,7 +106,9 @@ public class MoviesView extends Fragment implements MoviesContract.View,
 
     @Override
     public void showMovieCategories(List<Observable<MovieCategory>> categories) {
-        categories.forEach(this::addMovieCategory);
+        for (Observable<MovieCategory> category : categories) {
+            addMovieCategory(category);
+        }
     }
 
     @Override

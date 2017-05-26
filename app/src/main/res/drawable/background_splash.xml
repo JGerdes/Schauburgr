@@ -1,12 +1,13 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
     <item
         android:drawable="@color/colorBackgroundDark"/>
-    <item
-        android:gravity="center">
-        <bitmap android:src="@drawable/ic_launcher_128dp"/>
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/logo_192dp"/>
     </item>
-    <item
-        android:bottom="-192dp"
-        android:drawable="@drawable/ic_logo_text"
-        android:gravity="center"/>
+
 </layer-list>

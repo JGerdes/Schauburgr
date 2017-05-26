@@ -106,8 +106,10 @@
                     android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:ellipsize="end"
                     android:maxLines="3"
@@ -122,8 +124,10 @@
                     android:id="@+id/genre"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:lines="1"
@@ -140,7 +144,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -152,8 +156,10 @@
                     android:id="@+id/contentRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/background_rounded_rect_light"
                     android:backgroundTint="@color/colorContentRating16"
@@ -181,7 +187,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/poster"
+                    app:layout_constraintTop_toBottomOf="@+id/poster"
                     tools:text="Christopher Nolan"/>
 
                 <TextView
@@ -198,7 +204,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/director"
+                    app:layout_constraintTop_toBottomOf="@+id/director"
                     tools:text="Matthew McConaughey, Jessica Chastain, Anne Hathaway"/>
 
                 <android.support.v7.widget.CardView
@@ -223,37 +229,48 @@
                         android:padding="16dp"/>
                 </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:id="@+id/next_screenings_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
-                    android:text="Nächste Vorstellungen"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionCard"/>
-
 
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/next_screenings_title">
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionCard">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/screeningList"
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:nestedScrollingEnabled="false"/>
+                        android:layout_margin="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:layout_editor_absoluteY="402dp">
+
+                            <TextView
+                                android:id="@+id/next_screenings_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="16dp"
+                                android:text="@string/movie_detail_next_screenings"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/screeningList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="16dp"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginTop="8dp"
+                                android:nestedScrollingEnabled="false"
+                                tools:listitem="@layout/movie_detail_item_screening"/>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
                 </FrameLayout>
 
             </android.support.constraint.ConstraintLayout>
