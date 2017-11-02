@@ -1,5 +1,7 @@
 package com.jonasgerdes.schauburgr.model;
 
+import android.util.Log;
+
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgDataLoader;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Guide;
@@ -97,6 +99,7 @@ public class MovieRepository implements Disposable {
      * @param throwable Thrown error
      */
     private void propagateErrorState(Throwable throwable) {
+        Log.d("MovieRepository", "Error during network request", throwable);
         NetworkState state = new NetworkState(NetworkState.STATE_ERROR);
         if (throwable instanceof HttpException) {
             HttpException httpError = ((HttpException) throwable);

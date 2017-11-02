@@ -31,7 +31,7 @@ public class MovieParser {
     private static final String REGEX_ID = "'(\\w\\w\\d\\d?)'";
     private static final String REGEX_TITLE = "'(.*?)'";
     private static final String REGEX_RELEASE_DATE = "'(\\d{10})'";
-    private static final String REGEX_DURATION = "'(\\d{2,3})'";
+    private static final String REGEX_DURATION = "'(\\d{0,3})'"; //0 if there is nothing provided
     private static final String REGEX_CONTENT_RATING = "'(\\d\\d?)'";
     private static final String REGEX_DESCRIPTION = "'((?>\\s|\\S)*?)'";
     private static final String REGEX_IS_3D = "'(1?)'";
@@ -155,6 +155,7 @@ public class MovieParser {
             parseAndAddGenresFromTitle(movie);
         } else {
             movie = null;
+            // TODO: 02-Nov-17 somehow (remotly) log this to debug movies which couldn't be parsed
         }
 
         return movie;
