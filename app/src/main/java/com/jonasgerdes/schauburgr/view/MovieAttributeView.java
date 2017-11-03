@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -81,7 +80,6 @@ public class MovieAttributeView extends LinearLayout {
             layout.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             attributeView.setLayoutParams(layout);
             attributeView.setText(attribute);
-            Log.d("MovieAttrView", "setAttributes: " + horizontalMarginDp);
 
             if (Movie.EXTRA_LAST_SCREENINGS.equals(attributeName)) {
                 attributeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
