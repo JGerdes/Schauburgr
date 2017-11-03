@@ -137,7 +137,7 @@ public class MovieRepository implements Disposable {
     }
 
     /**
-     * Gets all movies which were relapsed during last 14 days or a shows as preview
+     * Gets all movies which were released during last 14 days or shows as preview
      * Ordered by release date
      *
      * @return Observable RealmResults of recent released movies
@@ -159,6 +159,8 @@ public class MovieRepository implements Disposable {
     public Observable<RealmResults<Movie>> getActionMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Action")
+                .or()
+                .contains("description", "Action")
                 .greaterThanOrEqualTo("contentRating", 12)
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
@@ -193,6 +195,10 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Thriller")
                 .or()
                 .contains("genres", "Horror")
+                .or()
+                .contains("description", "Thriller")
+                .or()
+                .contains("description", "Horror")
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
     }
@@ -211,6 +217,8 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Familie")
                 .or()
                 .contains("genres", "Family")
+                .or()
+                .contains("description", "Familie")
                 .lessThanOrEqualTo("contentRating", 6)
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
