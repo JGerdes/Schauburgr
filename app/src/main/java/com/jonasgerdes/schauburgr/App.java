@@ -12,7 +12,6 @@ import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
-import de.jonasrottmann.realmbrowser.RealmBrowser;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.rx.RealmObservableFactory;
@@ -39,8 +38,6 @@ public class App extends Application {
 
         initRealmDb();
         initChromeCustomTabs();
-
-        RealmBrowser.addFilesShortcut(getApplicationContext());
     }
 
     private void initRealmDb() {
