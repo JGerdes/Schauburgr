@@ -31,7 +31,7 @@ public class MovieParser {
     private static final String REGEX_ID = "'(\\w\\w\\d\\d?)'";
     private static final String REGEX_TITLE = "'(.*?)'";
     private static final String REGEX_RELEASE_DATE = "'(\\d{10})'";
-    private static final String REGEX_DURATION = "'(\\d{2,3})'";
+    private static final String REGEX_DURATION = "'(\\d{0,3})'"; //0 if there is nothing provided
     private static final String REGEX_CONTENT_RATING = "'(\\d\\d?)'";
     private static final String REGEX_DESCRIPTION = "'((?>\\s|\\S)*?)'";
     private static final String REGEX_IS_3D = "'(1?)'";
@@ -70,17 +70,31 @@ public class MovieParser {
             new ExtraMapping(Movie.EXTRA_3D, "(3D)", "in 3D", "- 3D", "3D"),
             new ExtraMapping(Movie.EXTRA_ATMOS, ": in Dolby Atmos", "in Dolby Atmos",
                     "- Dolby Atmos", "Dolby Atmos"),
-            new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT"),
+            new ExtraMapping(Movie.EXTRA_OT, "Original Ton", "O-Ton", "OTon", " OT",
+                    "(OV englisch)", "OV englisch", " OV"),
             new ExtraMapping(Movie.EXTRA_TIP, "- Filmtipp", "Filmtipp", "Tipp"),
             new ExtraMapping(Movie.EXTRA_REEL, "Filmrolle:", "- der besondere Film"),
             new ExtraMapping(Movie.EXTRA_LADIES_NIGHT, "Ladies Night:", "Ladies Night -"),
             new ExtraMapping(Movie.EXTRA_PREVIEW, ": Vorpremiere", "- Vorpremiere",
                     "Vorpremiere:", "Vorp:", "Vorp.:", "- Vorp", ":Vorp", "Vorp."),
-            new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS, ": Letzte Chance", "- Letzte Chance",
-                    ": Letzte Gelegenheit", "- Letzte Gelegenheit"),
+            new ExtraMapping(Movie.EXTRA_LAST_SCREENINGS,
+                    ": Letzte Chance!",
+                    ": Letzte Chance",
+                    "- Letzte Chance!",
+                    "- Letzte Chance",
+                    ": Letzte Gelegenheit!",
+                    ": Letzte Gelegenheit",
+                    "- Letzte Gelegenheit!",
+                    "- Letzte Gelegenheit"),
 
             //various stuff which might is added to title and should be removed
-            new ExtraMapping(Movie.EXTRA_IGNORE, "- Jetzt in 2D", "- Das Kino Event!"),
+            new ExtraMapping(Movie.EXTRA_IGNORE,
+                    "- Jetzt in 2D",
+                    "- in 2D",
+                    " in 2D",
+                    "- Das Kino Event!",
+                    "CDU Vechta presents:"
+            ),
     };
 
     /**
@@ -155,6 +169,7 @@ public class MovieParser {
             parseAndAddGenresFromTitle(movie);
         } else {
             movie = null;
+            // TODO: 02-Nov-17 somehow (remotly) log this to debug movies which couldn't be parsed
         }
 
         return movie;
@@ -188,7 +203,7 @@ public class MovieParser {
      * regex pattern. Automatically splits multiple values (concatenated by either , or /).
      * Removes everything matching the regex pattern from description.
      *
-     * @param movie Movie to parse genres from and save them into
+     * @param movie   Movie to parse genres from and save them into
      * @param pattern Compiled regex pattern to find data with
      * @return List of found data items
      */

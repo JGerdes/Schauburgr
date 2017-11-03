@@ -70,6 +70,12 @@ public class MovieCategoryView extends FrameLayout {
     }
 
     public void bindCategory(MovieCategory category) {
+        // TODO: 03-Nov-17 filter in presenter
+        if(category.getMovies().size() == 0) {
+            setVisibility(GONE);
+        } else {
+            setVisibility(VISIBLE);
+        }
         mTitle.setText(category.getTitle());
         mMovieListAdapter.setMovies(category.getMovies());
         if (category.getSubTitle() != -1) {
