@@ -79,6 +79,7 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
      * Converts the given {@link ResponseBody} containing movie and screening data to an instance
      * of {@link Guide} containing all relevant data by going through each line and try parsing them
      * as either {@link Movie} or {@link Screening}.
+     *
      * @param value reponse body (should be plain text/JavaScript) provided by Schauburgs website
      * @return Guide data parsed from given response text
      * @throws IOException Thrown when response body can't be read as text
@@ -115,9 +116,10 @@ public class SchauburgGuideConverter implements Converter<ResponseBody, Guide> {
     /**
      * Parses a string containing a date in the format defined in {@link #DATE_NONE_PLACEHOLDER}
      * (which is used in JavaScript source code on Schauburgs website)
+     *
      * @param toParse date string to parse
      * @return new instance of {@link DateTime}
-     *          or null if invalid format or place holder for no date
+     * or null if invalid format or place holder for no date
      */
     public static DateTime parseDate(String toParse) {
         if (toParse.equals(DATE_NONE_PLACEHOLDER)) {

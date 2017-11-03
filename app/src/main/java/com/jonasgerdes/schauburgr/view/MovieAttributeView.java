@@ -4,13 +4,15 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.ExtraMapper;
+import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.util.ViewUtils;
 
 import java.util.List;
@@ -75,9 +77,13 @@ public class MovieAttributeView extends LinearLayout {
             );
             int horizontalMarginDp = ViewUtils.dpToPx(getContext(), 4);
             layout.setMargins(horizontalMarginDp, 0, horizontalMarginDp, 0);
+            layout.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             attributeView.setLayoutParams(layout);
             attributeView.setText(attribute);
-            Log.d("MovieAttrView", "setAttributes: " + horizontalMarginDp);
+
+            if (Movie.EXTRA_LAST_SCREENINGS.equals(attributeName)) {
+                attributeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
+            }
             addView(attributeView);
         }
     }
