@@ -82,12 +82,6 @@ dependencies {
     implementation 'joda-time:joda-time:2.9.9'
 
     //debug and testing
-    debugImplementation ('com.github.jonasrottmann.realm-browser:realm-browser:0.0.11') {
-        exclude group: 'com.android.support';
-    }
-    testImplementation 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:0.0.14'
-    androidTestImplementation 'com.github.jonasrottmann.realm-browser:realm-browser-no-op:0.0.14'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
