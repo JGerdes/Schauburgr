@@ -37,11 +37,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DataModule {
-    String mSchauburgBaseUrl;
+    SchauburgUrlProvider mSchauburgUrlProvider;
     String mTheMovieDatabaseBaseUrl;
 
-    public DataModule(String schauburgBaseUrl, String theMovieDatabaseBaseUrl) {
-        mSchauburgBaseUrl = schauburgBaseUrl;
+    public DataModule(SchauburgUrlProvider schauburgUrlProvider, String theMovieDatabaseBaseUrl) {
+        mSchauburgUrlProvider = schauburgUrlProvider;
         mTheMovieDatabaseBaseUrl = theMovieDatabaseBaseUrl;
     }
 
@@ -58,14 +58,16 @@ public class DataModule {
     @Provides
     @Singleton
     SchauburgApi provideSchauburgApi(Gson gson) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(mSchauburgUrlProvider)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(new SchauburgGuideConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(mSchauburgBaseUrl)
                 .client(okHttpClient)
+                .baseUrl(mSchauburgUrlProvider.getBaseUrl())
                 .build();
         return retrofit.create(SchauburgApi.class);
     }
@@ -90,7 +92,7 @@ public class DataModule {
     @Provides
     @Singleton
     UrlProvider provideImageUrlCreator() {
-        return new SchauburgUrlProvider(mSchauburgBaseUrl);
+        return mSchauburgUrlProvider;
     }
 
 

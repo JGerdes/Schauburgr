@@ -10,6 +10,7 @@ import com.jonasgerdes.schauburgr.dagger.component.AppComponent;
 import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
 import io.realm.Realm;
@@ -23,18 +24,21 @@ import io.realm.rx.RealmObservableFactory;
 public class App extends Application {
 
     private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/";
-    private static final String SCHAUBURG_BASE_URL = "http://schauburg-cineworld.de/";
     private static AppComponent sAppComponent;
 
     private ChromeCustomTabWrapper mChromeTab = new ChromeCustomTabWrapper();
+    private SchauburgUrlProvider mSchauburgUrlProvider;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        mSchauburgUrlProvider = new SchauburgUrlProvider(
+                SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD
+        );
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this, mChromeTab))
-                .dataModule(new DataModule(SCHAUBURG_BASE_URL, THE_MOVIE_DATABASE_URL))
+                .dataModule(new DataModule(mSchauburgUrlProvider, THE_MOVIE_DATABASE_URL))
                 .build();
 
         initRealmDb();
@@ -72,6 +76,10 @@ public class App extends Application {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void changeCinema(@SchauburgUrlProvider.CinemaHost String cinema) {
+        mSchauburgUrlProvider.setHost(cinema);
     }
 
     public static AppComponent getAppComponent() {
