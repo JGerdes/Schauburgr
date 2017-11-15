@@ -10,6 +10,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,6 +20,7 @@ import android.view.animation.AnimationUtils;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.ScreeningDay;
 import com.jonasgerdes.schauburgr.usecase.home.guide.day_list.GuideDaysAdapter;
@@ -86,6 +90,7 @@ public class GuideView extends Fragment implements GuideContract.View,
         getActivity().setTitle(R.string.title_guide);
         ButterKnife.bind(this, view);
         App.getAppComponent().inject(this);
+        setHasOptionsMenu(true);
 
         mDayListAdapter = new GuideDaysAdapter();
         mDayListAdapter.setListener(this);
@@ -103,6 +108,26 @@ public class GuideView extends Fragment implements GuideContract.View,
         new GuidePresenter().attachView(this);
 
         mChromeTab.warmup();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cinema_selection, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.cinema_schauburg:
+                ((App)getActivity().getApplication()).changeCinema(SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD);
+                mPresenter.onCinemaChanged();
+                return true;
+            case R.id.cinema_central:
+                ((App)getActivity().getApplication()).changeCinema(SchauburgUrlProvider.CinemaHost.CENTRAL_CINEWORLD);
+                mPresenter.onCinemaChanged();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -21,5 +21,6 @@ public interface GuideContract {
         void loadGuide(boolean forceRefresh);
         void onRefreshTriggered();
         void onScreeningSelected(Screening screening);
+        void onCinemaChanged();
     }
 }
