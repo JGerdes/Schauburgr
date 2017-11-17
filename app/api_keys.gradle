@@ -1,5 +1,5 @@
 android {
     defaultConfig {
-        buildConfigField 'String', 'API_KEY_TMDB', '"YOUR_APIKEY_HERE"'
+        buildConfigField 'String', 'API_KEY_TMDB', '"0c2e9fc3f1a7e53e2715901ceeb67b20"'
     }
 }

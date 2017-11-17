@@ -2,6 +2,8 @@ package com.jonasgerdes.schauburgr.usecase.home.about;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.MovieRepository;
+import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 
 import javax.inject.Inject;
@@ -14,6 +16,12 @@ public class AboutPresenter implements AboutContract.Presenter {
 
     @Inject
     App mApp;
+
+    @Inject
+    SchauburgUrlProvider mSchauburgUrlProvider;
+
+    @Inject
+    MovieRepository mMovieRepository;
 
     private AboutContract.View mView;
 
@@ -76,5 +84,11 @@ public class AboutPresenter implements AboutContract.Presenter {
                         R.string.license_rxjava_title,
                         R.string.license_rxjava_body)
                 );
+    }
+
+    @Override
+    public void setCinemaHost(String host) {
+        mSchauburgUrlProvider.setHost(host);
+        mMovieRepository.loadMovieData();
     }
 }
