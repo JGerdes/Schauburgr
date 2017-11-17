@@ -89,6 +89,7 @@ public class AboutPresenter implements AboutContract.Presenter {
     @Override
     public void setCinemaHost(String host) {
         mSchauburgUrlProvider.setHost(host);
+        mView.navigateToGuide();
         mMovieRepository.loadMovieData();
     }
 }

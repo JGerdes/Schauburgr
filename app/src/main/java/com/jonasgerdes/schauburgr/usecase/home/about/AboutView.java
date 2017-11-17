@@ -86,6 +86,13 @@ public class AboutView extends Fragment implements AboutContract.View {
         mVersionName.setText("v" + versionName);
     }
 
+    @Override
+    public void navigateToGuide() {
+        if(getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).navigateTo(R.id.navigation_guide);
+        }
+    }
+
     @OnClick(R.id.cinema_selection)
     void onCinemaSelectionClicked() {
         if (getActivity() instanceof HomeActivity) {

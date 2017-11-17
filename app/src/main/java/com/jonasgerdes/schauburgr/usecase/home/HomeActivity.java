@@ -15,12 +15,16 @@ import com.jonasgerdes.schauburgr.usecase.home.movies.MoviesView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
     @Inject
     MovieRepository mMovieRepository;
+
+    @BindView(R.id.navigation)
+    BottomNavigationView mNavigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> showView(item.getItemId());
@@ -32,13 +36,16 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         App.getAppComponent().inject(this);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //don't show navigation when instance is restored
         if (savedInstanceState == null) {
             showView(R.id.navigation_guide);
         }
+    }
+
+    public void navigateTo(@IdRes int id) {
+        mNavigation.setSelectedItemId(id);
     }
 
     private boolean showView(@IdRes int id) {
