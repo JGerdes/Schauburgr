@@ -27,18 +27,15 @@ public class App extends Application {
     private static AppComponent sAppComponent;
 
     private ChromeCustomTabWrapper mChromeTab = new ChromeCustomTabWrapper();
-    private SchauburgUrlProvider mSchauburgUrlProvider;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mSchauburgUrlProvider = new SchauburgUrlProvider(
-                SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD
-        );
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this, mChromeTab))
-                .dataModule(new DataModule(mSchauburgUrlProvider, THE_MOVIE_DATABASE_URL))
+                .dataModule(new DataModule(SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD,
+                        THE_MOVIE_DATABASE_URL))
                 .build();
 
         initRealmDb();
@@ -76,10 +73,6 @@ public class App extends Application {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void changeCinema(@SchauburgUrlProvider.CinemaHost String cinema) {
-        mSchauburgUrlProvider.setHost(cinema);
     }
 
     public static AppComponent getAppComponent() {
