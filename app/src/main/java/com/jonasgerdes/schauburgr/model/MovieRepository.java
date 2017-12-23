@@ -57,7 +57,7 @@ public class MovieRepository implements Disposable {
      * @return Observable NetworkState
      */
     public Observable<NetworkState> getNetworkState() {
-        return mState.hide();
+        return mState.share();
     }
 
     /**
