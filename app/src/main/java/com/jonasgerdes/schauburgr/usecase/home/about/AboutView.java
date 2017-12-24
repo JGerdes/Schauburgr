@@ -98,6 +98,7 @@ public class AboutView extends Fragment implements AboutContract.View {
         if (getActivity() instanceof HomeActivity) {
             CinemaSelectionView view = new CinemaSelectionView(getContext());
             AlertDialog selectionDialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.about_cinema_selection_dialog_title)
                     .setView(view)
                     .setOnDismissListener(dialogInterface -> view.dismiss())
                     .show();
