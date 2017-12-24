@@ -26,6 +26,10 @@
     <string name="about_open_source_title">OpenSource-Lizenzen</string>
     <string name="about_data_source_screenings">Vorstellungszeiten, Basisinformationen</string>
     <string name="about_data_source_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="about_cinema_selection_button">Kino wechseln</string>
+    <string name="about_cinema_selection_dialog_title">Kino auswählen</string>
+    <string name="about_cinema_selection_dialog_schauburg">Schauburg Cineworld</string>
+    <string name="about_cinema_selection_dialog_central">Central Cineworld</string>
 
     <!-- generic ui state messages -->
     <string name="network_error_request_limit">Zu schnelle Abfragen, warte kurz!</string>
