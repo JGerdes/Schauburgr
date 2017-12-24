@@ -8,6 +8,7 @@ import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.MovieCategory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -101,6 +102,22 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .map(movies -> new MovieCategory()
                         .setTitle(R.string.movie_list_category_atmos)
                         .setSubTitle(R.string.movie_list_category_atmos_subtitle)
+                        .setMovies(movies))
+        );
+
+        // TODO: 05-Nov-17 somehow improve this
+        categories.add(mMovieRepository.getRemainingMovies(Arrays.asList(
+                mMovieRepository.getNewMovies(),
+                mMovieRepository.getActionMovies(),
+                mMovieRepository.getComedyMovies(),
+                mMovieRepository.getThrillerMovies(),
+                mMovieRepository.getKidsMovies(),
+                mMovieRepository.getMoviesWithExtra(Movie.EXTRA_3D),
+                mMovieRepository.getSpecialMovies(),
+                mMovieRepository.getExcessLengthMovies(),
+                mMovieRepository.getMoviesWithExtra(Movie.EXTRA_ATMOS)
+                )).map(movies -> new MovieCategory()
+                        .setTitle(R.string.movie_list_category_remaining)
                         .setMovies(movies))
         );
 

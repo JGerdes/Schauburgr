@@ -10,6 +10,7 @@ import com.jonasgerdes.schauburgr.dagger.component.AppComponent;
 import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
 import io.realm.Realm;
@@ -23,7 +24,6 @@ import io.realm.rx.RealmObservableFactory;
 public class App extends Application {
 
     private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/";
-    private static final String SCHAUBURG_BASE_URL = "http://schauburg-cineworld.de/";
     private static AppComponent sAppComponent;
 
     private ChromeCustomTabWrapper mChromeTab = new ChromeCustomTabWrapper();
@@ -34,7 +34,8 @@ public class App extends Application {
 
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this, mChromeTab))
-                .dataModule(new DataModule(SCHAUBURG_BASE_URL, THE_MOVIE_DATABASE_URL))
+                .dataModule(new DataModule(CinemaHost.SCHAUBURG_CINEWORLD,
+                        THE_MOVIE_DATABASE_URL))
                 .build();
 
         initRealmDb();
