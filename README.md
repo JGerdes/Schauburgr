@@ -1,6 +1,8 @@
 # Schauburgr
 Inofficial App for Schauburg-Cineworld
 
+Get it via Google Play or [download apk file](https://github.com/JGerdes/Schauburgr/releases/download/v1.1.0/Schauburgr-v1.1.0.apk)
+
     MIT License
 
     Copyright (c) 2017 Jonas Gerdes
