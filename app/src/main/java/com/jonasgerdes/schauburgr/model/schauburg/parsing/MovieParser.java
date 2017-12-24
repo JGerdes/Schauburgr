@@ -38,14 +38,20 @@ public class MovieParser {
     private static final String REGEX_STUB = "'.*?'";
 
     //description content patterns
-    private static final String REGEX_DESCRIPTION_GENRE = "Genre:? (.*?)<br>";
+    //find all "Genre: ... <br>", "Genres ... <br>", "(*) ... *"
+    //[\s\w,\-\/öüäÖÜÄß] is used instead of . to prevent "(*) Darsteller:" to be detected as genre
+    private static final String REGEX_DESCRIPTION_GENRE =
+            "(?>Genres?:?|\\(\\*\\)) (.[\\s\\w,\\-\\/öüäÖÜÄß]*?)(<br>|\\*)";
     //safety threshold of max. 30 (and min 5) chars as name for director to prevent
     //capturing sentences starting with "Von" as director
-    private static final String REGEX_DESCRIPTION_DIRECTOR = "(?>Regie|Von):? (.{5,30}?)<br>";
+    private static final String REGEX_DESCRIPTION_DIRECTOR = "(?>Regie|Von):? (.{5,30}?)(<br>|;)";
     //cast is often start with "Cast:", but sometimes just with "Mit ".
     //also sometimes it ends with "und mehr" or "mehr"
+    //alternative pattern sometimes start with "(*) Darsteller:" and ends with ";" (but names
+    //sometimes contain "&apos;", some make sure not word char is follorws by ;
     private static final String REGEX_DESCRIPTION_CAST
-            = "(?>^|<br>)(?>Cast|Mit):? (.*?)(?>(?>und)? mehr ?)?<br>";
+            //= "(?>^|<br>|\\(\\*\\) ?)(?>Cast|Mit|Darsteller):? (.*?)(?>(?>und)? mehr ?)?(?><br>|;\\W)";
+            = "(?>^|<br>|\\(\\*\\) ?)(?>Cast|Mit|Darsteller):? (.*?)(?>(?>und)? mehr ?)?;?<br>";
     private static final String REGEX_DESCRIPTION_DURATION = "(?>Laufzeit|Länge):(.*?)(>?<br>|$)";
     private static final String REGEX_DESCRIPTION_CONTENT_RATING = "FSK:(.*?)(>?<br>|$)";
     private static final String REGEX_DESCRIPTION_LOCATION = "Produktionsland:? (.*?)(>?<br>|$)";
@@ -162,6 +168,7 @@ public class MovieParser {
 
             //clean up whitespace
             description = movie.getDescription();
+            description = cleanDescription(description);
             description = description.trim();
             description = removeLineBreaks(description);
             movie.setDescription(description);
@@ -173,6 +180,17 @@ public class MovieParser {
         }
 
         return movie;
+    }
+
+    /**
+     * Cleans description from junk (like "* *")
+     * @param description description to clean
+     * @return cleaned description
+     */
+    private String cleanDescription(String description) {
+        //replace "* *" sometimes appear in description
+        description = description.replaceAll("\\* \\*", "<br>");
+        return description;
     }
 
     /**

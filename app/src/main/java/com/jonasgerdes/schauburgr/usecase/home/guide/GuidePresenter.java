@@ -85,6 +85,12 @@ public class GuidePresenter implements GuideContract.Presenter {
         }
     }
 
+    @Override
+    public void onCinemaChanged() {
+        mDoAnimateNewData = true;
+        loadGuide(true);
+    }
+
     public void loadGuide(boolean forceRefresh) {
         mDisposables.add(mMovieRepository.getScreeningDays()
                 .subscribe(screeningDays -> {

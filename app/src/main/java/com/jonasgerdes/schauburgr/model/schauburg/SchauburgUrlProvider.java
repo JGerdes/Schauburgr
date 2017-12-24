@@ -1,10 +1,19 @@
 package com.jonasgerdes.schauburgr.model.schauburg;
 
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.jonasgerdes.schauburgr.model.CinemaHost;
+import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
-import com.jonasgerdes.schauburgr.model.UrlProvider;
+
+import java.io.IOException;
+
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * UrlProvider which provides urls to webpages and resources like images on the
@@ -14,20 +23,29 @@ import com.jonasgerdes.schauburgr.model.UrlProvider;
  * @see UrlProvider
  * @since 07.03.2017
  */
-public class SchauburgUrlProvider implements UrlProvider {
+public class SchauburgUrlProvider implements UrlProvider, Interceptor {
+
+    private static final String PROTOCOL = "http://";
+
+    private @NonNull
+    CinemaHost mHost;
 
     /**
-     * Base url containing a trailing forward slash (e.g. "http://schauburg-cineworld.com/")
-     */
-    private String mBaseUrl;
-
-    /**
-     * Create a new instance of an UrlProvider for the schauburg webiste
+     * Create a new instance of an UrlProvider for the schauburg website
      *
-     * @param baseUrl Base url containing a trailing forward slash
+     * @param host Base url containing a trailing forward slash
      */
-    public SchauburgUrlProvider(String baseUrl) {
-        mBaseUrl = baseUrl;
+    public SchauburgUrlProvider(CinemaHost host) {
+        mHost = host;
+    }
+
+
+    public void setHost(CinemaHost host) {
+        mHost = host;
+    }
+
+    public String getBaseUrl() {
+        return PROTOCOL + mHost + "/";
     }
 
     /**
@@ -48,7 +66,7 @@ public class SchauburgUrlProvider implements UrlProvider {
         //different movie while still allowing image to be cached as long as used for same movie
         byte[] titleBytes = movie.getTitle().getBytes();
         String fingerprint = Base64.encodeToString(titleBytes, Base64.URL_SAFE | Base64.NO_PADDING);
-        return mBaseUrl + "generated/" + movie.getResourceId() + ".jpg?f=" + fingerprint;
+        return getBaseUrl() + "generated/" + movie.getResourceId() + ".jpg?f=" + fingerprint;
     }
 
     /**
@@ -60,8 +78,22 @@ public class SchauburgUrlProvider implements UrlProvider {
      */
     @Override
     public String getReservationPageUrl(Screening screening) {
-        String url = mBaseUrl + "?page_id=6608&showId=";
+        String url = mHost.getTicketUrl() + "/booking/";
         url += screening.getResourceId();
         return url;
+    }
+
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request();
+        HttpUrl url = request.url();
+
+        HttpUrl newUrl = url.newBuilder()
+                .host(mHost.getDataUrl())
+                .build();
+
+        Request newRequest = request.newBuilder()
+                .url(newUrl).build();
+        return chain.proceed(newRequest);
     }
 }

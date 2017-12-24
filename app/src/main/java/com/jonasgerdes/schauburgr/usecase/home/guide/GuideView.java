@@ -86,6 +86,7 @@ public class GuideView extends Fragment implements GuideContract.View,
         getActivity().setTitle(R.string.title_guide);
         ButterKnife.bind(this, view);
         App.getAppComponent().inject(this);
+        setHasOptionsMenu(true);
 
         mDayListAdapter = new GuideDaysAdapter();
         mDayListAdapter.setListener(this);

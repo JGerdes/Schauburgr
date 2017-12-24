@@ -15,7 +15,9 @@ import org.joda.time.LocalDate;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -55,7 +57,7 @@ public class MovieRepository implements Disposable {
      * @return Observable NetworkState
      */
     public Observable<NetworkState> getNetworkState() {
-        return mState.hide();
+        return mState.share();
     }
 
     /**
@@ -159,8 +161,6 @@ public class MovieRepository implements Disposable {
     public Observable<RealmResults<Movie>> getActionMovies() {
         return RealmObservable.from(mRealm.where(Movie.class)
                 .contains("genres", "Action")
-                .or()
-                .contains("description", "Action")
                 .greaterThanOrEqualTo("contentRating", 12)
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
@@ -195,10 +195,6 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Thriller")
                 .or()
                 .contains("genres", "Horror")
-                .or()
-                .contains("description", "Thriller")
-                .or()
-                .contains("description", "Horror")
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
     }
@@ -217,8 +213,6 @@ public class MovieRepository implements Disposable {
                 .contains("genres", "Familie")
                 .or()
                 .contains("genres", "Family")
-                .or()
-                .contains("description", "Familie")
                 .lessThanOrEqualTo("contentRating", 6)
                 .findAllSorted("title", Sort.ASCENDING)
                 .where().isNotEmpty("description").distinct("title"));
@@ -267,7 +261,30 @@ public class MovieRepository implements Disposable {
                 .contains("extras", Movie.EXTRA_TIP)
                 .or()
                 .contains("extras", Movie.EXTRA_OT)
+                .or()
+                .contains("title", "Malteser")
                 .findAllSorted("releaseDate", Sort.DESCENDING));
+    }
+
+    /**
+     * Gets all movies which are not in any of the given observables
+     *
+     * @param exclude List of Observable RealmResults of Movies to exclude
+     * @return Observable Movies not contained in parameters
+     */
+    @SuppressWarnings("unchecked")
+    public Observable<RealmResults<Movie>> getRemainingMovies(List<Observable<RealmResults<Movie>>> exclude) {
+        return Observable.zip(exclude, objects -> {
+            List<String> moviesIds = new ArrayList<>();
+            for (Object object : objects) {
+                for (Movie movie : (RealmResults<Movie>) object) {
+                    moviesIds.add(movie.getResourceId());
+                }
+            }
+            return mRealm.where(Movie.class)
+                    .not().in("resourceId", moviesIds.toArray(new String[0]))
+                    .findAll();
+        });
     }
 
     /**

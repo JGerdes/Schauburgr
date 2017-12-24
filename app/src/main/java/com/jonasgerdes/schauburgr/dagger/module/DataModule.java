@@ -5,6 +5,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.BuildConfig;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
@@ -37,12 +38,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DataModule {
-    String mSchauburgBaseUrl;
+    CinemaHost mCinemaHost;
     String mTheMovieDatabaseBaseUrl;
 
-    public DataModule(String schauburgBaseUrl, String theMovieDatabaseBaseUrl) {
-        mSchauburgBaseUrl = schauburgBaseUrl;
+    public DataModule(CinemaHost cinemaHost, String theMovieDatabaseBaseUrl) {
+        mCinemaHost = cinemaHost;
         mTheMovieDatabaseBaseUrl = theMovieDatabaseBaseUrl;
+    }
+
+    @Provides
+    @Singleton
+    SchauburgUrlProvider provideSchauburgUrlProvider() {
+        return new SchauburgUrlProvider(mCinemaHost);
     }
 
     @Provides
@@ -57,15 +64,17 @@ public class DataModule {
 
     @Provides
     @Singleton
-    SchauburgApi provideSchauburgApi(Gson gson) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+    SchauburgApi provideSchauburgApi(Gson gson, SchauburgUrlProvider schauburgUrlProvider) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(schauburgUrlProvider)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(new SchauburgGuideConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(mSchauburgBaseUrl)
                 .client(okHttpClient)
+                .baseUrl(schauburgUrlProvider.getBaseUrl())
                 .build();
         return retrofit.create(SchauburgApi.class);
     }
@@ -89,8 +98,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    UrlProvider provideImageUrlCreator() {
-        return new SchauburgUrlProvider(mSchauburgBaseUrl);
+    UrlProvider provideImageUrlCreator(SchauburgUrlProvider schauburgUrlProvider) {
+        return schauburgUrlProvider;
     }
 
 

@@ -3,6 +3,7 @@ package com.jonasgerdes.schauburgr.usecase.home.about;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,12 +13,15 @@ import android.widget.TextView;
 
 import com.jonasgerdes.schauburgr.R;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
+import com.jonasgerdes.schauburgr.usecase.home.CinemaSelectionView;
+import com.jonasgerdes.schauburgr.usecase.home.HomeActivity;
 import com.jonasgerdes.schauburgr.usecase.home.about.license_list.LicenseListAdapter;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jonas on 08.03.2017.
@@ -80,5 +84,27 @@ public class AboutView extends Fragment implements AboutContract.View {
     @Override
     public void setVersionName(String versionName) {
         mVersionName.setText("v" + versionName);
+    }
+
+    @Override
+    public void navigateToGuide() {
+        if(getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).navigateTo(R.id.navigation_guide);
+        }
+    }
+
+    @OnClick(R.id.cinema_selection)
+    void onCinemaSelectionClicked() {
+        if (getActivity() instanceof HomeActivity) {
+            CinemaSelectionView view = new CinemaSelectionView(getContext());
+            AlertDialog selectionDialog = new AlertDialog.Builder(getContext())
+                    .setView(view)
+                    .setOnDismissListener(dialogInterface -> view.dismiss())
+                    .show();
+            view.selections().subscribe(cinema -> {
+                selectionDialog.dismiss();
+                mPresenter.setCinemaHost(cinema);
+            });
+        }
     }
 }
