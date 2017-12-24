@@ -1,8 +1,9 @@
 package com.jonasgerdes.schauburgr.model.schauburg;
 
-import android.support.annotation.StringDef;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Movie;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.Screening;
@@ -26,31 +27,20 @@ public class SchauburgUrlProvider implements UrlProvider, Interceptor {
 
     private static final String PROTOCOL = "http://";
 
-    @StringDef({
-            CinemaHost.SCHAUBURG_CINEWORLD,
-            CinemaHost.CENTRAL_CINEWORLD
-    })
-    public @interface CinemaHost {
-
-        String SCHAUBURG_CINEWORLD = "schauburg-cineworld.de";
-
-        String CENTRAL_CINEWORLD = "central-cineworld.de";
-    }
-
-    private @CinemaHost
-    String mHost;
+    private @NonNull
+    CinemaHost mHost;
 
     /**
      * Create a new instance of an UrlProvider for the schauburg website
      *
      * @param host Base url containing a trailing forward slash
      */
-    public SchauburgUrlProvider(@CinemaHost String host) {
+    public SchauburgUrlProvider(CinemaHost host) {
         mHost = host;
     }
 
 
-    public void setHost(@CinemaHost String host) {
+    public void setHost(CinemaHost host) {
         mHost = host;
     }
 
@@ -88,7 +78,7 @@ public class SchauburgUrlProvider implements UrlProvider, Interceptor {
      */
     @Override
     public String getReservationPageUrl(Screening screening) {
-        String url = getBaseUrl() + "?page_id=6608&showId=";
+        String url = mHost.getTicketUrl() + "/booking/";
         url += screening.getResourceId();
         return url;
     }
@@ -99,7 +89,7 @@ public class SchauburgUrlProvider implements UrlProvider, Interceptor {
         HttpUrl url = request.url();
 
         HttpUrl newUrl = url.newBuilder()
-                .host(mHost)
+                .host(mHost.getDataUrl())
                 .build();
 
         Request newRequest = request.newBuilder()

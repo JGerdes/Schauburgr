@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.jonasgerdes.schauburgr.R;
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,7 +20,7 @@ import io.reactivex.subjects.PublishSubject;
 
 public class CinemaSelectionView extends FrameLayout {
 
-    PublishSubject<String> mSelectionSubject = PublishSubject.create();
+    PublishSubject<CinemaHost> mSelectionSubject = PublishSubject.create();
 
     public CinemaSelectionView(@NonNull Context context) {
         super(context);
@@ -39,17 +39,17 @@ public class CinemaSelectionView extends FrameLayout {
         mSelectionSubject.onError(new Throwable("Nothing selected"));
     }
 
-    public Single<String> selections() {
+    public Single<CinemaHost> selections() {
         return mSelectionSubject.firstOrError();
     }
 
     @OnClick(R.id.cinema_schauburg)
     void onSchauburgSelected() {
-        mSelectionSubject.onNext(SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD);
+        mSelectionSubject.onNext(CinemaHost.SCHAUBURG_CINEWORLD);
 
     }
     @OnClick(R.id.cinema_central)
     void onCentralSelected() {
-        mSelectionSubject.onNext(SchauburgUrlProvider.CinemaHost.CENTRAL_CINEWORLD);
+        mSelectionSubject.onNext(CinemaHost.CENTRAL_CINEWORLD);
     }
 }

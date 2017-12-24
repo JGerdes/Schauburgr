@@ -1,6 +1,6 @@
 package com.jonasgerdes.schauburgr.usecase.home.about;
 
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
 import com.jonasgerdes.schauburgr.mvp.BasePresenter;
 import com.jonasgerdes.schauburgr.mvp.BaseView;
@@ -18,6 +18,6 @@ public interface AboutContract {
     }
 
     interface Presenter extends BasePresenter<AboutContract.View> {
-        void setCinemaHost(@SchauburgUrlProvider.CinemaHost String host);
+        void setCinemaHost(CinemaHost host);
     }
 }

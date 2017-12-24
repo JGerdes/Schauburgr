@@ -2,6 +2,7 @@ package com.jonasgerdes.schauburgr.usecase.home.about;
 
 import com.jonasgerdes.schauburgr.App;
 import com.jonasgerdes.schauburgr.R;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.entity.OpenSourceLicense;
@@ -87,7 +88,7 @@ public class AboutPresenter implements AboutContract.Presenter {
     }
 
     @Override
-    public void setCinemaHost(String host) {
+    public void setCinemaHost(CinemaHost host) {
         mSchauburgUrlProvider.setHost(host);
         mView.navigateToGuide();
         mMovieRepository.loadMovieData();

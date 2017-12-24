@@ -5,6 +5,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jonasgerdes.schauburgr.BuildConfig;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.model.MovieRepository;
 import com.jonasgerdes.schauburgr.model.UrlProvider;
 import com.jonasgerdes.schauburgr.model.schauburg.SchauburgApi;
@@ -37,10 +38,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DataModule {
-    String mCinemaHost;
+    CinemaHost mCinemaHost;
     String mTheMovieDatabaseBaseUrl;
 
-    public DataModule(String cinemaHost, String theMovieDatabaseBaseUrl) {
+    public DataModule(CinemaHost cinemaHost, String theMovieDatabaseBaseUrl) {
         mCinemaHost = cinemaHost;
         mTheMovieDatabaseBaseUrl = theMovieDatabaseBaseUrl;
     }

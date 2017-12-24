@@ -10,7 +10,7 @@ import com.jonasgerdes.schauburgr.dagger.component.AppComponent;
 import com.jonasgerdes.schauburgr.dagger.component.DaggerAppComponent;
 import com.jonasgerdes.schauburgr.dagger.module.AppModule;
 import com.jonasgerdes.schauburgr.dagger.module.DataModule;
-import com.jonasgerdes.schauburgr.model.schauburg.SchauburgUrlProvider;
+import com.jonasgerdes.schauburgr.model.CinemaHost;
 import com.jonasgerdes.schauburgr.util.ChromeCustomTabWrapper;
 
 import io.realm.Realm;
@@ -34,7 +34,7 @@ public class App extends Application {
 
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this, mChromeTab))
-                .dataModule(new DataModule(SchauburgUrlProvider.CinemaHost.SCHAUBURG_CINEWORLD,
+                .dataModule(new DataModule(CinemaHost.SCHAUBURG_CINEWORLD,
                         THE_MOVIE_DATABASE_URL))
                 .build();
 
