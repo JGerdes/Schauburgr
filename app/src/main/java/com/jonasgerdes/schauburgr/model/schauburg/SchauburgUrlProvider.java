@@ -45,7 +45,7 @@ public class SchauburgUrlProvider implements UrlProvider, Interceptor {
     }
 
     public String getBaseUrl() {
-        return PROTOCOL + mHost + "/";
+        return PROTOCOL + mHost.getDataUrl() + "/";
     }
 
     /**
